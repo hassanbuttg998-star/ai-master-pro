@@ -3,64 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Prompt Master - Professional Tool</title>
+    <title>AI Prompt Pro - Create Masterpieces</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at top, #1e293b, #0f172a); }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; background: #0f172a; scroll-behavior: smooth; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(90deg, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="text-white min-h-screen">
+<body class="text-gray-200">
 
-    <!-- Header / Menu -->
-    <nav class="border-b border-gray-700 p-4 bg-gray-900/50 backdrop-blur-md sticky top-0">
+    <!-- Header -->
+    <nav class="p-6 sticky top-0 z-50 glass shadow-2xl">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">AI Master</h1>
-            <div class="space-x-6 hidden md:flex text-sm font-medium">
-                <a href="#" class="hover:text-blue-400">Home</a>
-                <a href="#how-to" class="hover:text-blue-400">How to Use</a>
-                <a href="#about" class="hover:text-blue-400">About AI</a>
+            <h1 class="text-2xl font-bold gradient-text">AI Master Pro</h1>
+            <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest">
+                <a href="#tool" class="hover:text-blue-400 transition">Tool</a>
+                <a href="#samples" class="hover:text-blue-400 transition">Samples</a>
+                <a href="#about" class="hover:text-blue-400 transition">FAQ</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Section -->
-    <main class="max-w-4xl mx-auto pt-16 px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Transform Simple Words into <span class="text-blue-500">Art</span></h2>
-            <p class="text-gray-400">The world's easiest AI prompt generator for Midjourney & Leonardo AI.</p>
-        </div>
-
-        <!-- Tool Box -->
-        <div class="bg-gray-800 border border-gray-700 p-6 rounded-2xl shadow-2xl mb-12">
-            <div class="flex flex-col md:flex-row gap-4">
-                <input id="userInput" type="text" placeholder="e.g. Astronaut on Mars" class="flex-1 p-4 rounded-xl bg-gray-900 border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none">
-                <button onclick="generatePrompt()" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105">Generate ✨</button>
+    <!-- Hero Section -->
+    <section id="tool" class="py-20 px-4 animate__animated animate__fadeIn">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-5xl md:text-6xl font-bold mb-6">Stop Writing, <br><span class="gradient-text">Start Creating.</span></h2>
+            <p class="text-gray-400 text-lg mb-12">Generate high-end artistic prompts for AI models in seconds.</p>
+            
+            <div class="glass p-2 rounded-2xl flex flex-col md:flex-row shadow-2xl">
+                <input id="userInput" type="text" placeholder="Imagine something... (e.g. Neon Samurai)" 
+                    class="bg-transparent flex-1 p-5 outline-none text-white text-lg">
+                <button onclick="generatePrompt()" 
+                    class="bg-blue-600 hover:bg-blue-500 px-10 py-5 rounded-xl font-bold transition-all shadow-lg active:scale-95">
+                    Generate ✨
+                </button>
             </div>
 
-            <!-- Result -->
-            <div id="resultBox" class="mt-8 p-5 bg-black/40 rounded-xl hidden border border-blue-500/30">
-                <p class="text-xs text-blue-400 uppercase font-bold mb-2">Your Magic Prompt:</p>
-                <p id="finalPrompt" class="text-lg italic text-gray-200"></p>
-                <button onclick="copyText()" class="mt-4 text-sm bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg">Copy to Clipboard 📋</button>
-            </div>
-        </div>
-
-        <!-- Info Section -->
-        <div id="how-to" class="grid md:grid-cols-2 gap-8 py-12 border-t border-gray-800">
-            <div>
-                <h3 class="text-xl font-bold mb-3 text-blue-400">How It Works?</h3>
-                <p class="text-gray-400 text-sm leading-relaxed">Simply enter a basic idea. Our algorithm adds professional lighting, camera angles, and artistic styles automatically to make your AI art look 10x better.</p>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold mb-3 text-emerald-400">Why Use This?</h3>
-                <p class="text-gray-400 text-sm leading-relaxed">Writing prompts is hard. This tool is built for creators who want high-quality results without spending hours learning prompt engineering.</p>
+            <!-- Result Box -->
+            <div id="resultBox" class="mt-8 p-6 glass rounded-2xl hidden animate__animated animate__zoomIn border-blue-500/50 border">
+                <p class="text-blue-400 text-xs font-bold mb-2 uppercase">Your Enhanced Prompt</p>
+                <p id="finalPrompt" class="text-xl italic text-white"></p>
+                <button onclick="copyText()" class="mt-6 text-sm bg-white/10 hover:bg-white/20 py-2 px-6 rounded-full transition">
+                    Copy to Clipboard 📋
+                </button>
             </div>
         </div>
-    </main>
+    </section>
 
-    <footer class="text-center py-10 text-gray-500 text-xs border-t border-gray-800 mt-10">
-        &copy; 2026 AI Master Tool - Building the Future of Art.
+    <!-- Samples Section -->
+    <section id="samples" class="py-20 bg-black/20">
+        <div class="max-w-6xl mx-auto px-6">
+            <h3 class="text-3xl font-bold mb-10 text-center">Generated with our Tool</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass p-4 rounded-xl">
+                    <div class="h-48 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg mb-4 opacity-50"></div>
+                    <p class="text-sm font-semibold">"Cyberpunk Cityscape..."</p>
+                </div>
+                <div class="glass p-4 rounded-xl">
+                    <div class="h-48 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-lg mb-4 opacity-50"></div>
+                    <p class="text-sm font-semibold">"Astronaut in Jungle..."</p>
+                </div>
+                <div class="glass p-4 rounded-xl">
+                    <div class="h-48 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg mb-4 opacity-50"></div>
+                    <p class="text-sm font-semibold">"Ancient God Portrait..."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 text-center border-t border-white/5">
+        <p class="text-gray-500 text-sm italic mb-4">"Built for the next generation of AI Artists"</p>
+        <div class="flex justify-center space-x-6 text-gray-400 text-xs uppercase tracking-widest">
+            <span>Privacy</span>
+            <span>Terms</span>
+            <span>Contact</span>
+        </div>
     </footer>
 
     <script>
@@ -68,23 +89,22 @@
             const input = document.getElementById('userInput').value;
             const resultBox = document.getElementById('resultBox');
             const finalPrompt = document.getElementById('finalPrompt');
-            if(!input) return alert("Kuch toh likho bhai!");
+            if(!input) return;
 
-            const styles = [
-                "cinematic lighting, 8k, highly detailed, unreal engine 5, masterpiece, sharp focus",
-                "cyberpunk style, neon lights, hyper-realistic, digital art, trending on artstation",
-                "oil painting, classical vibe, soft brush strokes, dramatic shadows, 4k resolution"
+            const modifiers = [
+                "volumetric lighting, octane render, photorealistic, 8k, detailed textures, depth of field",
+                "surrealism style, vivid colors, dreamlike atmosphere, intricate patterns, fantasy concept art",
+                "cinematic wide shot, dark moody lighting, hyper-detailed, trending on artstation, masterpiece"
             ];
-            const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+            const mod = modifiers[Math.floor(Math.random() * modifiers.length)];
             
-            finalPrompt.innerText = input + ", " + randomStyle;
+            finalPrompt.innerText = input + ", " + mod;
             resultBox.classList.remove('hidden');
         }
 
         function copyText() {
-            const text = document.getElementById('finalPrompt').innerText;
-            navigator.clipboard.writeText(text);
-            alert("Prompt Copy Ho Gaya!");
+            navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText);
+            alert("Prompt Copied!");
         }
     </script>
 </body>
