@@ -3,37 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Magic Prompt Generator</title>
+    <title>AI Magic Prompt Generator - Create Stunning AI Art</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white font-sans flex items-center justify-center min-h-screen">
-    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-6 text-center text-blue-400">AI Prompt Generator</h1>
-        
-        <label class="block mb-2 text-sm">What do you want to imagine?</label>
-        <input id="userInput" type="text" placeholder="e.g. A flying city" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500 mb-4">
-        
-        <button onclick="generatePrompt()" class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-bold transition">Magic Generate ✨</button>
-        
-        <div id="resultBox" class="mt-6 p-4 bg-gray-900 rounded hidden border-l-4 border-blue-500">
-            <p id="finalPrompt" class="text-sm italic text-gray-300"></p>
-            <button onclick="copyText()" class="mt-2 text-xs text-blue-400 underline">Copy Prompt</button>
+<body class="bg-gray-900 text-white font-sans">
+
+    <!-- Navigation -->
+    <nav class="p-5 bg-gray-800 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-blue-400">AI Prompt Master</h1>
+            <ul class="flex space-x-4 text-sm">
+                <li><a href="#about" class="hover:text-blue-400">About</a></li>
+                <li><a href="#how-to" class="hover:text-blue-400 text-gray-400">How to use</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Tool Section -->
+    <div class="flex flex-col items-center justify-center py-10 px-4">
+        <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md border border-gray-700">
+            <h2 class="text-2xl font-bold mb-4 text-center">Generate Pro Prompts ✨</h2>
+            <p class="text-gray-400 text-sm mb-6 text-center text-xs">Enter a simple word and let AI expand it for Midjourney or Stable Diffusion.</p>
+            
+            <input id="userInput" type="text" placeholder="e.g. Ancient City" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500 mb-4">
+            
+            <button onclick="generatePrompt()" class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-bold transition">Magic Generate ✨</button>
+            
+            <div id="resultBox" class="mt-6 p-4 bg-gray-900 rounded hidden border-l-4 border-blue-500">
+                <p id="finalPrompt" class="text-sm italic text-gray-300"></p>
+                <button onclick="copyText()" class="mt-2 text-xs text-blue-400 underline">Copy Prompt</button>
+            </div>
+        </div>
+
+        <!-- Ad Placeholder (Is jagah par Ads ayenge) -->
+        <div class="mt-8 w-full max-w-md h-24 bg-gray-800 border-2 border-dashed border-gray-600 flex items-center justify-center text-gray-500 rounded">
+            Ad Space (Will be active after Approval)
         </div>
     </div>
+
+    <!-- About Section (Paisa isi se milega) -->
+    <section id="about" class="container mx-auto px-6 py-10 border-t border-gray-800">
+        <h3 class="text-xl font-bold mb-4">Why use our AI Prompt Generator?</h3>
+        <p class="text-gray-400 leading-relaxed">This tool is designed to help artists and creators bridge the gap between imagination and reality. By using advanced descriptive algorithms, we turn simple words into high-quality artistic prompts. Perfect for creators using AI models like Leonardo AI, Midjourney, and DALL-E.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-6 text-center text-sm text-gray-500">
+        <p>&copy; 2024 AI Prompt Master. All Rights Reserved.</p>
+    </footer>
 
     <script>
         function generatePrompt() {
             const input = document.getElementById('userInput').value;
             const resultBox = document.getElementById('resultBox');
             const finalPrompt = document.getElementById('finalPrompt');
-            
             if(input.trim() === "") return alert("Please enter something!");
 
-            // Secret Sauce: Adding AI keywords
             const enhancers = [
-                "4k resolution, cinematic lighting, highly detailed, unreal engine 5, masterpiece, professional photography",
-                "digital art, vibrant colors, intricate details, trending on artstation, 8k, sharp focus",
-                "oil painting style, soft brush strokes, dramatic shadows, moody atmosphere, 35mm lens"
+                "ultra-realistic, 8k resolution, cinematic lighting, epic composition, trending on artstation",
+                "cyberpunk aesthetic, neon colors, intricate details, hyper-detailed, unreal engine 5 render",
+                "vintage oil painting style, soft edges, moody lighting, classical masterpiece vibe"
             ];
             
             const randomEnhancer = enhancers[Math.floor(Math.random() * enhancers.length)];
