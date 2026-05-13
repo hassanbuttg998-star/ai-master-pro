@@ -1,23 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AI Prompt Tool</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Master - Professional Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #111; color: white; text-align: center; font-family: Arial; padding-top: 50px; }
-        input { padding: 10px; width: 250px; border-radius: 5px; }
-        button { padding: 10px 20px; background: blue; color: white; border: none; cursor: pointer; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at top, #1e293b, #0f172a); }
     </style>
 </head>
-<body>
-    <h1>My AI Prompt Tool</h1>
-    <input id="in" type="text" placeholder="Write something...">
-    <button onclick="run()">Generate</button>
-    <p id="out"></p>
+<body class="text-white min-h-screen">
+
+    <!-- Header / Menu -->
+    <nav class="border-b border-gray-700 p-4 bg-gray-900/50 backdrop-blur-md sticky top-0">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">AI Master</h1>
+            <div class="space-x-6 hidden md:flex text-sm font-medium">
+                <a href="#" class="hover:text-blue-400">Home</a>
+                <a href="#how-to" class="hover:text-blue-400">How to Use</a>
+                <a href="#about" class="hover:text-blue-400">About AI</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <main class="max-w-4xl mx-auto pt-16 px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Transform Simple Words into <span class="text-blue-500">Art</span></h2>
+            <p class="text-gray-400">The world's easiest AI prompt generator for Midjourney & Leonardo AI.</p>
+        </div>
+
+        <!-- Tool Box -->
+        <div class="bg-gray-800 border border-gray-700 p-6 rounded-2xl shadow-2xl mb-12">
+            <div class="flex flex-col md:flex-row gap-4">
+                <input id="userInput" type="text" placeholder="e.g. Astronaut on Mars" class="flex-1 p-4 rounded-xl bg-gray-900 border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none">
+                <button onclick="generatePrompt()" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105">Generate ✨</button>
+            </div>
+
+            <!-- Result -->
+            <div id="resultBox" class="mt-8 p-5 bg-black/40 rounded-xl hidden border border-blue-500/30">
+                <p class="text-xs text-blue-400 uppercase font-bold mb-2">Your Magic Prompt:</p>
+                <p id="finalPrompt" class="text-lg italic text-gray-200"></p>
+                <button onclick="copyText()" class="mt-4 text-sm bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg">Copy to Clipboard 📋</button>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div id="how-to" class="grid md:grid-cols-2 gap-8 py-12 border-t border-gray-800">
+            <div>
+                <h3 class="text-xl font-bold mb-3 text-blue-400">How It Works?</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Simply enter a basic idea. Our algorithm adds professional lighting, camera angles, and artistic styles automatically to make your AI art look 10x better.</p>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-3 text-emerald-400">Why Use This?</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Writing prompts is hard. This tool is built for creators who want high-quality results without spending hours learning prompt engineering.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-10 text-gray-500 text-xs border-t border-gray-800 mt-10">
+        &copy; 2026 AI Master Tool - Building the Future of Art.
+    </footer>
 
     <script>
-        function run() {
-            var val = document.getElementById('in').value;
-            document.getElementById('out').innerText = val + ", ultra realistic, 8k, cinematic";
+        function generatePrompt() {
+            const input = document.getElementById('userInput').value;
+            const resultBox = document.getElementById('resultBox');
+            const finalPrompt = document.getElementById('finalPrompt');
+            if(!input) return alert("Kuch toh likho bhai!");
+
+            const styles = [
+                "cinematic lighting, 8k, highly detailed, unreal engine 5, masterpiece, sharp focus",
+                "cyberpunk style, neon lights, hyper-realistic, digital art, trending on artstation",
+                "oil painting, classical vibe, soft brush strokes, dramatic shadows, 4k resolution"
+            ];
+            const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+            
+            finalPrompt.innerText = input + ", " + randomStyle;
+            resultBox.classList.remove('hidden');
+        }
+
+        function copyText() {
+            const text = document.getElementById('finalPrompt').innerText;
+            navigator.clipboard.writeText(text);
+            alert("Prompt Copy Ho Gaya!");
         }
     </script>
 </body>
