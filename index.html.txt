@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Magic Prompt Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans flex items-center justify-center min-h-screen">
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center text-blue-400">AI Prompt Generator</h1>
+        
+        <label class="block mb-2 text-sm">What do you want to imagine?</label>
+        <input id="userInput" type="text" placeholder="e.g. A flying city" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500 mb-4">
+        
+        <button onclick="generatePrompt()" class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-bold transition">Magic Generate ✨</button>
+        
+        <div id="resultBox" class="mt-6 p-4 bg-gray-900 rounded hidden border-l-4 border-blue-500">
+            <p id="finalPrompt" class="text-sm italic text-gray-300"></p>
+            <button onclick="copyText()" class="mt-2 text-xs text-blue-400 underline">Copy Prompt</button>
+        </div>
+    </div>
+
+    <script>
+        function generatePrompt() {
+            const input = document.getElementById('userInput').value;
+            const resultBox = document.getElementById('resultBox');
+            const finalPrompt = document.getElementById('finalPrompt');
+            
+            if(input.trim() === "") return alert("Please enter something!");
+
+            // Secret Sauce: Adding AI keywords
+            const enhancers = [
+                "4k resolution, cinematic lighting, highly detailed, unreal engine 5, masterpiece, professional photography",
+                "digital art, vibrant colors, intricate details, trending on artstation, 8k, sharp focus",
+                "oil painting style, soft brush strokes, dramatic shadows, moody atmosphere, 35mm lens"
+            ];
+            
+            const randomEnhancer = enhancers[Math.floor(Math.random() * enhancers.length)];
+            finalPrompt.innerText = `${input}, ${randomEnhancer}`;
+            resultBox.classList.remove('hidden');
+        }
+
+        function copyText() {
+            const text = document.getElementById('finalPrompt').innerText;
+            navigator.clipboard.writeText(text);
+            alert("Prompt Copied!");
+        }
+    </script>
+</body>
+</html>
