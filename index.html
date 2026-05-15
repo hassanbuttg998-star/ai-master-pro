@@ -3,322 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Prompt Pro - Create Masterpieces</title>
+    <title>AI Master Pro - Create Masterpieces</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-    :root { --primary: #6366f1; --accent: #a855f7; --bg: #030712; }
-html { scroll-behavior: smooth; }
-body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: white; margin: 0; overflow-x: hidden; }
+        :root { --primary: #6366f1; --accent: #a855f7; --bg: #030712; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: white; margin: 0; overflow-x: hidden; }
 
-/* Sidebar Animation */
-#sidebar { transition: transform 0.3s ease-in-out; }
-.translate-x-full { transform: translateX(100%); }
+        /* Sidebar Animation */
+        #sidebar { transition: transform 0.3s ease-in-out; }
+        .translate-x-full { transform: translateX(100%); }
 
-.glass-card { 
-    background: rgba(255, 255, 255, 0.03); 
-    backdrop-filter: blur(12px); 
-    border: 1px solid rgba(255, 255, 255, 0.1); 
-    border-radius: 24px; 
-}
-.gradient-text { 
-    background: linear-gradient(to right, #818cf8, #c084fc); 
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-}
-.btn-premium { background: linear-gradient(45deg, var(--primary), var(--accent)); }
-        /* Jo section active nahi hoga wo chup jayega */
-.page-hidden { display: none !important; }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 24px; 
+        }
+        .gradient-text { 
+            background: linear-gradient(to right, #818cf8, #c084fc); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+        .btn-premium { background: linear-gradient(45deg, var(--primary), var(--accent)); cursor: pointer; border: none; }
+        
+        /* Page Switching Logic */
         .page-content { display: block; }
-.page-hidden { display: none !important; }
-</style>
+        .page-hidden { display: none !important; }
+    </style>
 </head>
 <body class="min-h-screen">
+
     <div id="sidebar" class="fixed top-0 right-0 h-full w-64 bg-[#030712] z-[100] translate-x-full border-l border-white/10 p-6 shadow-2xl transition-transform duration-300">
-    <button onclick="toggleMenu()" class="text-white mb-8 text-3xl font-light">&times;</button>
-    <div class="flex flex-col gap-6 font-medium">
-        <a href="javascript:void(0)" onclick="showPage('home')" class="text-white">Home</a>
-        <a href="javascript:void(0)" onclick="showPage('tools')" class="text-indigo-400 font-bold">⚡ All Tools</a>
-        <a href="#samples" onclick="showPage('samples')"="toggleMenu()" class="text-white hover:text-indigo-400">Samples</a>
-        <a href="#about" onclick="showPage('about')"="toggleMenu()" class="text-white hover:text-indigo-400">Dev Info</a>
-    </div>
-</div>
-
-<nav class="flex justify-between items-center p-6 max-w-7xl mx-auto sticky top-0 z-50 backdrop-blur-md border-b border-white/5">
-    <div class="text-2xl font-black gradient-text tracking-tighter">AI MASTER PRO</div>
-    
-    <div class="hidden md:flex gap-8 items-center text-sm font-semibold">
-        <a href="javascript:void(0)" onclick="showPage('home')" class="text-gray-400 hover:text-white">Home</a>
-        <a href="javascript:void(0)" onclick="showPage('tools')" class="text-gray-400 hover:text-white">Tools</a>
-        <a href="#about" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-500 transition">Dev Info</a>
+        <button onclick="toggleMenu()" class="text-white mb-8 text-3xl font-light">&times;</button>
+        <div class="flex flex-col gap-6 font-medium">
+            <a href="javascript:void(0)" onclick="showPage('home')" class="text-white">Home</a>
+            <a href="javascript:void(0)" onclick="showPage('tools-page')" class="text-indigo-400 font-bold">⚡ All Tools</a>
+            <a href="javascript:void(0)" onclick="showPage('samples-page')" class="text-white hover:text-indigo-400">Samples</a>
+            <a href="javascript:void(0)" onclick="showPage('about-page')" class="text-white hover:text-indigo-400">Dev Info</a>
+        </div>
     </div>
 
-    <button onclick="toggleMenu()" class="md:hidden flex flex-col gap-1.5">
-        <div class="w-7 h-1 bg-indigo-500 rounded-full"></div>
-        <div class="w-5 h-1 bg-white rounded-full"></div>
-        <div class="w-7 h-1 bg-indigo-500 rounded-full"></div>
-    </button>
-</nav>
-    <main class="max-w-4xl mx-auto px-6 pt-20 text-center">
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-            Next-Gen <span class="gradient-text">Prompt</span> <br>Studio
-        </h1>
-        <p class="text-gray-400 text-lg mb-12 max-w-2xl mx-auto">
-            Gora ho ya Desi, create professional prompts in English or Roman Urdu.
-        </p>
+    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto sticky top-0 z-50 backdrop-blur-md border-b border-white/5">
+        <div class="text-2xl font-black gradient-text tracking-tighter">AI MASTER PRO</div>
+        <div class="hidden md:flex gap-8 items-center text-sm font-semibold">
+            <a href="javascript:void(0)" onclick="showPage('home')" class="text-gray-400 hover:text-white transition">Home</a>
+            <a href="javascript:void(0)" onclick="showPage('tools-page')" class="text-gray-400 hover:text-white transition">Tools</a>
+            <button onclick="showPage('about-page')" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-500 transition">Dev Info</button>
+        </div>
+        <button onclick="toggleMenu()" class="md:hidden flex flex-col gap-1.5">
+            <div class="w-7 h-1 bg-indigo-500 rounded-full"></div>
+            <div class="w-5 h-1 bg-white rounded-full"></div>
+            <div class="w-7 h-1 bg-indigo-500 rounded-full"></div>
+        </button>
+    </nav>
 
-        <div class="glass-card p-2 md:p-3 flex flex-col md:flex-row gap-2">
-            <input type="text" id="userInput" 
-                   placeholder="E.g. Jungle mein sher ud raha ho..." 
-                   class="flex-1 bg-transparent border-none outline-none p-4 text-white text-lg">
-            <button onclick="generatePowerPrompt()" 
-                    class="btn-premium px-8 py-4 rounded-xl font-bold text-white">
-                GENERATE MAGIC
+    <main id="home" class="page-content min-h-[85vh] flex flex-col items-center justify-center text-center px-6 animate__animated animate__fadeIn">
+        <div class="max-w-4xl">
+            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight tracking-tighter">
+                Master Your <br><span class="gradient-text italic">Imagination.</span>
+            </h1>
+            <p class="text-gray-500 max-w-xl text-lg mb-10 font-light mx-auto">
+                The world's first Roman Urdu to AI Prompt studio. <br>Convert your thoughts into 8K cinematic art instantly.
+            </p>
+            <button onclick="showPage('tools-page')" class="btn-premium px-12 py-5 rounded-2xl font-bold text-white shadow-xl shadow-indigo-500/20">
+                START CREATION
             </button>
         </div>
+    </main>
+
+    <section id="tools-page" class="page-content page-hidden max-w-7xl mx-auto px-6 py-12 animate__animated animate__fadeIn">
+        <h2 class="text-4xl font-black mb-12 text-center">AI <span class="text-indigo-500">STUDIO</span></h2>
         
-        <main id="home" class="page-content min-h-[85vh] flex flex-col items-center justify-center text-center px-6">
-    <div class="animate__animated animate__fadeInUp">
-        <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight tracking-tighter">
-            Master Your <br><span class="gradient-text italic">Imagination.</span>
-        </h1>
-        <p class="text-gray-500 max-w-xl text-lg mb-10 font-light mx-auto">
-            The world's first Roman Urdu to AI Prompt studio. <br>Convert your thoughts into 8K cinematic art instantly.
-        </p>
-        <button onclick="showPage('tools')" class="btn-premium px-12 py-5 rounded-2xl font-bold text-white shadow-xl shadow-indigo-500/20 inline-block border-none cursor-pointer">
-    START CREATION
-</button>
-    </div>
-</main>
-
-<section id="tools" class="page-content page-hidden max-w-7xl mx-auto px-6 py-32 border-t border-white/5">
-    <h2 class="text-4xl font-black mb-16 text-center tracking-tight">OUR <span class="text-indigo-500">AI TOOLS</span></h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div class="glass-card p-10 group hover:bg-indigo-600/5 transition-all duration-500">
-            <div class="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 transition">🔍</div>
-            <h3 class="text-2xl font-bold mb-4">Global Prompt Search</h3>
-            <p class="text-gray-500 leading-relaxed mb-8">Type in Roman Urdu, Hindi, or English. Our engine understands your context and builds a professional prompt.</p>
-            <button class="text-indigo-400 font-bold flex items-center gap-2">OPEN TOOL <span>&rarr;</span></button>
-        </div>
-
-        <div class="glass-card p-10 group hover:bg-purple-600/5 transition-all duration-500">
-            <div class="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 transition">👤</div>
-            <h3 class="text-2xl font-bold mb-4">Portrait Transformer</h3>
-            <p class="text-gray-500 leading-relaxed mb-8">Select gender and vibe. Perfect for creating hyper-realistic avatars and professional headshots.</p>
-            <button class="text-purple-400 font-bold flex items-center gap-2">OPEN TOOL <span>&rarr;</span></button>
-        </div>
-    </div>
-</section>
-</body>
-<!-- Ab ye line search bar ke niche aur behtar design mein hai -->
-<p class="text-blue-300/60 text-sm md:text-base italic tracking-wide">
-    The world's simplest AI prompt tool for Midjourney & Leonardo AI creators.
-</p>
+        <div class="max-w-4xl mx-auto mb-20 text-center">
+            <h3 class="text-2xl font-bold mb-6">Global Prompt Search</h3>
+            <div class="glass-card p-3 flex flex-col md:flex-row gap-2 mb-4">
+                <input type="text" id="userInput" placeholder="E.g. Jungle mein sher ud raha ho..." class="flex-1 bg-transparent border-none outline-none p-4 text-white text-lg">
+                <button onclick="generatePowerPrompt()" class="btn-premium px-8 py-4 rounded-xl font-bold text-white">GENERATE MAGIC</button>
             </div>
-
-            <div id="resultBox" class="mt-8 p-6 glass rounded-2xl hidden animate__animated animate__zoomIn border-blue-500/50 border">
+            <p class="text-blue-300/60 text-sm italic">Midjourney & Leonardo AI Professional Engine.</p>
+            
+            <div id="resultBox" class="mt-8 p-6 glass-card hidden animate__animated animate__zoomIn border-indigo-500/50 border">
                 <p id="finalPrompt" class="text-xl italic text-white"></p>
-                <button onclick="copyText()" class="mt-6 text-sm bg-white/10 hover:bg-white/20 py-2 px-6 rounded-full transition">
-                    Copy Prompt 📋
-                </button>
+                <button onclick="copyPrompt()" class="mt-6 text-sm bg-white/10 hover:bg-white/20 py-2 px-6 rounded-full transition">Copy Prompt 📋</button>
+            </div>
+        </div>
+
+        <div class="mt-20 border-t border-white/5 pt-20">
+            <h3 class="text-2xl font-bold mb-8 text-center gradient-text">AI Portrait Transformer</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card p-6">
+                    <label class="block text-xs font-bold text-gray-500 mb-4 uppercase">1. Select Gender</label>
+                    <div class="flex gap-4 mb-8">
+                        <button onclick="setGender('Man')" id="btnMan" class="flex-1 py-3 rounded-xl border border-indigo-500 hover:bg-white/5 transition">👦 Man</button>
+                        <button onclick="setGender('Woman')" id="btnWoman" class="flex-1 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition">👩 Woman</button>
+                    </div>
+                    <label class="block text-xs font-bold text-gray-500 mb-4 uppercase">2. Choose Style</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="generatePortrait('Golden Hour')" class="bg-white/5 p-4 rounded-xl hover:border-indigo-500 border border-transparent transition text-sm">✨ Golden Hour</button>
+                        <button onclick="generatePortrait('Cyberpunk')" class="bg-white/5 p-4 rounded-xl hover:border-indigo-500 border border-transparent transition text-sm">🌃 Cyberpunk</button>
+                        <button onclick="generatePortrait('Old Money')" class="bg-white/5 p-4 rounded-xl hover:border-indigo-500 border border-transparent transition text-sm">🎩 Old Money</button>
+                        <button onclick="generatePortrait('Studio')" class="bg-white/5 p-4 rounded-xl hover:border-indigo-500 border border-transparent transition text-sm">📸 Studio Pro</button>
+                    </div>
+                </div>
+                <div class="flex flex-col justify-center p-8 bg-indigo-500/5 rounded-3xl border border-indigo-500/10">
+                    <h4 class="text-xl font-bold mb-4">Instructions</h4>
+                    <ul class="text-gray-400 text-sm space-y-3">
+                        <li>• Select your character's gender.</li>
+                        <li>• Pick a style vibe for the portrait.</li>
+                        <li>• Copy the result and use it with your photo link.</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="samples" class="py-20 bg-black/20">
+    <section id="samples-page" class="page-content page-hidden py-20 animate__animated animate__fadeIn">
         <div class="max-w-6xl mx-auto px-6">
-            <h3 class="text-3xl font-bold mb-10 text-center">Generated with our Tool</h3>
+            <h3 class="text-4xl font-black mb-12 text-center">COMMUNITY <span class="text-indigo-500">SAMPLES</span></h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <div class="glass p-4 rounded-2xl transform transition hover:scale-105 duration-300">
-                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3f2-0d68-6660-bc4d-a28ab05e99a2/lucid-origin_Ancient_God_volumetric_liCyberpunk_Cat_surrealism_style_vivid_colors_dreamlike_a-0.jpg" 
-                         class="h-64 w-full object-cover rounded-xl mb-4 shadow-lg">
-                    <p class="text-sm font-semibold text-blue-400 italic text-center">"Cyberpunk Cat Style"</p>
+                <div class="glass-card p-4 transform transition hover:scale-105 duration-300">
+                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3f2-0d68-6660-bc4d-a28ab05e99a2/lucid-origin_Ancient_God_volumetric_liCyberpunk_Cat_surrealism_style_vivid_colors_dreamlike_a-0.jpg" class="h-64 w-full object-cover rounded-xl mb-4">
+                    <p class="text-sm font-semibold text-indigo-400 italic text-center">"Cyberpunk Cat"</p>
                 </div>
-
-                <div class="glass p-4 rounded-2xl transform transition hover:scale-105 duration-300">
-                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3fa-7402-6990-adc6-85eaef128a74/lucid-origin_futuristic_City_with_traffic_surrealism_style_vivid_colors_dreamlike_atmosphere_-0.jpg" 
-                         class="h-64 w-full object-cover rounded-xl mb-4 shadow-lg">
-                    <p class="text-sm font-semibold text-emerald-400 italic text-center">"Futuristic Cityscape"</p>
+                <div class="glass-card p-4 transform transition hover:scale-105 duration-300">
+                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3fa-7402-6990-adc6-85eaef128a74/lucid-origin_futuristic_City_with_traffic_surrealism_style_vivid_colors_dreamlike_atmosphere_-0.jpg" class="h-64 w-full object-cover rounded-xl mb-4">
+                    <p class="text-sm font-semibold text-emerald-400 italic text-center">"Futuristic City"</p>
                 </div>
-
-                <div class="glass p-4 rounded-2xl transform transition hover:scale-105 duration-300">
-                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f41e-75df-68c0-970b-c1474825050b/lucid-origin_Astronaut_in_space_cinematic_lighting_8k_highly_detailed_unreal_engine_5_masterp-0.jpg" 
-                         class="h-64 w-full object-cover rounded-xl mb-4 shadow-lg">
-                    <p class="text-sm font-semibold text-orange-400 italic text-center">"Astronaut in Space"</p>
+                <div class="glass-card p-4 transform transition hover:scale-105 duration-300">
+                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f41e-75df-68c0-970b-c1474825050b/lucid-origin_Astronaut_in_space_cinematic_lighting_8k_highly_detailed_unreal_engine_5_masterp-0.jpg" class="h-64 w-full object-cover rounded-xl mb-4">
+                    <p class="text-sm font-semibold text-orange-400 italic text-center">"Astronaut Art"</p>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <!-- About Tool & Developer Section -->
-<section id="about" class="py-20 px-4 border-t border-white/10 bg-black/20">
-    <div class="max-w-4xl mx-auto">
-        
-        <!-- About Tool Part -->
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold mb-6 gradient-text">About The Tool</h2>
-            <p class="text-gray-300 text-lg leading-relaxed italic">
-                "AI Master Pro is a dedicated tool designed to simplify the art of AI prompting. 
-                Whether you are using Midjourney, Leonardo AI, or Stable Diffusion, we provide 
-                the perfect keywords to turn your ideas into high-quality visual masterpieces. 
-                Our tool is built to be a fast, free, and effective library for creators worldwide."
-            </p>
+    <section id="about-page" class="page-content page-hidden py-20 px-4 animate__animated animate__fadeIn">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-6 gradient-text uppercase">About The Studio</h2>
+                <p class="text-gray-400 text-lg leading-relaxed italic">
+                    AI Master Pro is the first dedicated platform to bridge Roman Urdu with AI art generation. We help you create high-end prompts for Midjourney, Leonardo AI, and Stable Diffusion using natural language.
+                </p>
+            </div>
+            <div class="glass-card p-10 text-center border border-indigo-500/20">
+                <h3 class="text-2xl font-bold text-white mb-4 uppercase">The Architect</h3>
+                <p class="text-gray-400 mb-8">
+                    Developed by <span class="text-indigo-400 font-bold">HASSAN FRAZ</span>. Passionate about AI engineering and making tech accessible for everyone.
+                </p>
+                <div class="flex justify-center gap-8">
+                    <a href="https://www.instagram.com/hazzy.996" target="_blank" class="text-pink-500 hover:scale-110 transition font-bold underline">Instagram</a>
+                    <a href="mailto:hassanbuttg998@gmail.com" class="text-indigo-400 hover:scale-110 transition font-bold underline">Email Me</a>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- Developer Part -->
-        <div class="glass p-8 rounded-2xl border border-white/10 text-center">
-            <h3 class="text-xl font-semibold text-white mb-4">Meet the Developer</h3>
-            <p class="text-gray-400 mb-6">
-                Hi, I'm <span class="text-blue-400 font-bold">HASSAN FRAZ</span>. I created this tool to bridge the gap between imagination and AI. As a developer passionate about AI technology, I ensure that every prompt provided here is high-quality and free to use.
-            </p>
-            <div class="flex justify-center gap-6">
-                <!-- Apna Instagram handle yahan dalain -->
-                <a href="https://www.instagram.com/hazzy.996" target="_blank" class="text-pink-500 hover:text-white transition underline font-semibold italic">Instagram</a>
-                <a href="mailto:hassanbuttg998@gmail.com" class="text-blue-400 hover:text-white transition underline">Contact Me</a>
-            </div>
-        </div>
-        
-    </div>
-</section>
-    </div>
-</section>
-
-<!-- Updated Footer -->
-<footer class="mt-32 py-12 border-t border-white/5 bg-black/20">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div class="text-left">
-                <div class="text-xl font-black gradient-text mb-4">AI MASTER PRO</div>
-                <p class="text-gray-500 text-sm">The world's first Roman Urdu to AI Prompt generator. Empowering creators globally.</p>
-            </div>
-            <div class="text-left">
-                <h4 class="font-bold mb-4">Quick Links</h4>
-                <ul class="text-gray-500 text-sm space-y-2">
-                    <li><a href="#" class="hover:text-indigo-400">Home</a></li>
-                    <li><a href="#" class="hover:text-indigo-400">Portrait Tool</a></li>
-                    <li><a href="#" class="hover:text-indigo-400">Library</a></li>
-                </ul>
-            </div>
-            <div class="text-left">
-                <h4 class="font-bold mb-4">Developer</h4>
-                <p class="text-gray-500 text-sm">Created with ❤️ by Hassan. Passionate about AI and Design.</p>
-            </div>
-        </div>
-        <div class="mt-12 text-center text-xs text-gray-600 border-t border-white/5 pt-6">
-            © 2026 AI MASTER PRO. All rights reserved.
+    <footer class="mt-20 py-12 border-t border-white/5 bg-black/40">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="text-xl font-black gradient-text mb-4">AI MASTER PRO</div>
+            <p class="text-gray-600 text-sm mb-6">© 2026 Designed with ❤️ by Hassan Fraz. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
-    function generatePowerPrompt() {
-        let input = document.getElementById('userInput').value.toLowerCase();
-        let resultBox = document.getElementById('resultBox');
-        let finalPrompt = document.getElementById('finalPrompt');
-
-        if(input.trim() === "") {
-            alert("Kuch likho toh sahi, Hassan bhai!");
-            return;
-        }
-
-        // Roman Urdu to English Mapping (Step 3 Teaser)
-        let translationMap = {
-            // Persons & Characters
-            "larka": "man", "larki": "woman", "bacha": "child", "budha": "old man", "hero": "superhero",
-            // Animals
-            "sher": "lion", "cheeta": "leopard", "ghora": "horse", "kutta": "dog", "billi": "cat", "parinda": "bird",
-            // Nature & Places
-            "paharon": "mountains", "jungle": "forest", "samundar": "ocean", "darya": "river", "aasman": "sky", "baraf": "snow", "barish": "rain", "raat": "night", "din": "sunny day", "ghaas": "grass", "phool": "flowers",
-            // Actions
-            "ud raha": "flying", "daur raha": "running", "baitha": "sitting", "khara": "standing", "lar raha": "fighting", "so raha": "sleeping",
-            // Colors & Details
-            "lal": "red", "neela": "blue", "kala": "black", "safaid": "white", "khubsurat": "stunning", "andhera": "dark", "roshni": "bright lighting"
-        };
-
-        // Replace Urdu words with English
-        for (let word in translationMap) {
-            input = input.replace(new RegExp(word, 'g'), translationMap[word]);
-        }
-
-        // Step 1: Power Expansion (Adjectives)
-        let proMagic = "cinematic lighting, hyper-realistic, 8k, highly detailed, professional photography, unreal engine 5 render --v 6.0";
-        
-        // Final Output
-        let finalOutput = input + ", " + proMagic;
-        
-        finalPrompt.innerText = finalOutput;
-        resultBox.style.display = "block";
-    }
-
-    function copyPrompt() {
-        let text = document.getElementById('finalPrompt').innerText;
-        navigator.clipboard.writeText(text);
-        alert("Prompt Copied! Ab ja kar AI par paste karein.");
-    }
-</script>
-    <script>
-    // Pehle wala generatePowerPrompt function yahan rehne dain, uske niche ye add karein:
-    
-    let selectedGender = "Man"; 
-
-    function setGender(g) {
-        selectedGender = g;
-        document.getElementById('btnMan').style.borderColor = g === 'Man' ? '#6366f1' : 'rgba(255,255,255,0.1)';
-        document.getElementById('btnWoman').style.borderColor = g === 'Woman' ? '#6366f1' : 'rgba(255,255,255,0.1)';
-    }
-
-    function generatePortrait(style) {
-        let resultBox = document.getElementById('resultBox');
-        let finalPrompt = document.getElementById('finalPrompt');
-        let template = "";
-
-        if(style === 'Golden Hour') {
-            template = `[IMAGE_URL] a handsome ${selectedGender.toLowerCase()}, standing in a dreamy wild grass field, soft golden hour sunlight, 8k --v 6.0`;
-        } else if(style === 'Cyberpunk') {
-            template = `[IMAGE_URL] a futuristic ${selectedGender.toLowerCase()} character, glowing neon armor, rainy night, hyper-realistic --v 6.0`;
-        } else if(style === 'Old Money') {
-            template = `[IMAGE_URL] a sophisticated ${selectedGender.toLowerCase()} in luxury outfit, classic aesthetic, expensive vibe --v 6.0`;
-        } else if(style === 'Studio') {
-            template = `[IMAGE_URL] professional studio portrait of a ${selectedGender.toLowerCase()}, Rembrandt lighting, highly detailed --v 6.0`;
-        }
-
-        finalPrompt.innerText = template;
-        resultBox.classList.remove('hidden'); // hidden class hata di taake nazar aaye
-        window.scrollTo({ top: 0, behavior: 'smooth' }); 
-    }
-    
-    function copyPrompt() {
-        let text = document.getElementById('finalPrompt').innerText;
-        navigator.clipboard.writeText(text);
-        alert("Prompt Copied!");
-    }
+        // NAVIGATION LOGIC
         function toggleMenu() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('translate-x-full');
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('translate-x-full');
         }
+
         function showPage(pageId) {
-    // 1. Saare sections dhoondo jin mein 'page-content' class hai
-    const pages = document.querySelectorAll('.page-content');
-    
-    // 2. Sab ko hide kar do
-    pages.forEach(p => {
-        p.classList.add('page-hidden');
-    });
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(p => p.classList.add('page-hidden'));
+            
+            const activePage = document.getElementById(pageId);
+            if(activePage) activePage.classList.remove('page-hidden');
+            
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.add('translate-x-full');
+            window.scrollTo(0, 0);
+        }
 
-    // 3. Sirf usay dikhao jis par click hua hai
-    const activePage = document.getElementById(pageId);
-    if(activePage) {
-        activePage.classList.remove('page-hidden');
-    }
+        // TOOL LOGIC: SEARCH
+        function generatePowerPrompt() {
+            let input = document.getElementById('userInput').value.toLowerCase();
+            let resultBox = document.getElementById('resultBox');
+            let finalPrompt = document.getElementById('finalPrompt');
 
-    // 4. Sidebar band karo (Mobile ke liye)
-    const sidebar = document.getElementById('sidebar');
-    if(sidebar) {
-        sidebar.classList.add('translate-x-full');
-    }
+            if(input.trim() === "") {
+                alert("Kuch likho toh sahi, Hassan bhai!");
+                return;
+            }
 
-    // 5. Screen ke top par jao
-    window.scrollTo(0, 0);
-}
-</script>
+            let translationMap = {
+                "larka": "man", "larki": "woman", "bacha": "child", "budha": "old man", "hero": "superhero",
+                "sher": "lion", "cheeta": "leopard", "ghora": "horse", "paharon": "mountains", "jungle": "forest", 
+                "samundar": "ocean", "aasman": "sky", "baraf": "snow", "barish": "rain", "raat": "night"
+            };
+
+            for (let word in translationMap) {
+                input = input.replace(new RegExp(word, 'g'), translationMap[word]);
+            }
+
+            let finalOutput = input + ", cinematic lighting, hyper-realistic, 8k, highly detailed, unreal engine 5 --v 6.0";
+            finalPrompt.innerText = finalOutput;
+            resultBox.classList.remove('hidden');
+        }
+
+        // TOOL LOGIC: PORTRAIT
+        let selectedGender = "Man"; 
+        function setGender(g) {
+            selectedGender = g;
+            document.getElementById('btnMan').style.borderColor = g === 'Man' ? '#6366f1' : 'rgba(255,255,255,0.1)';
+            document.getElementById('btnWoman').style.borderColor = g === 'Woman' ? '#6366f1' : 'rgba(255,255,255,0.1)';
+        }
+
+        function generatePortrait(style) {
+            let resultBox = document.getElementById('resultBox');
+            let finalPrompt = document.getElementById('finalPrompt');
+            let template = "";
+
+            if(style === 'Golden Hour') template = `[IMAGE_URL] a handsome ${selectedGender.toLowerCase()}, wild grass field, golden hour sunlight, 8k --v 6.0`;
+            else if(style === 'Cyberpunk') template = `[IMAGE_URL] futuristic ${selectedGender.toLowerCase()}, neon armor, rainy night, hyper-realistic --v 6.0`;
+            else if(style === 'Old Money') template = `[IMAGE_URL] sophisticated ${selectedGender.toLowerCase()}, luxury outfit, classic aesthetic --v 6.0`;
+            else if(style === 'Studio') template = `[IMAGE_URL] professional studio portrait of a ${selectedGender.toLowerCase()}, Rembrandt lighting, 8k --v 6.0`;
+
+            finalPrompt.innerText = template;
+            showPage('tools-page'); // Stay on tools page
+            resultBox.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }
+
+        function copyPrompt() {
+            let text = document.getElementById('finalPrompt').innerText;
+            navigator.clipboard.writeText(text);
+            alert("Prompt Copied!");
+        }
+    </script>
 </body>
 </html>
