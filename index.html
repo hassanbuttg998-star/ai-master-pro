@@ -81,6 +81,29 @@
                 <button onclick="copyPrompt()" class="mt-4 text-xs text-indigo-400 font-bold uppercase">Copy Prompt</button>
             </div>
         </div>
+        <div class="mt-20 text-left">
+    <h3 class="text-2xl font-bold mb-6 gradient-text">AI Portrait Transformer</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="glass-card p-6">
+            <label class="block text-sm font-bold text-gray-400 mb-4 uppercase">1. Select Gender</label>
+            <div class="flex gap-4 mb-8">
+                <button onclick="setGender('Man')" id="btnMan" class="flex-1 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition" style="border-color: #6366f1;">👦 Man</button>
+                <button onclick="setGender('Woman')" id="btnWoman" class="flex-1 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition">👩 Woman</button>
+            </div>
+            <label class="block text-sm font-bold text-gray-400 mb-4 uppercase">2. Choose Your Vibe</label>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="generatePortrait('Golden Hour')" class="bg-white/5 p-4 rounded-xl hover:border-indigo-500 border border-transparent transition text-sm">✨ Golden Hour</button>
+                <button onclick="generatePortrait('Cyberpunk')" class="bg-white/5 p-4 rounded-xl hover:border-indigo-500 border border-transparent transition text-sm">🌃 Cyberpunk</button>
+                <button onclick="generatePortrait('Old Money')" class="bg-white/5 p-4 rounded-xl hover:border-indigo-500 border border-transparent transition text-sm">🎩 Old Money</button>
+                <button onclick="generatePortrait('Studio')" class="bg-white/5 p-4 rounded-xl hover:border-indigo-500 border border-transparent transition text-sm">📸 Studio Pro</button>
+            </div>
+        </div>
+        <div class="flex flex-col justify-center p-6 bg-indigo-500/5 rounded-3xl border border-indigo-500/10">
+            <h4 class="text-xl font-bold mb-2">Instructions</h4>
+            <p class="text-gray-400 text-sm">Select gender and style. Use the generated prompt with your photo link on Midjourney or Leonardo AI.</p>
+        </div>
+    </div>
+</div>
     </main>
 </body>
 <!-- Ab ye line search bar ke niche aur behtar design mein hai -->
