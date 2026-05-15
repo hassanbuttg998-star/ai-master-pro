@@ -230,5 +230,42 @@
         alert("Prompt Copied! Ab ja kar AI par paste karein.");
     }
 </script>
+    <script>
+    // Pehle wala generatePowerPrompt function yahan rehne dain, uske niche ye add karein:
+    
+    let selectedGender = "Man"; 
+
+    function setGender(g) {
+        selectedGender = g;
+        document.getElementById('btnMan').style.borderColor = g === 'Man' ? '#6366f1' : 'rgba(255,255,255,0.1)';
+        document.getElementById('btnWoman').style.borderColor = g === 'Woman' ? '#6366f1' : 'rgba(255,255,255,0.1)';
+    }
+
+    function generatePortrait(style) {
+        let resultBox = document.getElementById('resultBox');
+        let finalPrompt = document.getElementById('finalPrompt');
+        let template = "";
+
+        if(style === 'Golden Hour') {
+            template = `[IMAGE_URL] a handsome ${selectedGender.toLowerCase()}, standing in a dreamy wild grass field, soft golden hour sunlight, 8k --v 6.0`;
+        } else if(style === 'Cyberpunk') {
+            template = `[IMAGE_URL] a futuristic ${selectedGender.toLowerCase()} character, glowing neon armor, rainy night, hyper-realistic --v 6.0`;
+        } else if(style === 'Old Money') {
+            template = `[IMAGE_URL] a sophisticated ${selectedGender.toLowerCase()} in luxury outfit, classic aesthetic, expensive vibe --v 6.0`;
+        } else if(style === 'Studio') {
+            template = `[IMAGE_URL] professional studio portrait of a ${selectedGender.toLowerCase()}, Rembrandt lighting, highly detailed --v 6.0`;
+        }
+
+        finalPrompt.innerText = template;
+        resultBox.classList.remove('hidden'); // hidden class hata di taake nazar aaye
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    }
+    
+    function copyPrompt() {
+        let text = document.getElementById('finalPrompt').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Prompt Copied!");
+    }
+</script>
 </body>
 </html>
