@@ -28,6 +28,8 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
 .btn-premium { background: linear-gradient(45deg, var(--primary), var(--accent)); }
         /* Jo section active nahi hoga wo chup jayega */
 .page-hidden { display: none !important; }
+        .page-content { display: block; }
+.page-hidden { display: none !important; }
 </style>
 </head>
 <body class="min-h-screen">
@@ -74,7 +76,7 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
             </button>
         </div>
         
-        <main id="home" class="min-h-[85vh] flex flex-col items-center justify-center text-center px-6">
+        <main id="home" class="page-content min-h-[85vh] flex flex-col items-center justify-center text-center px-6">
     <div class="animate__animated animate__fadeInUp">
         <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight tracking-tighter">
             Master Your <br><span class="gradient-text italic">Imagination.</span>
@@ -88,7 +90,7 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
     </div>
 </main>
 
-<section id="tools" class="max-w-7xl mx-auto px-6 py-32 border-t border-white/5">
+<section id="tools" class="page-content page-hidden max-w-7xl mx-auto px-6 py-32 border-t border-white/5">
     <h2 class="text-4xl font-black mb-16 text-center tracking-tight">OUR <span class="text-indigo-500">AI TOOLS</span></h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div class="glass-card p-10 group hover:bg-indigo-600/5 transition-all duration-500">
@@ -293,6 +295,22 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('translate-x-full');
         }
+        function showPage(pageId) {
+    // Saare pages ko hide karo
+    const pages = document.querySelectorAll('.page-content');
+    pages.forEach(p => p.classList.add('page-hidden'));
+
+    // Sirf us page ko dikhao jiski ID pass ki gayi hai
+    const activePage = document.getElementById(pageId);
+    activePage.classList.remove('page-hidden');
+
+    // Sidebar band karo (agar mobile pe hain)
+    const sidebar = document.getElementById('sidebar');
+    if(sidebar) sidebar.classList.add('translate-x-full');
+
+    // Top pe le jao
+    window.scrollTo(0, 0);
+}
 </script>
 </body>
 </html>
