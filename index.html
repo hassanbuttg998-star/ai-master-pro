@@ -296,19 +296,27 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
     sidebar.classList.toggle('translate-x-full');
         }
         function showPage(pageId) {
-    // Saare pages ko hide karo
+    // 1. Saare sections dhoondo jin mein 'page-content' class hai
     const pages = document.querySelectorAll('.page-content');
-    pages.forEach(p => p.classList.add('page-hidden'));
+    
+    // 2. Sab ko hide kar do
+    pages.forEach(p => {
+        p.classList.add('page-hidden');
+    });
 
-    // Sirf us page ko dikhao jiski ID pass ki gayi hai
+    // 3. Sirf usay dikhao jis par click hua hai
     const activePage = document.getElementById(pageId);
-    activePage.classList.remove('page-hidden');
+    if(activePage) {
+        activePage.classList.remove('page-hidden');
+    }
 
-    // Sidebar band karo (agar mobile pe hain)
+    // 4. Sidebar band karo (Mobile ke liye)
     const sidebar = document.getElementById('sidebar');
-    if(sidebar) sidebar.classList.add('translate-x-full');
+    if(sidebar) {
+        sidebar.classList.add('translate-x-full');
+    }
 
-    // Top pe le jao
+    // 5. Screen ke top par jao
     window.scrollTo(0, 0);
 }
 </script>
