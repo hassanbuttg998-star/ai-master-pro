@@ -45,32 +45,43 @@
     }
 </style>
 </head>
-<body class="text-gray-200">
-
-    <nav class="p-6 sticky top-0 z-50 glass shadow-2xl">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold gradient-text">AI Master Pro</h1>
-            <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest">
-                <a href="#tool" class="hover:text-blue-400 transition">Tool</a>
-                <a href="#samples" class="hover:text-blue-400 transition">Samples</a>
-                <a href="#about" class="hover:text-blue-400 transition">About Dev</a>
-            </div>
+<body class="min-h-screen">
+    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto sticky top-0 z-50 backdrop-blur-md">
+        <div class="text-2xl font-black tracking-tighter gradient-text">AI MASTER <span class="text-white">PRO</span></div>
+        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
+            <a href="#" class="hover:text-white transition">Home</a>
+            <a href="#" class="hover:text-white transition">AI Portrait</a>
+            <a href="#" class="hover:text-white transition">About Dev</a>
         </div>
+        <button class="text-xs border border-white/20 px-4 py-2 rounded-full">v1.0 Beta</button>
     </nav>
 
-    <section id="tool" class="py-20 px-4 animate__animated animate__fadeIn">
-        <div class="max-w-4xl mx-auto text-center">
-           <h2 class="text-5xl md:text-6xl font-bold mb-8">Stop Writing, <br><span class="gradient-text">Start Creating.</span></h2>
+    <main class="max-w-4xl mx-auto px-6 pt-20 text-center">
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+            Next-Gen <span class="gradient-text">Prompt</span> <br>Studio
+        </h1>
+        <p class="text-gray-400 text-lg mb-12 max-w-2xl mx-auto">
+            Gora ho ya Desi, create professional prompts in English or Roman Urdu.
+        </p>
 
-<div class="glass p-2 rounded-2xl flex flex-col md:flex-row shadow-2xl mb-6">
-    <input id="userInput" type="text" placeholder="Imagine something... (e.g. Neon Samurai)" 
-           class="bg-transparent flex-1 p-5 outline-none text-white text-lg">
-    <button onclick="generatePrompt()" 
-            class="bg-blue-600 hover:bg-blue-500 px-10 py-5 rounded-xl font-bold transition-all shadow-lg active:scale-95">
-        Generate ✨
-    </button>
-</div>
-
+        <div class="glass-card p-2 md:p-3 flex flex-col md:flex-row gap-2">
+            <input type="text" id="userInput" 
+                   placeholder="E.g. Jungle mein sher ud raha ho..." 
+                   class="flex-1 bg-transparent border-none outline-none p-4 text-white text-lg">
+            <button onclick="generatePowerPrompt()" 
+                    class="btn-premium px-8 py-4 rounded-xl font-bold text-white">
+                GENERATE MAGIC
+            </button>
+        </div>
+        
+        <div id="resultBox" class="hidden mt-8 text-left">
+            <div class="glass-card p-6 border-l-4 border-l-indigo-500">
+                <p id="finalPrompt" class="text-gray-200 italic"></p>
+                <button onclick="copyPrompt()" class="mt-4 text-xs text-indigo-400 font-bold uppercase">Copy Prompt</button>
+            </div>
+        </div>
+    </main>
+</body>
 <!-- Ab ye line search bar ke niche aur behtar design mein hai -->
 <p class="text-blue-300/60 text-sm md:text-base italic tracking-wide">
     The world's simplest AI prompt tool for Midjourney & Leonardo AI creators.
