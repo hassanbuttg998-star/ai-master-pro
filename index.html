@@ -29,16 +29,31 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
 </style>
 </head>
 <body class="min-h-screen">
-    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto sticky top-0 z-50 backdrop-blur-md">
-        <div class="text-2xl font-black tracking-tighter gradient-text">AI MASTER <span class="text-white">PRO</span></div>
-        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-            <a href="#" class="hover:text-white transition">Home</a>
-            <a href="#" class="hover:text-white transition">AI Portrait</a>
-            <a href="#" class="hover:text-white transition">About Dev</a>
-        </div>
-        <button class="text-xs border border-white/20 px-4 py-2 rounded-full">v1.0 Beta</button>
-    </nav>
+    <div id="sidebar" class="fixed top-0 right-0 h-full w-64 bg-[#030712] z-[100] translate-x-full border-l border-white/10 p-6 shadow-2xl transition-transform duration-300">
+    <button onclick="toggleMenu()" class="text-white mb-8 text-3xl font-light">&times;</button>
+    <div class="flex flex-col gap-6 font-medium">
+        <a href="#home" onclick="toggleMenu()" class="text-white hover:text-indigo-400">Home</a>
+        <a href="#tools" onclick="toggleMenu()" class="text-indigo-400 font-bold">⚡ All Tools</a>
+        <a href="#samples" onclick="toggleMenu()" class="text-white hover:text-indigo-400">Samples</a>
+        <a href="#about" onclick="toggleMenu()" class="text-white hover:text-indigo-400">Dev Info</a>
+    </div>
+</div>
 
+<nav class="flex justify-between items-center p-6 max-w-7xl mx-auto sticky top-0 z-50 backdrop-blur-md border-b border-white/5">
+    <div class="text-2xl font-black gradient-text tracking-tighter">AI MASTER PRO</div>
+    
+    <div class="hidden md:flex gap-8 items-center text-sm font-semibold">
+        <a href="#home" class="text-gray-400 hover:text-white transition">Home</a>
+        <a href="#tools" class="text-gray-400 hover:text-white transition">Tools</a>
+        <a href="#about" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-500 transition">Dev Info</a>
+    </div>
+
+    <button onclick="toggleMenu()" class="md:hidden flex flex-col gap-1.5">
+        <div class="w-7 h-1 bg-indigo-500 rounded-full"></div>
+        <div class="w-5 h-1 bg-white rounded-full"></div>
+        <div class="w-7 h-1 bg-indigo-500 rounded-full"></div>
+    </button>
+</nav>
     <main class="max-w-4xl mx-auto px-6 pt-20 text-center">
         <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
             Next-Gen <span class="gradient-text">Prompt</span> <br>Studio
