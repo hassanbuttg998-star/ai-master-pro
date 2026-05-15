@@ -164,19 +164,47 @@
 </footer>
 
     <script>
-        function generatePrompt() {
-            const input = document.getElementById('userInput').value;
-            const resultBox = document.getElementById('resultBox');
-            const finalPrompt = document.getElementById('finalPrompt');
-            if(!input) return;
-            const mod = "cinematic lighting, 8k, highly detailed, unreal engine 5, masterpiece, sharp focus";
-            finalPrompt.innerText = input + ", " + mod;
-            resultBox.classList.remove('hidden');
+    function generatePowerPrompt() {
+        let input = document.getElementById('userInput').value.toLowerCase();
+        let resultBox = document.getElementById('resultBox');
+        let finalPrompt = document.getElementById('finalPrompt');
+
+        if(input.trim() === "") {
+            alert("Kuch likho toh sahi, Hassan bhai!");
+            return;
         }
-        function copyText() {
-            navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText);
-            alert("Copied!");
+
+        // Roman Urdu to English Mapping (Step 3 Teaser)
+        let translationMap = {
+            "larka": "man",
+            "larki": "woman",
+            "paharon": "mountains",
+            "sher": "lion",
+            "ud raha": "flying",
+            "jungle": "forest",
+            "khubsurat": "stunningly beautiful"
+        };
+
+        // Replace Urdu words with English
+        for (let word in translationMap) {
+            input = input.replace(new RegExp(word, 'g'), translationMap[word]);
         }
-    </script>
+
+        // Step 1: Power Expansion (Adjectives)
+        let proMagic = "cinematic lighting, hyper-realistic, 8k, highly detailed, professional photography, unreal engine 5 render --v 6.0";
+        
+        // Final Output
+        let finalOutput = input + ", " + proMagic;
+        
+        finalPrompt.innerText = finalOutput;
+        resultBox.style.display = "block";
+    }
+
+    function copyPrompt() {
+        let text = document.getElementById('finalPrompt').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Prompt Copied! Ab ja kar AI par paste karein.");
+    }
+</script>
 </body>
 </html>
