@@ -36,8 +36,8 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
     <div id="sidebar" class="fixed top-0 right-0 h-full w-64 bg-[#030712] z-[100] translate-x-full border-l border-white/10 p-6 shadow-2xl transition-transform duration-300">
     <button onclick="toggleMenu()" class="text-white mb-8 text-3xl font-light">&times;</button>
     <div class="flex flex-col gap-6 font-medium">
-        <a href="#home" onclick="showPage('home')"="toggleMenu()" class="text-white hover:text-indigo-400">Home</a>
-        <a href="#tools" onclick="showPage('tools')"="toggleMenu()" class="text-indigo-400 font-bold">⚡ All Tools</a>
+        <a href="javascript:void(0)" onclick="showPage('home')" class="text-white">Home</a>
+        <a href="javascript:void(0)" onclick="showPage('tools')" class="text-indigo-400 font-bold">⚡ All Tools</a>
         <a href="#samples" onclick="showPage('samples')"="toggleMenu()" class="text-white hover:text-indigo-400">Samples</a>
         <a href="#about" onclick="showPage('about')"="toggleMenu()" class="text-white hover:text-indigo-400">Dev Info</a>
     </div>
@@ -47,8 +47,8 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
     <div class="text-2xl font-black gradient-text tracking-tighter">AI MASTER PRO</div>
     
     <div class="hidden md:flex gap-8 items-center text-sm font-semibold">
-        <a href="#home" class="text-gray-400 hover:text-white transition">Home</a>
-        <a href="#tools" class="text-gray-400 hover:text-white transition">Tools</a>
+        <a href="javascript:void(0)" onclick="showPage('home')" class="text-gray-400 hover:text-white">Home</a>
+        <a href="javascript:void(0)" onclick="showPage('tools')" class="text-gray-400 hover:text-white">Tools</a>
         <a href="#about" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-500 transition">Dev Info</a>
     </div>
 
@@ -84,9 +84,9 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
         <p class="text-gray-500 max-w-xl text-lg mb-10 font-light mx-auto">
             The world's first Roman Urdu to AI Prompt studio. <br>Convert your thoughts into 8K cinematic art instantly.
         </p>
-        <a href="#tools" class="btn-premium px-12 py-5 rounded-2xl font-bold text-white shadow-xl shadow-indigo-500/20 inline-block">
-            START CREATION
-        </a>
+        <button onclick="showPage('tools')" class="btn-premium px-12 py-5 rounded-2xl font-bold text-white shadow-xl shadow-indigo-500/20 inline-block border-none cursor-pointer">
+    START CREATION
+</button>
     </div>
 </main>
 
