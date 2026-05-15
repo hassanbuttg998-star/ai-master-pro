@@ -171,6 +171,32 @@
             navigator.clipboard.writeText(text);
             alert("Prompt copied to clipboard!");
         }
+        // Step 3: Sample Filter Logic
+const sampleData = [
+    { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3f2-0d68-6660-bc4d-a28ab05e99a2/lucid-origin_Ancient_God_volumetric_liCyberpunk_Cat_surrealism_style_vivid_colors_dreamlike_a-0.jpg', title: 'Cyberpunk Cat' },
+    { type: 'newest', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3fa-7402-6990-adc6-85eaef128a74/lucid-origin_futuristic_City_with_traffic_surrealism_style_vivid_colors_dreamlike_atmosphere_-0.jpg', title: 'Futuristic City' },
+    { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f41e-75df-68c0-970b-c1474825050b/lucid-origin_Astronaut_in_space_cinematic_lighting_8k_highly_detailed_unreal_engine_5_masterp-0.jpg', title: 'Astronaut Art' }
+];
+
+function filterSamples(category) {
+    const grid = document.getElementById('samples-grid');
+    if(!grid) return;
+    grid.innerHTML = ''; 
+
+    const filtered = sampleData.filter(item => item.type === category);
+    
+    filtered.forEach(item => {
+        grid.innerHTML += `
+            <div class="glass-card p-4 animate__animated animate__fadeInUp">
+                <img src="${item.img}" class="h-64 w-full object-cover rounded-xl mb-4 shadow-lg">
+                <p class="text-xs font-bold text-indigo-400 uppercase tracking-widest text-center">${item.title}</p>
+            </div>
+        `;
+    });
+}
+
+// Ye line zarur likhen taake page khulte hi trending images nazar ayen
+window.onload = () => { filterSamples('trending'); };
     </script>
 </body>
     </html>
