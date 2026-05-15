@@ -36,10 +36,10 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
     <div id="sidebar" class="fixed top-0 right-0 h-full w-64 bg-[#030712] z-[100] translate-x-full border-l border-white/10 p-6 shadow-2xl transition-transform duration-300">
     <button onclick="toggleMenu()" class="text-white mb-8 text-3xl font-light">&times;</button>
     <div class="flex flex-col gap-6 font-medium">
-        <a href="#home" onclick="toggleMenu()" class="text-white hover:text-indigo-400">Home</a>
-        <a href="#tools" onclick="toggleMenu()" class="text-indigo-400 font-bold">⚡ All Tools</a>
-        <a href="#samples" onclick="toggleMenu()" class="text-white hover:text-indigo-400">Samples</a>
-        <a href="#about" onclick="toggleMenu()" class="text-white hover:text-indigo-400">Dev Info</a>
+        <a href="#home" onclick="showPage('home')"="toggleMenu()" class="text-white hover:text-indigo-400">Home</a>
+        <a href="#tools" onclick="showPage('tools')"="toggleMenu()" class="text-indigo-400 font-bold">⚡ All Tools</a>
+        <a href="#samples" onclick="showPage('samples')"="toggleMenu()" class="text-white hover:text-indigo-400">Samples</a>
+        <a href="#about" onclick="showPage('about')"="toggleMenu()" class="text-white hover:text-indigo-400">Dev Info</a>
     </div>
 </div>
 
