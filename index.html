@@ -147,6 +147,32 @@
     </footer>
 
     <script>
+        // Ye function slider ko open/close karega
+function toggleMobileMenu() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('translate-x-full');
+    }
+}
+
+// Ye function page badalne ke liye hai
+function showPage(pageId) {
+    const pages = document.querySelectorAll('.page-content');
+    pages.forEach(p => p.classList.remove('active-page'));
+
+    const target = document.getElementById(pageId);
+    if(target) {
+        target.classList.add('active-page');
+    }
+
+    // Link click hote hi sidebar khud band ho jaye
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.add('translate-x-full');
+    }
+
+    window.scrollTo(0, 0);
+}
         // ROUTING SYSTEM (Step 1 & 6)
         function showPage(pageId) {
             const pages = document.querySelectorAll('.page-content');
