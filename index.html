@@ -272,6 +272,10 @@ body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: whi
         navigator.clipboard.writeText(text);
         alert("Prompt Copied!");
     }
+        function toggleMenu() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('translate-x-full');
+        }
 </script>
 </body>
 </html>
