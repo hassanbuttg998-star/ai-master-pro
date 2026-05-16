@@ -336,27 +336,58 @@ body {
     </footer>
 
     <script>
-        function toggleMobileMenu() {
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar) sidebar.classList.toggle('translate-x-full');
-        }
+        // --- SIDEBAR & NAVIGATION MASTER LOGIC ---
 
-        function showPage(pageId) {
+// 1. Sidebar ke bahar click karne par band hona
+document.addEventListener('click', (e) => {
+    const sidebar = document.getElementById('sidebar');
+    const menuBtn = document.querySelector('button[onclick*="toggleMobileMenu"]'); 
+    
+    // Agar sidebar khula hai aur click sidebar ya menu button ke bahar hua hai
+    if (sidebar && !sidebar.classList.contains('translate-x-full')) {
+        if (!sidebar.contains(e.target) && (!menuBtn || !menuBtn.contains(e.target))) {
+            sidebar.classList.add('translate-x-full');
+        }
+    }
+});
+
+function toggleMobileMenu() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('translate-x-full');
+}
+
+// 2. Advanced Navigation (Back Button Support)
+function showPage(pageId, pushState = true) {
     const pages = document.querySelectorAll('.page-content');
     pages.forEach(p => p.classList.remove('active-page'));
     
     const target = document.getElementById(pageId);
     if(target) {
         target.classList.add('active-page');
+        // Browser history mein save karna taake back button kaam kare
+        if(pushState) {
+            history.pushState({pageId: pageId}, null, "");
+        }
     }
     
-    // Sidebar band karne ke liye (Mobile ke liye)
+    // Sidebar ko band karna har click par
     const sidebar = document.getElementById('sidebar');
     if(sidebar) sidebar.classList.add('translate-x-full');
     
     window.scrollTo(0, 0);
+
+    // Agar Gallery (Samples) page khule toh images render karna
+    if(pageId === 'samples') renderSamples();
 }
 
+// 3. Mobile Back Button Handle Logic
+window.onpopstate = function(event) {
+    if(event.state && event.state.pageId) {
+        showPage(event.state.pageId, false);
+    } else {
+        showPage('home', false);
+    }
+};
      let selectedStyle = 'cinematic'; // Default style
 
 function setStyle(style) {
@@ -476,7 +507,10 @@ function copyPortraitPrompt() {
     });
 }
 
-        window.onload = renderSamples;
+       window.onload = () => {
+    showPage('home', true); // Taake site hamesha Home se shuru ho
+    renderSamples();        // Taake images load ho jayein
+};
     </script>
 </body>
 </html>
