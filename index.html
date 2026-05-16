@@ -125,7 +125,55 @@
             </div>
         </div>
     </section>
+<section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
+    <div class="max-w-6xl mx-auto">
+        <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2 transition">← Back to Hub</button>
+        
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-4 text-white">
+                Portrait <span class="text-indigo-500">Transformer</span>
+            </h2>
+            <p class="text-gray-500 uppercase tracking-[0.3em] text-[10px] font-bold">Select a style to generate your elite AI avatar prompt</p>
+        </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div onclick="generatePortrait('cyberpunk')" class="glass-card p-4 cursor-pointer hover:border-indigo-500/50 transition-all group">
+                <div class="h-48 bg-indigo-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
+                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/0b556942-8c11-4796-930c-2646c827b500/Default_Cyberpunk_warrior_neon_lights_highly_detailed_8k_0.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <h3 class="text-lg font-bold text-white mb-1">Cyberpunk Neon</h3>
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Neon & Tech Vibe</p>
+            </div>
+            <div onclick="generatePortrait('viking')" class="glass-card p-4 cursor-pointer hover:border-orange-500/50 transition-all group">
+                <div class="h-48 bg-orange-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
+                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/8f16b23a-555e-4993-9c8e-3c5a61066474/Default_Viking_warrior_cinematic_lighting_highly_detailed_8k_0.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <h3 class="text-lg font-bold text-white mb-1">Ancient Viking</h3>
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Raw & Gritty Look</p>
+            </div>
+            <div onclick="generatePortrait('avatar')" class="glass-card p-4 cursor-pointer hover:border-purple-500/50 transition-all group">
+                <div class="h-48 bg-purple-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
+                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/3a8e7e22-6e2c-4933-9f5b-c290137785c4/Default_Pixar_style_3d_character_highly_detailed_8k_0.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <h3 class="text-lg font-bold text-white mb-1">3D Pixar Style</h3>
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Modern 3D Art</p>
+            </div>
+            <div onclick="generatePortrait('business')" class="glass-card p-4 cursor-pointer hover:border-blue-500/50 transition-all group">
+                <div class="h-48 bg-blue-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
+                    <img src="https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1b747062-8178-4395-8e36-40742f89c62c/Default_Professional_business_headshot_cinematic_lighting_hig_0.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <h3 class="text-lg font-bold text-white mb-1">Pro Headshot</h3>
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Sharp & Corporate</p>
+            </div>
+        </div>
+
+        <div id="portraitResult" class="hidden mt-16 glass-card p-10 border-indigo-500/30 border animate__animated animate__fadeInUp max-w-2xl mx-auto text-center relative overflow-hidden">
+            <h4 id="portraitStyleName" class="text-indigo-400 font-black uppercase text-[10px] tracking-[0.4em] mb-6">Style Generated</h4>
+            <p id="portraitFinalPrompt" class="text-xl italic text-gray-200 mb-8 leading-relaxed"></p>
+            <button onclick="copyPortraitPrompt()" class="btn-premium px-10 py-4 rounded-2xl font-bold transition shadow-lg">Copy Portrait Prompt</button>
+        </div>
+    </div>
+</section>
     <section id="samples" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-4xl font-black mb-4 text-center italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> Gallery</h2>
@@ -230,6 +278,38 @@ function generatePowerPrompt() {
     finalPrompt.innerText = expandedPrompt;
     resultBox.classList.remove('hidden');
     resultBox.classList.add('animate__animated', 'animate__zoomIn');
+}
+        // --- PORTRAIT TRANSFORMER LOGIC ---
+
+function generatePortrait(style) {
+    const portraitResult = document.getElementById('portraitResult');
+    const styleName = document.getElementById('portraitStyleName');
+    const finalPrompt = document.getElementById('portraitFinalPrompt');
+
+    // Har style ke liye alag heavy cinematic prompt
+    const portraitPrompts = {
+        cyberpunk: "Close-up portrait of a character in cyberpunk gear, neon purple and cyan lighting reflecting on face, hyper-realistic, high-tech visor, raining city background, 8k, cinematic shot --v 6.0",
+        viking: "Intense close-up of a Viking warrior, braided beard, war paint on face, wearing fur and leather armor, cinematic lighting, snowy mountain background, hyper-detailed, 8k, photorealistic --v 6.0",
+        avatar: "Cute 3D character portrait, Pixar style, big expressive eyes, soft studio lighting, vibrant colors, 4k render, Unreal Engine 5, clean background, masterpiece --v 6.0",
+        business: "Professional corporate headshot, man in a tailored charcoal suit, confident smile, blurred modern office background, soft natural lighting, high-end photography, sharp focus --v 6.0"
+    };
+
+    // UI update karna
+    styleName.innerText = style.toUpperCase() + " STYLE GENERATED";
+    finalPrompt.innerText = portraitPrompts[style];
+    
+    // Result box dikhana aur scroll karna
+    portraitResult.classList.remove('hidden');
+    setTimeout(() => {
+        portraitResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+}
+
+function copyPortraitPrompt() {
+    let text = document.getElementById('portraitFinalPrompt').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Portrait prompt copied! Paste it in your AI generator.");
+    });
 }
         function copyPrompt() {
             let text = document.getElementById('finalPrompt').innerText;
