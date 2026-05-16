@@ -41,6 +41,7 @@
             <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-white transition">Home</a>
             <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="hover:text-white transition">Tools Hub</a>
             <a href="javascript:void(0)" onclick="showPage('samples')" class="hover:text-white transition">Showcase</a>
+            <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="hover:text-white transition">Guide</a>
             <button onclick="showPage('about-dev')" class="bg-indigo-600/90 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-500 hover:shadow-[0_0_20px_-5px_rgba(99,102,241,0.5)] transition-all">Developer</button>
         </div>
         
@@ -54,6 +55,7 @@
             <a href="javascript:void(0)" onclick="showPage('home')" class="text-white text-lg">Home</a>
             <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="text-indigo-400 text-lg">⚡ Tools Hub</a>
             <a href="javascript:void(0)" onclick="showPage('samples')" class="text-white text-lg">Showcase</a>
+            <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="hover:text-white transition">Guide</a>
             <a href="javascript:void(0)" onclick="showPage('about-dev')" class="text-white text-lg">Developer</a>
         </div>
     </div>
@@ -71,6 +73,7 @@
             </p>
             <div class="flex flex-wrap justify-center gap-4">
                 <button onclick="showPage('tools-hub')" class="btn-premium px-10 py-4 rounded-2xl font-bold text-lg">Launch Studio</button>
+                <button onclick="showPage('about-frazx')" class="px-10 py-4 rounded-2xl font-bold text-lg border border-indigo-500/20 hover:bg-indigo-500/10 transition ml-2">Learn More</button>
                 <button onclick="showPage('samples')" class="px-10 py-4 rounded-2xl font-bold text-lg border border-white/10 hover:bg-white/5 transition">View Gallery</button>
             </div>
         </div>
@@ -282,14 +285,20 @@
         }
 
         function showPage(pageId) {
-            const pages = document.querySelectorAll('.page-content');
-            pages.forEach(p => p.classList.remove('active-page'));
-            const target = document.getElementById(pageId);
-            if(target) target.classList.add('active-page');
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar) sidebar.classList.add('translate-x-full');
-            window.scrollTo(0, 0);
-        }
+    const pages = document.querySelectorAll('.page-content');
+    pages.forEach(p => p.classList.remove('active-page'));
+    
+    const target = document.getElementById(pageId);
+    if(target) {
+        target.classList.add('active-page');
+    }
+    
+    // Sidebar band karne ke liye (Mobile ke liye)
+    const sidebar = document.getElementById('sidebar');
+    if(sidebar) sidebar.classList.add('translate-x-full');
+    
+    window.scrollTo(0, 0);
+}
 
      let selectedStyle = 'cinematic'; // Default style
 
