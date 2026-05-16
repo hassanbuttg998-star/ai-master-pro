@@ -324,18 +324,32 @@ function copyPortraitPrompt() {
         ];
 
         function renderSamples() {
-            const grid = document.getElementById('samples-grid');
-            if(!grid) return;
-            grid.innerHTML = ''; 
-            sampleData.forEach(item => {
-                grid.innerHTML += `
-                    <div class="glass-card p-4 animate__animated animate__fadeInUp">
-                        <img src="${item.img}" class="h-64 w-full object-cover rounded-xl mb-4 shadow-lg hover:scale-[1.02] transition duration-500">
-                        <p class="text-xs font-bold text-indigo-400 uppercase tracking-widest text-center italic">${item.title}</p>
-                    </div>
-                `;
-            });
-        }
+    const grid = document.getElementById('samples-grid');
+    if(!grid) return;
+    
+    // In prompts ki jagah aap apni images ke links bhi daal sakte hain
+    const samples = [
+        "cinematic masterpiece of a neon tiger in futuristic city",
+        "ethereal goddess portrait with golden lighting",
+        "cyberpunk street samurai in heavy rain high detail",
+        "ancient dragon over a mountain peak 8k cinematic",
+        "astronaut floating in a galaxy of flowers",
+        "steampunk locomotive in a desert sunset"
+    ];
+
+    grid.innerHTML = ''; 
+    samples.forEach(prompt => {
+        grid.innerHTML += `
+            <div class="glass-card p-4 animate__animated animate__fadeInUp group">
+                <div class="h-80 overflow-hidden rounded-xl mb-4">
+                    <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=500&height=700&nologo=true" 
+                         class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest text-center italic opacity-60">FRAZX ENGINE RENDER</p>
+            </div>
+        `;
+    });
+}
 
         window.onload = renderSamples;
     </script>
