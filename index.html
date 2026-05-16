@@ -178,15 +178,34 @@
             window.scrollTo(0, 0);
         }
 
-        function generatePowerPrompt() {
-            let input = document.getElementById('userInput').value;
-            let resultBox = document.getElementById('resultBox');
-            let finalPrompt = document.getElementById('finalPrompt');
-            if(input.trim() === "") return alert("Please enter your thoughts first!");
-            finalPrompt.innerText = input + ", hyper-realistic cinematic portrait, shot on 35mm lens, 8k, photorealistic, intricate details, moody lighting --v 6.0";
-            resultBox.classList.remove('hidden');
-        }
+       function generatePowerPrompt() {
+    let input = document.getElementById('userInput').value;
+    let resultBox = document.getElementById('resultBox');
+    let finalPrompt = document.getElementById('finalPrompt');
+    
+    if(input.trim() === "") return alert("Pehle kuch likho toh sahi, Hassan bhai!");
 
+    // 1. Creative Adjectives & Styles (Ye cheezein user ke input ko professional banayengi)
+    const lighting = ["volumetric cinematic lighting", "golden hour sun rays", "neon cyberpunk ambiance", "soft dramatic shadows", "ethereal misty lighting", "bioluminescent glow"];
+    const camera = ["shot on 35mm lens", "ultra-wide angle cinematic perspective", "macro photography detail", "depth of field f/1.8", "low angle heroic shot", "aerial drone view"];
+    const textures = ["hyper-realistic textures", "intricate fine details", "sharp focus", "masterpiece quality", "8k resolution", "photorealistic skin pores"];
+    const engine = ["Unreal Engine 5 render", "Octane Render", "Ray traced shadows", "highly detailed digital art", "Pixar style 3D", "Cinematic color grading"];
+
+    // 2. Random selection taake har baar naya result mile
+    let l = lighting[Math.floor(Math.random() * lighting.length)];
+    let c = camera[Math.floor(Math.random() * camera.length)];
+    let t = textures[Math.floor(Math.random() * textures.length)];
+    let e = engine[Math.floor(Math.random() * engine.length)];
+
+    // 3. User ke input ko expand karna
+    // Ismein humne weighting (1.2) aur professional tags khud se add kar diye hain
+    let expandedPrompt = `(Masterpiece:1.2), A high-end cinematic depiction of ${input}, ${l}, ${c}, ${t}, ${e}, incredibly detailed environment, atmospheric perspective, professional color grading, --v 6.0 --ar 16:9 --stylize 250`;
+
+    // 4. Result dikhana aur animation apply karna
+    finalPrompt.innerText = expandedPrompt;
+    resultBox.classList.remove('hidden');
+    resultBox.classList.add('animate__animated', 'animate__zoomIn');
+}
         function copyPrompt() {
             let text = document.getElementById('finalPrompt').innerText;
             navigator.clipboard.writeText(text);
