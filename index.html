@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AEVO LABS | The Ultimate AI Prompt Ecosystem</title>
+    <title>FRAZX | Cinematic AI Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
@@ -22,41 +22,53 @@
 
     <nav class="fixed top-0 w-full z-[100] backdrop-blur-xl border-b border-white/5">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-black tracking-tighter cursor-pointer" onclick="showPage('home')">
-                AEVO<span class="text-indigo-500">LABS</span>
+            <div class="flex items-center gap-2 group cursor-pointer" onclick="showPage('home')">
+                <div class="relative w-10 h-10 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-indigo-600/20 rounded-lg blur-sm group-hover:bg-indigo-500/40 transition"></div>
+                    <div class="relative bg-black border border-white/10 w-full h-full rounded-lg flex items-center justify-center">
+                        <span class="text-white font-black text-xl italic">X</span>
+                    </div>
+                </div>
+                <div class="flex flex-col leading-none">
+                    <span class="text-2xl font-black tracking-tighter text-white uppercase">FRAZ<span class="text-indigo-500">X</span></span>
+                    <span class="text-[8px] tracking-[0.4em] text-gray-500 font-bold uppercase italic">Cinematic AI Lab</span>
+                </div>
             </div>
+
             <div class="hidden md:flex gap-8 items-center text-sm font-medium text-gray-400">
                 <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-white">Home</a>
                 <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="hover:text-white">Tools Hub</a>
                 <a href="javascript:void(0)" onclick="showPage('samples')" class="hover:text-white">Showcase</a>
-                <button onclick="showPage('about-dev')" class="bg-indigo-600 text-white px-5 py-2 rounded-xl hover:bg-indigo-500">Developer</button>
+                <button onclick="showPage('about-dev')" class="bg-indigo-600 text-white px-5 py-2 rounded-xl hover:bg-indigo-500 transition">Developer</button>
             </div>
             <button onclick="toggleMobileMenu()" class="md:hidden text-2xl">☰</button>
         </div>
     </nav>
-<div id="sidebar" class="fixed top-0 right-0 h-[100dvh] w-64 bg-[#020617] z-[150] translate-x-full border-l border-white/10 p-6 shadow-2xl transition-transform duration-300 ease-in-out">
-    <button onclick="toggleMobileMenu()" class="text-white mb-10 text-4xl font-light">&times;</button>
-    <div class="flex flex-col gap-8 font-semibold">
-        <a href="javascript:void(0)" onclick="showPage('home')" class="text-white text-lg">Home</a>
-        <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="text-indigo-400 text-lg">⚡ Tools Hub</a>
-        <a href="javascript:void(0)" onclick="showPage('samples')" class="text-white text-lg">Showcase</a>
-        <a href="javascript:void(0)" onclick="showPage('about-dev')" class="text-white text-lg">Developer</a>
+
+    <div id="sidebar" class="fixed top-0 right-0 h-[100dvh] w-64 bg-[#020617] z-[150] translate-x-full border-l border-white/10 p-6 shadow-2xl transition-transform duration-300 ease-in-out">
+        <button onclick="toggleMobileMenu()" class="text-white mb-10 text-4xl font-light">&times;</button>
+        <div class="flex flex-col gap-8 font-semibold">
+            <a href="javascript:void(0)" onclick="showPage('home')" class="text-white text-lg">Home</a>
+            <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="text-indigo-400 text-lg">⚡ Tools Hub</a>
+            <a href="javascript:void(0)" onclick="showPage('samples')" class="text-white text-lg">Showcase</a>
+            <a href="javascript:void(0)" onclick="showPage('about-dev')" class="text-white text-lg">Developer</a>
+        </div>
     </div>
-</div>
-    <main id="home" class="page-content active-page pt-32 pb-20 px-6 animate__animated animate__fadeIn">
+
+    <main id="home" class="page-content active-page pt-40 pb-20 px-6 animate__animated animate__fadeIn">
         <div class="max-w-5xl mx-auto text-center">
             <div class="inline-block px-4 py-1.5 mb-6 border border-indigo-500/30 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold tracking-widest uppercase">
-                Weekly Update: New Portrait Styles Added
+                FRAZX LIVE: New Engine Updates
             </div>
-            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter">
-                Engineering <br><span class="gradient-text italic">The Future</span> of Art.
+            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter uppercase italic">
+                FRAZ<span class="gradient-text">X</span>
             </h1>
             <p class="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto mb-12 font-light">
-                AEVO LABS provides high-performance AI engines for creators. <br>From Roman Urdu prompts to hyper-realistic portraits.
+                FRAZX provides high-performance AI engines for creators. <br>Master the art of Cinematic Prompt Engineering.
             </p>
             <div class="flex flex-wrap justify-center gap-4">
                 <button onclick="showPage('tools-hub')" class="btn-premium px-10 py-4 rounded-2xl font-bold text-lg">Launch Studio</button>
-                <button onclick="showPage('about-site')" class="px-10 py-4 rounded-2xl font-bold text-lg border border-white/10 hover:bg-white/5">Our Vision</button>
+                <button onclick="showPage('samples')" class="px-10 py-4 rounded-2xl font-bold text-lg border border-white/10 hover:bg-white/5 transition">View Gallery</button>
             </div>
         </div>
     </main>
@@ -64,8 +76,8 @@
     <section id="tools-hub" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-12">
-                <h2 class="text-4xl font-black">AEVO <span class="text-indigo-500">Toolkit</span></h2>
-                <button onclick="showPage('home')" class="text-sm text-gray-500 hover:text-white">← Back to Home</button>
+                <h2 class="text-4xl font-black italic uppercase tracking-tighter text-white">FRAZ<span class="text-indigo-500 text-5xl">X</span> LAB</h2>
+                <button onclick="showPage('home')" class="text-sm text-gray-500 hover:text-white transition">← Back to Home</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div onclick="showPage('prompt-engine')" class="glass-card tool-card p-8 cursor-pointer transition duration-300">
@@ -83,7 +95,7 @@
                 <div class="glass-card p-8 opacity-40 border-dashed border-white/10 grayscale">
                     <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-3xl mb-6">🎬</div>
                     <h3 class="text-2xl font-bold mb-3 italic text-gray-400">Video Gen Pro</h3>
-                    <p class="text-gray-400 text-sm mb-6">Experience text-to-cinematic video. This tool is currently in early development.</p>
+                    <p class="text-gray-400 text-sm mb-6">Experience text-to-cinematic video. This tool is currently in development.</p>
                     <span class="text-gray-500 font-bold uppercase text-[10px] tracking-widest border border-white/10 px-2 py-1 rounded">Coming Soon</span>
                 </div>
             </div>
@@ -92,118 +104,83 @@
 
     <section id="prompt-engine" class="page-content pt-32 pb-20 px-6">
         <div class="max-w-4xl mx-auto">
-            <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2">← Back to Hub</button>
-            <h2 class="text-4xl font-black mb-8">Global <span class="gradient-text italic">Prompt Engine</span></h2>
+            <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2 transition">← Back to Hub</button>
+            <h2 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> Prompt Engine</h2>
             <div class="glass-card p-3 flex flex-col md:flex-row gap-3 mb-10">
                 <input type="text" id="userInput" placeholder="Describe your vision in English or Roman Urdu..." class="flex-1 bg-transparent p-4 outline-none text-lg">
                 <button onclick="generatePowerPrompt()" class="btn-premium px-8 py-4 rounded-xl font-bold">Generate</button>
             </div>
             <div id="resultBox" class="hidden glass-card p-8 border-indigo-500/30 border animate__animated animate__zoomIn">
                 <p id="finalPrompt" class="text-xl italic leading-relaxed text-gray-200"></p>
-                <button onclick="copyPrompt()" class="mt-6 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full text-sm">Copy to Clipboard</button>
+                <button onclick="copyPrompt()" class="mt-6 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full text-sm transition">Copy to Clipboard</button>
             </div>
         </div>
     </section>
-<section id="samples" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
+
+    <section id="samples" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
         <div class="max-w-7xl mx-auto">
-            <h2 class="text-4xl font-black mb-4 text-center">AEVO <span class="text-indigo-500">Showcase</span></h2>
-            <p class="text-gray-500 text-center mb-12">Masterpieces engineered by our community.</p>
-            
-            <div class="flex flex-wrap justify-center gap-3 mb-16">
-                <button onclick="filterSamples('trending')" class="px-6 py-2 rounded-full border border-indigo-500/50 bg-indigo-500/10 text-xs font-bold uppercase tracking-widest hover:bg-indigo-500 hover:text-white transition">Trending</button>
-                <button onclick="filterSamples('newest')" class="px-6 py-2 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest hover:border-indigo-500 transition">Newest</button>
-                <button onclick="filterSamples('most-used')" class="px-6 py-2 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest hover:border-indigo-500 transition">Most Used</button>
-            </div>
+            <h2 class="text-4xl font-black mb-4 text-center italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> Gallery</h2>
+            <p class="text-gray-500 text-center mb-12 uppercase tracking-widest text-xs font-bold">Top-Tier AI Visuals Engineered at FRAZX</p>
             <div id="samples-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </div>
     </section>
+
     <section id="about-dev" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
-    <div class="max-w-4xl mx-auto text-center">
-        <div class="glass-card p-12 border-t-4 border-t-indigo-600 relative">
-         <div class="w-40 h-40 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full mx-auto mb-8 p-1 shadow-2xl flex items-center justify-center">
-    <div class="w-full h-full bg-[#010413] rounded-full overflow-hidden">
-    <img src="profile.png" alt="Hassan Fraz" class="w-full h-full object-cover object-top">
-</div>
-</div>
-            
-            <h2 class="text-4xl font-black mb-2 uppercase tracking-tighter text-white">Hassan <span class="text-indigo-500">Fraz</span></h2>
-            <p class="text-indigo-400 font-bold text-xs uppercase tracking-[0.3em] mb-8 border-b border-white/5 pb-4 inline-block">Founder & Lead Prompt Architect</p>
-            
-            <p class="text-gray-400 leading-relaxed mb-10 italic max-w-2xl mx-auto">
-                "My mission is to democratize high-end AI art. AEVO LABS is built for the global creator who demands precision and cinematic excellence."
-            </p>
-            
-            <div class="flex flex-wrap justify-center gap-6">
-                <a href="https://www.instagram.com/hazzy.996" target="_blank" class="bg-gradient-to-r from-pink-500 to-orange-500 px-10 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-lg text-white">Instagram</a>
-                <a href="mailto:hassanbuttg998@gmail.com" class="bg-white/5 border border-white/10 px-10 py-4 rounded-2xl font-bold hover:bg-white/10 transition text-white">Email Founder</a>
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="glass-card p-12 border-t-4 border-t-indigo-600 relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-600/10 blur-3xl"></div>
+                <div class="w-40 h-40 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full mx-auto mb-8 p-1 shadow-2xl flex items-center justify-center">
+                    <div class="w-full h-full bg-[#010413] rounded-full overflow-hidden">
+                        <img src="profile.png" alt="Hassan Fraz" class="w-full h-full object-cover object-top">
+                    </div>
+                </div>
+                <h2 class="text-4xl font-black mb-2 uppercase tracking-tighter text-white">Hassan <span class="text-indigo-500 italic">Fraz</span></h2>
+                <p class="text-indigo-400 font-bold text-xs uppercase tracking-[0.3em] mb-8 border-b border-white/5 pb-4 inline-block">Founder & Lead Architect at FRAZX</p>
+                <p class="text-gray-400 leading-relaxed mb-10 italic max-w-2xl mx-auto">
+                    "My mission is to democratize high-end AI art. FRAZX is built for the global creator who demands precision and cinematic excellence."
+                </p>
+                <div class="flex flex-wrap justify-center gap-6">
+                    <a href="https://www.instagram.com/hazzy.996" target="_blank" class="bg-gradient-to-r from-pink-500 to-orange-500 px-10 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-lg text-white">Instagram</a>
+                    <a href="mailto:hassanbuttg998@gmail.com" class="bg-white/5 border border-white/10 px-10 py-4 rounded-2xl font-bold hover:bg-white/10 transition text-white">Email Founder</a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
-    
+    </section>
+
     <footer class="py-20 border-t border-white/5 bg-black/40">
         <div class="max-w-7xl mx-auto px-6 text-center">
-            <div class="text-2xl font-black mb-4">AEVO<span class="text-indigo-500">LABS</span></div>
+            <div class="text-2xl font-black mb-4 uppercase italic">FRAZ<span class="text-indigo-500">X</span></div>
             <p class="text-gray-500 text-sm mb-8">Empowering the next generation of AI artists globally.</p>
-            <div class="flex justify-center gap-8 text-xs font-bold text-gray-600 uppercase tracking-widest">
-                <a href="#" class="hover:text-white">Terms</a>
+            <div class="flex justify-center gap-8 text-[10px] font-bold text-gray-600 uppercase tracking-widest">
+                <span class="text-indigo-500/50">FRAZX STUDIO &copy; 2026</span>
                 <a href="#" class="hover:text-white">Privacy</a>
-                <a href="#" class="hover:text-white">Updates</a>
+                <a href="#" class="hover:text-white">Terms</a>
             </div>
         </div>
     </footer>
 
     <script>
-        // Ye function slider ko open/close karega
-function toggleMobileMenu() {
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-        sidebar.classList.toggle('translate-x-full');
-    }
-}
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('translate-x-full');
+        }
 
-// Ye function page badalne ke liye hai
-function showPage(pageId) {
-    const pages = document.querySelectorAll('.page-content');
-    pages.forEach(p => p.classList.remove('active-page'));
-
-    const target = document.getElementById(pageId);
-    if(target) {
-        target.classList.add('active-page');
-    }
-
-    // Link click hote hi sidebar khud band ho jaye
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-        sidebar.classList.add('translate-x-full');
-    }
-
-    window.scrollTo(0, 0);
-}
-        // ROUTING SYSTEM (Step 1 & 6)
         function showPage(pageId) {
             const pages = document.querySelectorAll('.page-content');
             pages.forEach(p => p.classList.remove('active-page'));
-            
             const target = document.getElementById(pageId);
-            if(target) {
-                target.classList.add('active-page');
-                window.scrollTo(0, 0);
-            }
+            if(target) target.classList.add('active-page');
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.add('translate-x-full');
+            window.scrollTo(0, 0);
         }
 
         function generatePowerPrompt() {
             let input = document.getElementById('userInput').value;
             let resultBox = document.getElementById('resultBox');
             let finalPrompt = document.getElementById('finalPrompt');
-            
             if(input.trim() === "") return alert("Please enter your thoughts first!");
-
-            // Roman Urdu Mapping (Internal)
-            let mapping = {"larka": "man", "larki": "woman", "sher": "lion", "paharon": "mountains"};
-            for(let key in mapping) { input = input.replace(new RegExp(key, 'g'), mapping[key]); }
-
-            finalPrompt.innerText = input + ", hyper-realistic, 8k, cinematic lighting, unreal engine 5, masterwork --v 6.0";
+            finalPrompt.innerText = input + ", hyper-realistic, 8k, cinematic lighting, photorealistic, shot on 35mm lens, masterwork --v 6.0";
             resultBox.classList.remove('hidden');
         }
 
@@ -212,32 +189,28 @@ function showPage(pageId) {
             navigator.clipboard.writeText(text);
             alert("Prompt copied to clipboard!");
         }
-        // Step 3: Sample Filter Logic
-const sampleData = [
-    { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3f2-0d68-6660-bc4d-a28ab05e99a2/lucid-origin_Ancient_God_volumetric_liCyberpunk_Cat_surrealism_style_vivid_colors_dreamlike_a-0.jpg', title: 'Cyberpunk Cat' },
-    { type: 'newest', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3fa-7402-6990-adc6-85eaef128a74/lucid-origin_futuristic_City_with_traffic_surrealism_style_vivid_colors_dreamlike_atmosphere_-0.jpg', title: 'Futuristic City' },
-    { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f41e-75df-68c0-970b-c1474825050b/lucid-origin_Astronaut_in_space_cinematic_lighting_8k_highly_detailed_unreal_engine_5_masterp-0.jpg', title: 'Astronaut Art' }
-];
 
-function filterSamples(category) {
-    const grid = document.getElementById('samples-grid');
-    if(!grid) return;
-    grid.innerHTML = ''; 
+        const sampleData = [
+            { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3f2-0d68-6660-bc4d-a28ab05e99a2/lucid-origin_Ancient_God_volumetric_liCyberpunk_Cat_surrealism_style_vivid_colors_dreamlike_a-0.jpg', title: 'Cyberpunk Cat' },
+            { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3fa-7402-6990-adc6-85eaef128a74/lucid-origin_futuristic_City_with_traffic_surrealism_style_vivid_colors_dreamlike_atmosphere_-0.jpg', title: 'Futuristic City' },
+            { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f41e-75df-68c0-970b-c1474825050b/lucid-origin_Astronaut_in_space_cinematic_lighting_8k_highly_detailed_unreal_engine_5_masterp-0.jpg', title: 'Astronaut Art' }
+        ];
 
-    const filtered = sampleData.filter(item => item.type === category);
-    
-    filtered.forEach(item => {
-        grid.innerHTML += `
-            <div class="glass-card p-4 animate__animated animate__fadeInUp">
-                <img src="${item.img}" class="h-64 w-full object-cover rounded-xl mb-4 shadow-lg">
-                <p class="text-xs font-bold text-indigo-400 uppercase tracking-widest text-center">${item.title}</p>
-            </div>
-        `;
-    });
-}
+        function renderSamples() {
+            const grid = document.getElementById('samples-grid');
+            if(!grid) return;
+            grid.innerHTML = ''; 
+            sampleData.forEach(item => {
+                grid.innerHTML += `
+                    <div class="glass-card p-4 animate__animated animate__fadeInUp">
+                        <img src="${item.img}" class="h-64 w-full object-cover rounded-xl mb-4 shadow-lg grayscale hover:grayscale-0 transition duration-500">
+                        <p class="text-xs font-bold text-indigo-400 uppercase tracking-widest text-center italic">${item.title}</p>
+                    </div>
+                `;
+            });
+        }
 
-// Ye line zarur likhen taake page khulte hi trending images nazar ayen
-window.onload = () => { filterSamples('trending'); };
+        window.onload = renderSamples;
     </script>
 </body>
-    </html>
+</html>
