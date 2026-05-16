@@ -7,8 +7,40 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        :root { --primary: #6366f1; --accent: #a855f7; --bg: #020617; }
-        body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: white; overflow-x: hidden; }
+        :root { 
+    --primary: #6366f1; 
+    --accent: #a855f7; 
+}
+
+/* Updated Body with Premium Glow */
+body { 
+    background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
+    background-attachment: fixed !important;
+    color: #e2e8f0;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Text Selection Glow */
+::selection {
+    background: rgba(79, 70, 229, 0.4);
+    color: white;
+}
+
+/* Custom Premium Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #050508;
+}
+::-webkit-scrollbar-thumb {
+    background: #1e1e2e;
+    border-radius: 10px;
+    border: 2px solid #050508;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #4f46e5;
+}
         .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
         .gradient-text { background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .btn-premium { background: linear-gradient(45deg, var(--primary), var(--accent)); transition: all 0.3s ease; }
