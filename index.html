@@ -200,7 +200,7 @@ body {
             </div>
             <div onclick="generatePortrait('business')" class="glass-card p-4 cursor-pointer hover:border-blue-500/50 transition-all group">
                 <div class="h-48 bg-blue-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=500&auto=format&fit=crop
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&h=500&auto=format&fit=crop
                 </div>
                 <h3 class="text-lg font-bold text-white mb-1">Pro Headshot</h3>
                 <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Sharp & Corporate</p>
@@ -308,7 +308,7 @@ body {
             </div>
         </div>
     </section>
-<section id="updates" class="page-content py-20 px-6">
+<section id="updates" class="py-20 px-6 border-t border-white/5">
     <div class="max-w-4xl mx-auto text-center">
         <h3 class="text-indigo-500 font-black uppercase text-xs tracking-[0.4em] mb-12">Deployment Roadmap</h3>
         <div class="space-y-4 text-left">
@@ -483,27 +483,23 @@ function copyPortraitPrompt() {
     const grid = document.getElementById('samples-grid');
     if(!grid) return;
     
-    // In prompts ki jagah aap apni images ke links bhi daal sakte hain
-    const samples = [
-        "cinematic masterpiece of a neon tiger in futuristic city",
-        "ethereal goddess portrait with golden lighting",
-        "cyberpunk street samurai in heavy rain high detail",
-        "ancient dragon over a mountain peak 8k cinematic",
-        "astronaut floating in a galaxy of flowers",
-        "steampunk locomotive in a desert sunset"
+    const samplePrompts = [
+        "Cinematic tiger in neon city", 
+        "Cyberpunk samurai rain", 
+        "Ancient dragon mountain 8k",
+        "Astronaut in flower galaxy"
     ];
 
     grid.innerHTML = ''; 
-    samples.forEach(prompt => {
+    samplePrompts.forEach(prompt => {
         grid.innerHTML += `
-            <div class="glass-card p-4 animate__animated animate__fadeInUp group">
-                <div class="h-80 overflow-hidden rounded-xl mb-4">
+            <div class="glass-card p-4 animate__animated animate__fadeInUp">
+                <div class="h-60 overflow-hidden rounded-xl mb-4">
                     <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=500&height=700&nologo=true" 
-                         class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                         class="w-full h-full object-cover hover:scale-110 transition duration-700" alt="AI Visual">
                 </div>
-                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest text-center italic opacity-60">FRAZX ENGINE RENDER</p>
-            </div>
-        `;
+                <p class="text-[10px] font-black text-indigo-400 uppercase text-center italic opacity-60">${prompt}</p>
+            </div>`;
     });
 }
 
