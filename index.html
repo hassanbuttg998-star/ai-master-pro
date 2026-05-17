@@ -4,44 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FRAZX | Cinematic AI Lab</title>
-<link rel="icon" type="image/png" href="https://api.dicebear.com/7.x/bottts/svg?seed=frazx">
+    <link rel="icon" type="image/png" href="https://api.dicebear.com/7.x/bottts/svg?seed=frazx">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        :root { 
-    --primary: #6366f1; 
-    --accent: #a855f7; 
-}
-
-/* Updated Body with Premium Glow */
-body { 
-    background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
-    background-attachment: fixed !important;
-    color: #e2e8f0;
-    font-family: 'Inter', sans-serif;
-}
-
-/* Text Selection Glow */
-::selection {
-    background: rgba(79, 70, 229, 0.4);
-    color: white;
-}
-
-/* Custom Premium Scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: #050508;
-}
-::-webkit-scrollbar-thumb {
-    background: #1e1e2e;
-    border-radius: 10px;
-    border: 2px solid #050508;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #4f46e5;
-}
+        :root { --primary: #6366f1; --accent: #a855f7; }
+        body { 
+            background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
+            background-attachment: fixed !important;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+        ::selection { background: rgba(79, 70, 229, 0.4); color: white; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050508; }
+        ::-webkit-scrollbar-thumb { background: #1e1e2e; border-radius: 10px; border: 2px solid #050508; }
+        ::-webkit-scrollbar-thumb:hover { background: #4f46e5; }
         .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
         .gradient-text { background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .btn-premium { background: linear-gradient(45deg, var(--primary), var(--accent)); transition: all 0.3s ease; }
@@ -53,34 +32,28 @@ body {
 </head>
 <body>
 
-   <nav class="fixed top-0 w-full z-[100] backdrop-blur-xl border-b border-white/5 bg-black/20">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        
-        <div class="flex items-center gap-4 group cursor-pointer" onclick="showPage('home')">
-            <div class="relative w-12 h-12 flex items-center justify-center">
-                <div class="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full group-hover:bg-indigo-500/40 transition"></div>
-                <img src="preview.png" alt="FX" class="relative z-10 w-full h-full object-contain filter brightness-125 contrast-110 group-hover:scale-110 transition duration-300">
+    <nav class="fixed top-0 w-full z-[100] backdrop-blur-xl border-b border-white/5 bg-black/20">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4 group cursor-pointer" onclick="showPage('home')">
+                <div class="relative w-12 h-12 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full group-hover:bg-indigo-500/40 transition"></div>
+                    <img src="preview.png" alt="FX" class="relative z-10 w-full h-full object-contain filter brightness-125 contrast-110 group-hover:scale-110 transition duration-300">
+                </div>
+                <div class="flex flex-col leading-tight">
+                    <span class="text-3xl font-black tracking-tighter text-white uppercase flex items-center">FRAZ<span class="text-indigo-500">X</span></span>
+                    <span class="text-[9px] tracking-[0.5em] text-gray-400 font-bold uppercase italic opacity-80">Cinematic AI Lab</span>
+                </div>
             </div>
-            
-            <div class="flex flex-col leading-tight">
-                <span class="text-3xl font-black tracking-tighter text-white uppercase flex items-center">
-                    FRAZ<span class="text-indigo-500">X</span>
-                </span>
-                <span class="text-[9px] tracking-[0.5em] text-gray-400 font-bold uppercase italic opacity-80">Cinematic AI Lab</span>
+            <div class="hidden md:flex gap-8 items-center text-sm font-semibold tracking-wide text-gray-400">
+                <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-white transition">Home</a>
+                <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="hover:text-white transition">Tools Hub</a>
+                <a href="javascript:void(0)" onclick="showPage('samples')" class="hover:text-white transition">Showcase</a>
+                <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="hover:text-white transition">Guide</a>
+                <button onclick="showPage('about-dev')" class="bg-indigo-600/90 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-500 transition-all">Developer</button>
             </div>
+            <button onclick="toggleMobileMenu()" class="md:hidden text-2xl text-white">☰</button>
         </div>
-
-        <div class="hidden md:flex gap-8 items-center text-sm font-semibold tracking-wide text-gray-400">
-            <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-white transition">Home</a>
-            <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="hover:text-white transition">Tools Hub</a>
-            <a href="javascript:void(0)" onclick="showPage('samples')" class="hover:text-white transition">Showcase</a>
-            <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="hover:text-white transition">Guide</a>
-            <button onclick="showPage('about-dev')" class="bg-indigo-600/90 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-500 hover:shadow-[0_0_20px_-5px_rgba(99,102,241,0.5)] transition-all">Developer</button>
-        </div>
-        
-        <button onclick="toggleMobileMenu()" class="md:hidden text-2xl text-white">☰</button>
-    </div>
-</nav>
+    </nav>
 
     <div id="sidebar" class="fixed top-0 right-0 h-[100dvh] w-64 bg-[#020617] z-[150] translate-x-full border-l border-white/10 p-6 shadow-2xl transition-transform duration-300 ease-in-out">
         <button onclick="toggleMobileMenu()" class="text-white mb-10 text-4xl font-light">&times;</button>
@@ -88,31 +61,20 @@ body {
             <a href="javascript:void(0)" onclick="showPage('home')" class="text-white text-lg">Home</a>
             <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="text-indigo-400 text-lg">⚡ Tools Hub</a>
             <a href="javascript:void(0)" onclick="showPage('samples')" class="text-white text-lg">Showcase</a>
-            <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="hover:text-white transition">Guide</a>
+            <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="text-white text-lg">Guide</a>
             <a href="javascript:void(0)" onclick="showPage('about-dev')" class="text-white text-lg">Developer</a>
         </div>
     </div>
 
     <main id="home" class="page-content active-page pt-44 pb-20 px-6 animate__animated animate__fadeIn">
         <div class="max-w-5xl mx-auto text-center">
-            <div class="inline-block px-4 py-1.5 mb-6 border border-indigo-500/30 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold tracking-widest uppercase">
-                FRAZX LIVE: Cinematic Engine Updates
-            </div>
-            <h1 class="text-6xl md:text-8xl font-black mb-6 italic uppercase tracking-tighter leading-none">
-    Beyond <span class="gradient-text">Imagination.</span>
-</h1>
-<p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed uppercase tracking-[0.2em] font-light">
-    The world's most elite <span class="text-white font-bold">Neural Prompt Engine</span> for cinematic AI creators.
-</p>
+            <div class="inline-block px-4 py-1.5 mb-6 border border-indigo-500/30 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold tracking-widest uppercase">FRAZX LIVE: Cinematic Engine Updates</div>
+            <h1 class="text-6xl md:text-8xl font-black mb-6 italic uppercase tracking-tighter leading-none">Beyond <span class="gradient-text">Imagination.</span></h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed uppercase tracking-[0.2em] font-light">The world's most elite <span class="text-white font-bold">Neural Prompt Engine</span> for cinematic AI creators.</p>
             <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-    <button onclick="showPage('tools-hub')" class="btn-premium px-12 py-5 rounded-2xl font-black text-xl shadow-[0_20px_50px_rgba(79,70,229,0.3)] hover:scale-105 transition-all">
-        LAUNCH STUDIO
-    </button>
-    
-    <button onclick="showPage('about-frazx')" class="px-10 py-5 rounded-2xl font-bold text-lg border border-white/10 hover:bg-white/5 transition-all backdrop-blur-sm">
-        LEARN MORE
-    </button>
-</div>
+                <button onclick="showPage('tools-hub')" class="btn-premium px-12 py-5 rounded-2xl font-black text-xl shadow-[0_20px_50px_rgba(79,70,229,0.3)] hover:scale-105 transition-all">LAUNCH STUDIO</button>
+                <button onclick="showPage('about-frazx')" class="px-10 py-5 rounded-2xl font-bold text-lg border border-white/10 hover:bg-white/5 transition-all backdrop-blur-sm">LEARN MORE</button>
+            </div>
         </div>
     </main>
 
@@ -124,7 +86,7 @@ body {
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div onclick="showPage('prompt-engine')" class="glass-card tool-card p-8 cursor-pointer transition duration-300">
-                    <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-3xl mb-6">🔍</div>
+                    <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-3xl mb-6">🚀</div>
                     <h3 class="text-2xl font-bold mb-3">Global Prompt Engine</h3>
                     <p class="text-gray-500 text-sm mb-6">Convert Roman Urdu or English into professional AI prompts.</p>
                     <span class="text-indigo-400 font-bold uppercase text-xs tracking-widest">Open Engine →</span>
@@ -148,15 +110,14 @@ body {
     <section id="prompt-engine" class="page-content pt-32 pb-20 px-6">
         <div class="max-w-4xl mx-auto">
             <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2 transition">← Back to Hub</button>
-            <h2 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> Prompt Engine
-            </h2>
+            <h2 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> Prompt Engine</h2>
             <div class="flex flex-wrap gap-3 mb-6 justify-center">
-              <button onclick="setStyle('cinematic')" id="btn-cinematic" class="style-btn px-4 py-2 rounded-full border border-indigo-500/30 text-xs font-bold uppercase tracking-widest bg-indigo-500/20 text-indigo-400">🎬 Cinematic</button>
-              <button onclick="setStyle('anime')" id="btn-anime" class="style-btn px-4 py-2 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest hover:border-indigo-500/50 transition">🎨 Anime/3D</button>
-              <button onclick="setStyle('realistic')" id="btn-realistic" class="style-btn px-4 py-2 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest hover:border-indigo-500/50 transition">📸 Realistic</button>
+                <button onclick="setStyle('cinematic')" id="btn-cinematic" class="style-btn px-4 py-2 rounded-full border border-indigo-500/30 text-xs font-bold uppercase tracking-widest bg-indigo-500/20 text-indigo-400">🎬 Cinematic</button>
+                <button onclick="setStyle('anime')" id="btn-anime" class="style-btn px-4 py-2 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest hover:border-indigo-500/50 transition">🎨 Anime/3D</button>
+                <button onclick="setStyle('realistic')" id="btn-realistic" class="style-btn px-4 py-2 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest hover:border-indigo-500/50 transition">📸 Realistic</button>
             </div>
             <div class="glass-card p-3 flex flex-col md:flex-row gap-3 mb-10">
-                <input type="text" id="userInput" placeholder="Describe your vision..." class="flex-1 bg-transparent p-4 outline-none text-lg">
+                <input type="text" id="userInput" placeholder="Describe your vision (Urdu/English)..." class="flex-1 bg-transparent p-4 outline-none text-lg">
                 <button onclick="generatePowerPrompt()" class="btn-premium px-8 py-4 rounded-xl font-bold">Generate</button>
             </div>
             <div id="resultBox" class="hidden glass-card p-8 border-indigo-500/30 border animate__animated animate__zoomIn">
@@ -165,132 +126,94 @@ body {
             </div>
         </div>
     </section>
-<section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
-    <div class="max-w-6xl mx-auto">
-        <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2 transition">← Back to Hub</button>
-        
-        <div class="text-center mb-16">
-            <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-4 text-white">
-                Portrait <span class="text-indigo-500">Transformer</span>
-            </h2>
-            <p class="text-gray-500 uppercase tracking-[0.3em] text-[10px] font-bold">Select a style to generate your elite AI avatar prompt</p>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div onclick="generatePortrait('cyberpunk')" class="glass-card p-4 cursor-pointer hover:border-indigo-500/50 transition-all group">
-                <div class="h-48 bg-indigo-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
-                   <img src="https://image.pollinations.ai/prompt/cyberpunk%20warrior%20neon%20lights%20highly%20detailed%208k?width=400&height=500&nologo=true" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                </div>
-                <h3 class="text-lg font-bold text-white mb-1">Cyberpunk Neon</h3>
-                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Neon & Tech Vibe</p>
+    <section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2 transition">← Back to Hub</button>
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-4 text-white">Portrait <span class="text-indigo-500">Transformer</span></h2>
+                <p class="text-gray-500 uppercase tracking-[0.3em] text-[10px] font-bold">Select a style to generate your elite AI avatar prompt</p>
             </div>
-            <div onclick="generatePortrait('viking')" class="glass-card p-4 cursor-pointer hover:border-orange-500/50 transition-all group">
-                <div class="h-48 bg-orange-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
-                    <img src="https://image.pollinations.ai/prompt/ancient%20viking%20warrior%20cinematic%20lighting%20highly%20detailed?width=400&height=500&nologo=true" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div onclick="generatePortrait('cyberpunk')" class="glass-card p-4 cursor-pointer hover:border-indigo-500/50 transition-all group">
+                    <div class="h-48 bg-indigo-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
+                        <img src="https://image.pollinations.ai/prompt/cyberpunk%20warrior%20neon%20lights%20highly%20detailed%208k?width=400&height=500&nologo=true" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Cyberpunk Neon</h3>
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Neon & Tech Vibe</p>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-1">Ancient Viking</h3>
-                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Raw & Gritty Look</p>
+                <div onclick="generatePortrait('viking')" class="glass-card p-4 cursor-pointer hover:border-orange-500/50 transition-all group">
+                    <div class="h-48 bg-orange-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
+                        <img src="https://image.pollinations.ai/prompt/ancient%20viking%20warrior%20cinematic%20lighting%20highly%20detailed?width=400&height=500&nologo=true" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Ancient Viking</h3>
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Raw & Gritty Look</p>
+                </div>
+                <div onclick="generatePortrait('avatar')" class="glass-card p-4 cursor-pointer hover:border-purple-500/50 transition-all group">
+                    <div class="h-48 bg-purple-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
+                        <img src="https://image.pollinations.ai/prompt/pixar%20style%203d%20cute%20character%20highly%20detailed?width=400&height=500&nologo=true" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">3D Pixar Style</h3>
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Modern 3D Art</p>
+                </div>
+                <div onclick="generatePortrait('business')" class="glass-card p-4 cursor-pointer hover:border-blue-500/50 transition-all group">
+                    <div class="h-48 bg-blue-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&h=500&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Pro Headshot</h3>
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Sharp & Corporate</p>
+                </div>
             </div>
-            <div onclick="generatePortrait('avatar')" class="glass-card p-4 cursor-pointer hover:border-purple-500/50 transition-all group">
-                <div class="h-48 bg-purple-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
-                   <img src="https://image.pollinations.ai/prompt/pixar%20style%203d%20cute%20character%20highly%20detailed?width=400&height=500&nologo=true" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                </div>
-                <h3 class="text-lg font-bold text-white mb-1">3D Pixar Style</h3>
-                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Modern 3D Art</p>
-            </div>
-            <div onclick="generatePortrait('business')" class="glass-card p-4 cursor-pointer hover:border-blue-500/50 transition-all group">
-                <div class="h-48 bg-blue-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&h=500&auto=format&fit=crop
-                </div>
-                <h3 class="text-lg font-bold text-white mb-1">Pro Headshot</h3>
-                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Sharp & Corporate</p>
+            <div id="portraitResult" class="hidden mt-16 glass-card p-10 border-indigo-500/30 border animate__animated animate__fadeInUp max-w-2xl mx-auto text-center relative overflow-hidden">
+                <h4 id="portraitStyleName" class="text-indigo-400 font-black uppercase text-[10px] tracking-[0.4em] mb-6">Style Generated</h4>
+                <p id="portraitFinalPrompt" class="text-xl italic text-gray-200 mb-8 leading-relaxed"></p>
+                <button onclick="copyPortraitPrompt()" class="btn-premium px-10 py-4 rounded-2xl font-bold transition shadow-lg">Copy Portrait Prompt</button>
             </div>
         </div>
+    </section>
 
-        <div id="portraitResult" class="hidden mt-16 glass-card p-10 border-indigo-500/30 border animate__animated animate__fadeInUp max-w-2xl mx-auto text-center relative overflow-hidden">
-            <h4 id="portraitStyleName" class="text-indigo-400 font-black uppercase text-[10px] tracking-[0.4em] mb-6">Style Generated</h4>
-            <p id="portraitFinalPrompt" class="text-xl italic text-gray-200 mb-8 leading-relaxed"></p>
-            <button onclick="copyPortraitPrompt()" class="btn-premium px-10 py-4 rounded-2xl font-bold transition shadow-lg">Copy Portrait Prompt</button>
+    <section id="samples" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-black mb-12 italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> SHOWCASE</h2>
+            <div id="samples-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                </div>
         </div>
-    </div>
-</section>
+    </section>
+
     <section id="about-frazx" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
-    <div class="max-w-6xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
-            <div>
-                <h4 class="text-indigo-500 font-bold uppercase text-xs tracking-[0.3em] mb-4">The Vision</h4>
-                <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-6 text-white">Advanced <span class="text-indigo-500">AI Lab.</span></h2>
-                <p class="text-gray-400 leading-relaxed mb-6 text-lg">
-                    FRAZX is an elite **AI Cinematic Engine** engineered for digital creators, prompt engineers, and visionary artists. We bridge the gap between simple ideas and high-fidelity visual masterpieces.
-                </p>
-                <ul class="space-y-4">
-                    <li class="flex items-start gap-3">
-                        <div class="mt-1 bg-indigo-500/20 p-1 rounded">
-                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <p class="text-gray-400 text-sm"><strong class="text-white">Neural Expansion:</strong> Transforming basic keywords into multi-layered cinematic descriptions.</p>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <span class="mt-1 bg-indigo-500/20 p-1 rounded">
-                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                        </span>
-                        <p class="text-gray-400 text-sm"><strong class="text-white">Style Precision:</strong> Absolute control over lighting, optics, and atmospheric rendering.</p>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="glass-card p-8 border-l-4 border-l-indigo-600 relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10">
-                    <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.45l8.27 14.3H3.73L12 5.45z"/></svg>
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+                <div>
+                    <h4 class="text-indigo-500 font-bold uppercase text-xs tracking-[0.3em] mb-4">The Vision</h4>
+                    <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-6 text-white">Advanced <span class="text-indigo-500">AI Lab.</span></h2>
+                    <p class="text-gray-400 leading-relaxed mb-6 text-lg">FRAZX is an elite AI Cinematic Engine engineered for digital creators. We bridge the gap between simple ideas and visual masterpieces.</p>
                 </div>
-                <h3 class="text-2xl font-bold mb-8 italic">USER <span class="text-indigo-500 text-sm tracking-widest">Workflow</span></h3>
-                <div class="space-y-8">
-                    <div class="flex gap-5">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-sm shrink-0 shadow-lg shadow-indigo-500/20">01</div>
-                        <div>
-                            <h4 class="font-bold text-white uppercase text-xs tracking-widest mb-1">Select Module</h4>
-                            <p class="text-gray-500 text-xs">Navigate to the Tools Hub and choose between the Prompt Engine or Portrait Transformer.</p>
+                <div class="glass-card p-8 border-l-4 border-l-indigo-600 relative overflow-hidden">
+                    <h3 class="text-2xl font-bold mb-8 italic">USER <span class="text-indigo-500 text-sm tracking-widest">Workflow</span></h3>
+                    <div class="space-y-8">
+                        <div class="flex gap-5">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-sm shrink-0 shadow-lg shadow-indigo-500/20">01</div>
+                            <div>
+                                <h4 class="font-bold text-white uppercase text-xs tracking-widest mb-1">Select Module</h4>
+                                <p class="text-gray-500 text-xs">Choose between Prompt Engine or Portrait Transformer.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex gap-5">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-sm shrink-0 shadow-lg shadow-indigo-500/20">02</div>
-                        <div>
-                            <h4 class="font-bold text-white uppercase text-xs tracking-widest mb-1">Define Vision</h4>
-                            <p class="text-gray-500 text-xs">Input your base concept or select a pre-engineered style card for instant results.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-5">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-sm shrink-0 shadow-lg shadow-indigo-500/20">03</div>
-                        <div>
-                            <h4 class="font-bold text-white uppercase text-xs tracking-widest mb-1">Deploy Prompt</h4>
-                            <p class="text-gray-500 text-xs">Generate your professional prompt and deploy it on Midjourney, Leonardo, or Stable Diffusion.</p>
+                        <div class="flex gap-5">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-sm shrink-0 shadow-lg shadow-indigo-500/20">02</div>
+                            <div>
+                                <h4 class="font-bold text-white uppercase text-xs tracking-widest mb-1">Define Vision</h4>
+                                <p class="text-gray-500 text-xs">Input your concept or select a style card.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="glass-card p-8 border-t border-white/5 hover:bg-white/5 transition">
-                <h4 class="text-indigo-400 font-black mb-4 uppercase text-xs tracking-[0.3em]">Module 01: Global Engine</h4>
-                <p class="text-gray-500 text-sm leading-relaxed italic border-l-2 border-indigo-500/30 pl-4">
-                    "Engineered for complexity. It automatically injects professional parameters like focal length, volumetric lighting, and texture mapping into your raw ideas."
-                </p>
-            </div>
-            <div class="glass-card p-8 border-t border-white/5 hover:bg-white/5 transition">
-                <h4 class="text-indigo-400 font-black mb-4 uppercase text-xs tracking-[0.3em]">Module 02: Portrait Transformer</h4>
-                <p class="text-gray-500 text-sm leading-relaxed italic border-l-2 border-indigo-500/30 pl-4">
-                    "Optimized for human aesthetics. From Viking grit to Pixar-grade 3D renders, this module delivers ultra-precise character prompts instantly."
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
     <section id="about-dev" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
         <div class="max-w-4xl mx-auto text-center">
             <div class="glass-card p-12 border-t-4 border-t-indigo-600 relative overflow-hidden">
-                <div class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-600/10 blur-3xl"></div>
                 <div class="w-40 h-40 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full mx-auto mb-8 p-1 shadow-2xl flex items-center justify-center">
                     <div class="w-full h-full bg-[#010413] rounded-full overflow-hidden">
                         <img src="profile.png" alt="Hassan Fraz" class="w-full h-full object-cover object-top">
@@ -298,9 +221,6 @@ body {
                 </div>
                 <h2 class="text-4xl font-black mb-2 uppercase tracking-tighter text-white">Hassan <span class="text-indigo-500 italic">Fraz</span></h2>
                 <p class="text-indigo-400 font-bold text-xs uppercase tracking-[0.3em] mb-8 border-b border-white/5 pb-4 inline-block">Founder & Lead Architect at FRAZX</p>
-                <p class="text-gray-400 leading-relaxed mb-10 italic max-w-2xl mx-auto">
-                    "My mission is to democratize high-end AI art. FRAZX is built for the global creator who demands precision and cinematic excellence."
-                </p>
                 <div class="flex flex-wrap justify-center gap-6">
                     <a href="https://www.instagram.com/hazzy.996" target="_blank" class="bg-gradient-to-r from-pink-500 to-orange-500 px-10 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-lg text-white">Instagram</a>
                     <a href="mailto:hassanbuttg998@gmail.com" class="bg-white/5 border border-white/10 px-10 py-4 rounded-2xl font-bold hover:bg-white/10 transition text-white">Email Founder</a>
@@ -308,21 +228,23 @@ body {
             </div>
         </div>
     </section>
-<section id="updates" class="py-20 px-6 border-t border-white/5">
-    <div class="max-w-4xl mx-auto text-center">
-        <h3 class="text-indigo-500 font-black uppercase text-xs tracking-[0.4em] mb-12">Deployment Roadmap</h3>
-        <div class="space-y-4 text-left">
-            <div class="glass-card p-6 flex justify-between items-center border-l-4 border-indigo-500">
-                <span class="font-bold text-white uppercase tracking-widest text-sm">V1.0 Global Prompt Engine</span>
-                <span class="text-[10px] bg-green-500/20 text-green-400 px-3 py-1 rounded-full font-bold">ACTIVE</span>
-            </div>
-            <div class="glass-card p-6 flex justify-between items-center opacity-60 border-l-4 border-gray-700">
-                <span class="font-bold text-gray-400 uppercase tracking-widest text-sm">V2.0 Negative Prompt Generator</span>
-                <span class="text-[10px] bg-white/10 text-gray-400 px-3 py-1 rounded-full font-bold">COMING SOON</span>
+
+    <section id="updates" class="py-20 px-6 border-t border-white/5 bg-white/[0.01]">
+        <div class="max-w-4xl mx-auto text-center">
+            <h3 class="text-indigo-500 font-black uppercase text-xs tracking-[0.4em] mb-12">Deployment Roadmap</h3>
+            <div class="space-y-4 text-left">
+                <div class="glass-card p-6 flex justify-between items-center border-l-4 border-indigo-500">
+                    <span class="font-bold text-white uppercase tracking-widest text-sm">V1.0 Global Prompt Engine</span>
+                    <span class="text-[10px] bg-green-500/20 text-green-400 px-3 py-1 rounded-full font-bold">ACTIVE</span>
+                </div>
+                <div class="glass-card p-6 flex justify-between items-center opacity-60 border-l-4 border-gray-700">
+                    <span class="font-bold text-gray-400 uppercase tracking-widest text-sm">V2.0 Negative Prompt Generator</span>
+                    <span class="text-[10px] bg-white/10 text-gray-400 px-3 py-1 rounded-full font-bold">COMING SOON</span>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
     <footer class="py-20 border-t border-white/5 bg-black/40">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <div class="text-2xl font-black mb-4 uppercase italic">FRAZ<span class="text-indigo-500">X</span></div>
@@ -336,177 +258,109 @@ body {
     </footer>
 
     <script>
-        // --- SIDEBAR & NAVIGATION MASTER LOGIC ---
-
-// 1. Sidebar ke bahar click karne par band hona
-document.addEventListener('click', (e) => {
-    const sidebar = document.getElementById('sidebar');
-    const menuBtn = document.querySelector('button[onclick*="toggleMobileMenu"]'); 
-    
-    // Agar sidebar khula hai aur click sidebar ya menu button ke bahar hua hai
-    if (sidebar && !sidebar.classList.contains('translate-x-full')) {
-        if (!sidebar.contains(e.target) && (!menuBtn || !menuBtn.contains(e.target))) {
-            sidebar.classList.add('translate-x-full');
+        // --- NAVIGATION & SIDEBAR (Problem 3, 8 & 10 Fix) ---
+        function toggleMobileMenu() {
+            document.getElementById('sidebar').classList.toggle('translate-x-full');
         }
-    }
-});
 
-function toggleMobileMenu() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('translate-x-full');
-}
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('sidebar');
+            const menuBtn = document.querySelector('button[onclick*="toggleMobileMenu"]'); 
+            if (sidebar && !sidebar.classList.contains('translate-x-full')) {
+                if (!sidebar.contains(e.target) && (!menuBtn || !menuBtn.contains(e.target))) {
+                    sidebar.classList.add('translate-x-full');
+                }
+            }
+        });
 
-// 2. Advanced Navigation (Back Button Support)
-function showPage(pageId, pushState = true) {
-    const pages = document.querySelectorAll('.page-content');
-    pages.forEach(p => p.classList.remove('active-page'));
-    
-    const target = document.getElementById(pageId);
-    if(target) {
-        target.classList.add('active-page');
-        // Browser history mein save karna taake back button kaam kare
-        if(pushState) {
-            history.pushState({pageId: pageId}, null, "");
+        function showPage(pageId, pushState = true) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
+            const target = document.getElementById(pageId);
+            if(target) {
+                target.classList.add('active-page');
+                if(pushState) history.pushState({pageId: pageId}, null, "");
+            }
+            document.getElementById('sidebar').classList.add('translate-x-full');
+            window.scrollTo(0, 0);
+            if(pageId === 'samples') renderSamples();
         }
-    }
-    
-    // Sidebar ko band karna har click par
-    const sidebar = document.getElementById('sidebar');
-    if(sidebar) sidebar.classList.add('translate-x-full');
-    
-    window.scrollTo(0, 0);
 
-    // Agar Gallery (Samples) page khule toh images render karna
-    if(pageId === 'samples') renderSamples();
-}
+        window.onpopstate = function(event) {
+            if(event.state && event.state.pageId) showPage(event.state.pageId, false);
+            else showPage('home', false);
+        };
 
-// 3. Mobile Back Button Handle Logic
-window.onpopstate = function(event) {
-    if(event.state && event.state.pageId) {
-        showPage(event.state.pageId, false);
-    } else {
-        showPage('home', false);
-    }
-};
-     let selectedStyle = 'cinematic'; // Default style
-
-function setStyle(style) {
-    selectedStyle = style;
-    // Saare buttons se highlight khatam karo
-    document.querySelectorAll('.style-btn').forEach(btn => {
-        btn.classList.remove('bg-indigo-500/20', 'text-indigo-400', 'border-indigo-500/50');
-        btn.classList.add('border-white/10', 'text-gray-400');
-    });
-    // Clicked button ko highlight karo
-    const activeBtn = document.getElementById('btn-' + style);
-    activeBtn.classList.add('bg-indigo-500/20', 'text-indigo-400', 'border-indigo-500/50');
-    activeBtn.classList.remove('border-white/10', 'text-gray-400');
-}
-
-function generatePowerPrompt() {
-    let input = document.getElementById('userInput').value;
-    let resultBox = document.getElementById('resultBox');
-    let finalPrompt = document.getElementById('finalPrompt');
-    
-    if(input.trim() === "") return alert("Hassan bhai, pehle idea toh likhen!");
-
-    // Style-wise Data
-    const styles = {
-        cinematic: {
-            tags: "hollywood movie style, anamorphic lens, teal and orange color grading, volumetric lighting, epic scale, shot on Arri Alexa",
-            suffix: "--ar 21:9 --v 6.0 --stylize 400"
-        },
-        anime: {
-            tags: "studio ghibli style, vibrant colors, hand-drawn aesthetic, high-quality digital illustration, Makoto Shinkai vibe, sharp cel shading",
-            suffix: "--niji 6 --stylize 250"
-        },
-        realistic: {
-            tags: "8k resolution, raw photo, f/1.8 depth of field, hyper-detailed skin pores, shot on Sony A7R IV, natural daylight, authentic textures",
-            suffix: "--style raw --v 6.0 --ar 4:5"
+        // --- PROMPT ENGINE LOGIC ---
+        let selectedStyle = 'cinematic';
+        function setStyle(style) {
+            selectedStyle = style;
+            document.querySelectorAll('.style-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-500/20', 'text-indigo-400', 'border-indigo-500/50');
+                btn.classList.add('border-white/10', 'text-gray-400');
+            });
+            const activeBtn = document.getElementById('btn-' + style);
+            activeBtn.classList.add('bg-indigo-500/20', 'text-indigo-400', 'border-indigo-500/50');
         }
-    };
 
-    const current = styles[selectedStyle];
-    
-    // Creative Expansion
-    let expandedPrompt = `(Masterpiece:1.3), ${input}, ${current.tags}, intricate background, atmospheric perspective, highly detailed, professional composition ${current.suffix}`;
+        function generatePowerPrompt() {
+            let input = document.getElementById('userInput').value;
+            if(input.trim() === "") return alert("Hassan bhai, pehle idea toh likhen!");
+            const styles = {
+                cinematic: { tags: "hollywood movie style, anamorphic lens, teal and orange color grading, volumetric lighting", suffix: "--ar 21:9 --v 6.0" },
+                anime: { tags: "studio ghibli style, vibrant colors, hand-drawn aesthetic, high-quality digital illustration", suffix: "--niji 6" },
+                realistic: { tags: "8k resolution, raw photo, f/1.8 depth of field, hyper-detailed skin pores, Sony A7R IV", suffix: "--style raw --v 6.0" }
+            };
+            const current = styles[selectedStyle];
+            let expandedPrompt = `(Masterpiece:1.3), ${input}, ${current.tags}, intricate background, cinematic atmosphere, highly detailed ${current.suffix}`;
+            document.getElementById('finalPrompt').innerText = expandedPrompt;
+            document.getElementById('resultBox').classList.remove('hidden');
+        }
 
-    finalPrompt.innerText = expandedPrompt;
-    resultBox.classList.remove('hidden');
-    resultBox.classList.add('animate__animated', 'animate__zoomIn');
-}
-        // --- PORTRAIT TRANSFORMER LOGIC ---
-
-function generatePortrait(style) {
-    const portraitResult = document.getElementById('portraitResult');
-    const styleName = document.getElementById('portraitStyleName');
-    const finalPrompt = document.getElementById('portraitFinalPrompt');
-
-    // Har style ke liye alag heavy cinematic prompt
-    const portraitPrompts = {
-        cyberpunk: "Close-up portrait of a character in cyberpunk gear, neon purple and cyan lighting reflecting on face, hyper-realistic, high-tech visor, raining city background, 8k, cinematic shot --v 6.0",
-        viking: "Intense close-up of a Viking warrior, braided beard, war paint on face, wearing fur and leather armor, cinematic lighting, snowy mountain background, hyper-detailed, 8k, photorealistic --v 6.0",
-        avatar: "Cute 3D character portrait, Pixar style, big expressive eyes, soft studio lighting, vibrant colors, 4k render, Unreal Engine 5, clean background, masterpiece --v 6.0",
-        business: "Professional corporate headshot, man in a tailored charcoal suit, confident smile, blurred modern office background, soft natural lighting, high-end photography, sharp focus --v 6.0"
-    };
-
-    // UI update karna
-    styleName.innerText = style.toUpperCase() + " STYLE GENERATED";
-    finalPrompt.innerText = portraitPrompts[style];
-    
-    // Result box dikhana aur scroll karna
-    portraitResult.classList.remove('hidden');
-    setTimeout(() => {
-        portraitResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
-}
-
-function copyPortraitPrompt() {
-    let text = document.getElementById('portraitFinalPrompt').innerText;
-    navigator.clipboard.writeText(text).then(() => {
-        alert("Portrait prompt copied! Paste it in your AI generator.");
-    });
-}
         function copyPrompt() {
-            let text = document.getElementById('finalPrompt').innerText;
-            navigator.clipboard.writeText(text);
-            alert("Prompt copied to clipboard!");
+            navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText);
+            alert("Prompt copied!");
         }
 
-        const sampleData = [
-            { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3f2-0d68-6660-bc4d-a28ab05e99a2/lucid-origin_Ancient_God_volumetric_liCyberpunk_Cat_surrealism_style_vivid_colors_dreamlike_a-0.jpg', title: 'Cyberpunk Cat' },
-            { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f3fa-7402-6990-adc6-85eaef128a74/lucid-origin_futuristic_City_with_traffic_surrealism_style_vivid_colors_dreamlike_atmosphere_-0.jpg', title: 'Futuristic City' },
-            { type: 'trending', img: 'https://cdn.leonardo.ai/users/746e8961-76d4-4e4c-9842-db8c9fdd77d1/generations/1f14f41e-75df-68c0-970b-c1474825050b/lucid-origin_Astronaut_in_space_cinematic_lighting_8k_highly_detailed_unreal_engine_5_masterp-0.jpg', title: 'Astronaut Art' }
-        ];
+        // --- PORTRAIT LOGIC ---
+        function generatePortrait(style) {
+            const portraitPrompts = {
+                cyberpunk: "Close-up portrait of a character in cyberpunk gear, neon purple lighting, hyper-realistic, 8k --v 6.0",
+                viking: "Intense close-up of a Viking warrior, war paint, fur and leather armor, cinematic snowy background --v 6.0",
+                avatar: "Cute 3D character portrait, Pixar style, soft studio lighting, Unreal Engine 5 --v 6.0",
+                business: "Professional corporate headshot, confident smile, blurred modern office, high-end photography --v 6.0"
+            };
+            document.getElementById('portraitStyleName').innerText = style.toUpperCase() + " STYLE GENERATED";
+            document.getElementById('portraitFinalPrompt').innerText = portraitPrompts[style];
+            document.getElementById('portraitResult').classList.remove('hidden');
+            setTimeout(() => { document.getElementById('portraitResult').scrollIntoView({ behavior: 'smooth' }); }, 100);
+        }
 
+        function copyPortraitPrompt() {
+            navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
+            alert("Portrait prompt copied!");
+        }
+
+        // --- SHOWCASE LOGIC (Problem 7 Fix) ---
         function renderSamples() {
-    const grid = document.getElementById('samples-grid');
-    if(!grid) return;
-    
-    const samplePrompts = [
-        "Cinematic tiger in neon city", 
-        "Cyberpunk samurai rain", 
-        "Ancient dragon mountain 8k",
-        "Astronaut in flower galaxy"
-    ];
+            const grid = document.getElementById('samples-grid');
+            if(!grid) return;
+            const prompts = ["Cyberpunk Cat", "Futuristic City", "Astronaut Art", "Neon Samurai"];
+            grid.innerHTML = ''; 
+            prompts.forEach(p => {
+                grid.innerHTML += `<div class="glass-card p-4 animate__animated animate__fadeInUp">
+                    <div class="h-60 overflow-hidden rounded-xl mb-4">
+                        <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(p)}?width=500&height=700&nologo=true" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-[10px] font-black text-indigo-400 uppercase text-center italic opacity-60">${p}</p>
+                </div>`;
+            });
+        }
 
-    grid.innerHTML = ''; 
-    samplePrompts.forEach(prompt => {
-        grid.innerHTML += `
-            <div class="glass-card p-4 animate__animated animate__fadeInUp">
-                <div class="h-60 overflow-hidden rounded-xl mb-4">
-                    <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=500&height=700&nologo=true" 
-                         class="w-full h-full object-cover hover:scale-110 transition duration-700" alt="AI Visual">
-                </div>
-                <p class="text-[10px] font-black text-indigo-400 uppercase text-center italic opacity-60">${prompt}</p>
-            </div>`;
-    });
-}
-
-       window.onload = () => {
-    showPage('home', true); // Taake site hamesha Home se shuru ho
-    renderSamples();        // Taake images load ho jayein
-};
+        // --- Problem 2, 7 & 10 Fix: Global Init ---
+        window.onload = () => {
+            showPage('home', true);
+            renderSamples();
+        };
     </script>
 </body>
 </html>
