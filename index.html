@@ -98,63 +98,50 @@
         </div>
     </main>
 
-    <section id="tools-hub" class="py-20 bg-black">
+    <div id="tools-hub" class="hidden min-h-screen pt-24 pb-20 bg-[#050505]">
     <div class="max-w-7xl mx-auto px-6">
         
         <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-black text-white mb-4 uppercase tracking-tighter">
-                Explore <span class="text-indigo-500">AI Tools</span> Hub
+            <h2 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter">
+                AI <span class="text-indigo-500 underline decoration-indigo-500/30 underline-offset-8">Tools</span> Discovery
             </h2>
-            <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
-                Discover the most powerful AI engines to amplify your creativity and workflow.
+            <p class="text-gray-500 max-w-xl mx-auto text-sm uppercase tracking-[0.2em] font-semibold">
+                Premium Neural Engines for Creators
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            <div class="group relative bg-white/5 border border-white/10 p-8 rounded-3xl hover:bg-white/[0.08] transition-all duration-500 hover:-translate-y-2">
-                <div class="absolute -top-4 -right-4 w-20 h-20 bg-indigo-600/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition"></div>
-                
-                <div class="w-14 h-14 bg-indigo-500/20 rounded-2xl flex items-center justify-center mb-6 border border-indigo-500/30">
-                    <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <div class="group bg-white/[0.03] border border-white/10 p-8 rounded-[2rem] hover:bg-white/[0.07] hover:border-indigo-500/50 transition-all duration-500">
+                <div class="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/30 group-hover:scale-110 transition">
+                    <i class="fas fa-wand-magic-sparkles text-indigo-400"></i>
                 </div>
-                
-                <h3 class="text-xl font-bold text-white mb-3">Cinematic Vision</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-6">Create hyper-realistic AI images with deep cinematic textures and lighting.</p>
-                
-                <button class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-500 shadow-lg shadow-indigo-600/20 transition-all">
-                    Launch Tool
-                </button>
+                <h3 class="text-xl font-bold text-white mb-2">Cinematic Vision</h3>
+                <p class="text-gray-500 text-sm mb-8 leading-relaxed">Generate 8K hyper-realistic AI art with advanced lighting controls.</p>
+                <button class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-indigo-500 shadow-xl shadow-indigo-600/20 transition-all">Launch Engine</button>
             </div>
 
-            <div class="group relative bg-white/5 border border-white/10 p-8 rounded-3xl hover:bg-white/[0.08] transition-all duration-500 hover:-translate-y-2">
-                <div class="w-14 h-14 bg-purple-500/20 rounded-2xl flex items-center justify-center mb-6 border border-purple-500/30">
-                    <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            <div class="group bg-white/[0.03] border border-white/10 p-8 rounded-[2rem] hover:bg-white/[0.07] hover:border-purple-500/50 transition-all duration-500">
+                <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6 border border-purple-500/30 group-hover:scale-110 transition">
+                    <i class="fas fa-brain text-purple-400"></i>
                 </div>
-                
-                <h3 class="text-xl font-bold text-white mb-3">Neural Prompt</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-6">Master your prompts with our AI-driven enhancer for better results.</p>
-                
-                <button class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-sm hover:bg-purple-500 shadow-lg shadow-purple-600/20 transition-all">
-                    Access Library
-                </button>
+                <h3 class="text-xl font-bold text-white mb-2">Neural Prompt</h3>
+                <p class="text-gray-500 text-sm mb-8 leading-relaxed">AI-powered prompt engineering for midjourney and stable diffusion.</p>
+                <button class="w-full py-4 bg-purple-600 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-purple-500 shadow-xl shadow-purple-600/20 transition-all">Open Library</button>
             </div>
 
-            <div class="group relative bg-white/5 border border-white/10 p-8 rounded-3xl hover:bg-white/[0.08] transition-all duration-500 hover:-translate-y-2">
-                <div class="w-14 h-14 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6 border border-blue-500/30">
-                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <div class="group bg-white/[0.03] border border-white/10 p-8 rounded-[2rem] hover:bg-white/[0.07] hover:border-blue-500/50 transition-all duration-500">
+                <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30 group-hover:scale-110 transition">
+                    <i class="fas fa-video text-blue-400"></i>
                 </div>
-                
-                <h3 class="text-xl font-bold text-white mb-3">Motion FX</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-6">Transform static images into breathtaking cinematic video clips.</p>
-                
-                <button class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all">
-                    Try Motion
-                </button>
+                <h3 class="text-xl font-bold text-white mb-2">Motion FX</h3>
+                <p class="text-gray-500 text-sm mb-8 leading-relaxed">Animate your AI portraits into cinematic motion clips within seconds.</p>
+                <button class="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-blue-500 shadow-xl shadow-blue-600/20 transition-all">Start Motion</button>
             </div>
 
         </div>
     </div>
+</div>
 </section>
 
     <section id="prompt-engine" class="page-content pt-32 pb-20 px-6">
