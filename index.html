@@ -265,17 +265,20 @@
         </div>
     </section>
 
-    <footer class="py-20 border-t border-white/5 bg-black/40">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <div class="text-2xl font-black mb-4 uppercase italic">FRAZ<span class="text-indigo-500">X</span></div>
-            <p class="text-gray-500 text-sm mb-8">Empowering the next generation of AI artists globally.</p>
-            <div class="flex justify-center gap-8 text-[10px] font-bold text-gray-600 uppercase tracking-widest">
-                <span class="text-indigo-500/50">FRAZX STUDIO &copy; 2026</span>
-                <a href="#" class="hover:text-white transition">Privacy</a>
-                <a href="#" class="hover:text-white transition">Terms</a>
-            </div>
+    <footer class="py-12 border-t border-white/5 bg-black/40">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <button onclick="showPage('privacy')" class="px-5 py-2 text-xs rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">Privacy Policy</button>
+            <button onclick="showPage('terms')" class="px-5 py-2 text-xs rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">Terms of Service</button>
+            <button onclick="showPage('about-dev')" class="px-5 py-2 text-xs rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">About Us</button>
+            <button onclick="showPage('contact')" class="px-5 py-2 text-xs rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-600/40 hover:text-white transition">Contact Us</button>
         </div>
-    </footer>
+
+        <p class="text-gray-500 text-[10px] tracking-[0.3em] uppercase">
+            © 2026 <span class="text-indigo-500 font-bold">FRAZX</span> AI LAB. ALL RIGHTS RESERVED.
+        </p>
+    </div>
+</footer>
 
     <script>
         // --- NAVIGATION & SIDEBAR (Problem 3, 8 & 10 Fix) ---
