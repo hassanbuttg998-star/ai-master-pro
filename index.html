@@ -50,13 +50,13 @@
                 <a href="javascript:void(0)" onclick="showPage('samples')" class="hover:text-white transition">Showcase</a>
                 <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="hover:text-white transition">Guide</a>
                 <button onclick="showPage('about-dev')" class="bg-indigo-600/90 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-500 transition-all">Developer</button>
-            </div>
-           <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-white bg-white/5 rounded-lg border border-white/10 active:scale-95 transition-all">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-    </svg>
-</button>
-        </div>
+           <div class="md:hidden ml-auto">
+    <button onclick="toggleMobileMenu()" class="p-2 text-white bg-white/5 rounded-lg border border-white/10">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+    </button>
+</div>
     </nav>
 
     <div id="sidebar" class="fixed top-0 right-0 h-[100dvh] w-64 bg-[#020617] z-[150] translate-x-full border-l border-white/10 p-6 shadow-2xl transition-transform duration-300 ease-in-out">
