@@ -1,406 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRAZX | Cinematic AI Lab</title>
-   <link rel="icon" type="image/jpeg" href="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/logohui.png?raw=true">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <style>
-        :root { --primary: #6366f1; --accent: #a855f7; }
-        body { 
-            background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
-            background-attachment: fixed !important;
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-        }
-        ::selection { background: rgba(79, 70, 229, 0.4); color: white; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #050508; }
-        ::-webkit-scrollbar-thumb { background: #1e1e2e; border-radius: 10px; border: 2px solid #050508; }
-        ::-webkit-scrollbar-thumb:hover { background: #4f46e5; }
-        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
-        .gradient-text { background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-premium { background: linear-gradient(45deg, var(--primary), var(--accent)); transition: all 0.3s ease; }
-        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.5); }
-        .page-content { display: none; }
-        .active-page { display: block; }
-        .tool-card:hover { border-color: rgba(99, 102, 241, 0.4); background: rgba(99, 102, 241, 0.05); }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRAZX | Cinematic AI Lab</title>
+    <link rel="icon" type="image/jpeg" href="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/logohui.png?raw=true">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <style>
+        :root { --primary: #6366f1; --accent: #a855f7; }
+        body { 
+            background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
+            background-attachment: fixed !important;
+            color: #e2e8f0; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden;
+        }
+        ::selection { background: rgba(79, 70, 229, 0.4); color: white; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050508; }
+        ::-webkit-scrollbar-thumb { background: #1e1e2e; border-radius: 10px; border: 2px solid #050508; }
+        ::-webkit-scrollbar-thumb:hover { background: #4f46e5; }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
+        .gradient-text { background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-premium { background: linear-gradient(45deg, var(--primary), var(--accent)); transition: all 0.3s ease; cursor: pointer; }
+        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.5); }
+        
+        .page-content { display: none; }
+        .active-page { display: block !important; }
+        .style-btn-active { background: rgba(99, 102, 241, 0.2) !important; border-color: #6366f1 !important; color: #818cf8 !important; }
+    </style>
 </head>
 <body>
 
-   <nav class="fixed top-0 w-full z-[100] backdrop-blur-xl border-b border-white/5 bg-black/20">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        
-        <div class="flex items-center gap-4 group cursor-pointer" onclick="showPage('home')">
-            <div class="hidden md:flex relative w-12 h-12 items-center justify-center">
-                <div class="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full group-hover:bg-indigo-500/40 transition"></div>
-                <img src="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/logohui.png?raw=true" class="relative z-10 w-full h-full object-contain filter brightness-125 contrast-110 group-hover:scale-110 transition duration-300">
-            </div>
-            
-            <div class="flex flex-col leading-tight">
-                <span class="text-3xl font-black tracking-tighter text-white uppercase flex items-center">FRAZ<span class="text-indigo-500">X</span></span>
-                <span class="text-[9px] tracking-[0.5em] text-gray-400 font-bold uppercase italic opacity-80">Cinematic AI Lab</span>
-            </div>
-        </div>
+    <nav class="fixed top-0 w-full z-[100] backdrop-blur-xl border-b border-white/5 bg-black/20">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4 group cursor-pointer" onclick="showPage('home')">
+                <div class="hidden md:flex relative w-12 h-12 items-center justify-center">
+                    <div class="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full group-hover:bg-indigo-500/40 transition"></div>
+                    <img src="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/logohui.png?raw=true" class="relative z-10 w-full h-full object-contain filter brightness-125 group-hover:scale-110 transition">
+                </div>
+                <div class="flex flex-col leading-tight">
+                    <span class="text-3xl font-black tracking-tighter text-white uppercase">FRAZ<span class="text-indigo-500">X</span></span>
+                    <span class="text-[9px] tracking-[0.5em] text-gray-400 font-bold uppercase italic opacity-80">Cinematic AI Lab</span>
+                </div>
+            </div>
 
-        <div class="flex items-center">
-            <div class="hidden md:flex gap-8 items-center text-sm font-semibold tracking-wide text-gray-400 mr-8">
-                <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-white transition">Home</a>
-                <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="hover:text-white transition">Tools Hub</a>
-                <a href="javascript:void(0)" onclick="showPage('samples')" class="hover:text-white transition">Showcase</a>
-                <button onclick="showPage('about-dev')" class="bg-indigo-600/90 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-500 transition-all">Developer</button>
-            </div>
+            <div class="hidden md:flex gap-8 items-center text-sm font-semibold tracking-wide text-gray-400">
+                <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-white transition">Home</a>
+                <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="hover:text-white transition">Tools Hub</a>
+                <a href="javascript:void(0)" onclick="showPage('samples')" class="hover:text-white transition">Showcase</a>
+                <button onclick="showPage('about-dev')" class="bg-indigo-600/90 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-500 transition-all">Developer</button>
+            </div>
 
-            <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-white bg-white/5 rounded-lg border border-white/10 active:scale-95 transition-all">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
-        </div>
+            <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-white bg-white/5 rounded-lg border border-white/10">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
 
-    </div>
-</nav>
-    </nav>
+    <div id="sidebar" class="fixed top-0 right-0 h-screen w-72 z-[200] bg-black/95 backdrop-blur-2xl border-l border-white/5 p-8 flex flex-col transform translate-x-full transition-transform duration-500">
+        <button onclick="toggleMobileMenu()" class="text-white mb-10 text-4xl font-light text-left">&times;</button>
+        <div class="flex flex-col gap-8 font-semibold uppercase tracking-widest text-xs">
+            <a href="javascript:void(0)" onclick="showPage('home')" class="text-white hover:text-indigo-400">Home</a>
+            <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="text-indigo-400">⚡ Tools Hub</a>
+            <a href="javascript:void(0)" onclick="showPage('samples')" class="text-white hover:text-indigo-400">Showcase</a>
+            <a href="javascript:void(0)" onclick="showPage('about-dev')" class="text-white hover:text-indigo-400">Developer</a>
+        </div>
+    </div>
 
-   <div id="sidebar" class="fixed top-0 right-0 h-screen w-72 z-[200] bg-[#050505]/95 backdrop-blur-2xl border-l border-white/5 p-8 flex flex-col transform translate-x-full transition-transform duration-500 ease-in-out shadow-[-20px_0_50px_rgba(0,0,0,0.9)]">
-        <button onclick="toggleMobileMenu()" class="text-white mb-10 text-4xl font-light">&times;</button>
-        <div class="flex items-center gap-3 mb-8 pb-6 border-b border-white/5">
-    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 p-1.5 border border-indigo-500/20">
-        <img src="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/logohui.png?raw=true" class="w-full h-full object-contain">
-    </div>
-    <div class="flex flex-col">
-        <span class="text-xl font-black tracking-tighter text-white uppercase leading-none">FRAZ<span class="text-indigo-500">X</span></span>
-        <span class="text-[8px] tracking-[0.3em] text-gray-500 font-bold uppercase italic leading-none mt-1">AI Master Pro</span>
-    </div>
-</div>
-        <div class="flex flex-col gap-8 font-semibold">
-            <a href="javascript:void(0)" onclick="showPage('home')" class="text-white text-lg">Home</a>
-            <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="text-indigo-400 text-lg">⚡ Tools Hub</a>
-            <a href="javascript:void(0)" onclick="showPage('samples')" class="text-white text-lg">Showcase</a>
-            <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="text-white text-lg">Guide</a>
-            <a href="javascript:void(0)" onclick="showPage('about-dev')" class="text-white text-lg">Developer</a>
-        </div>
-    </div>
+    <main id="home" class="page-content active-page pt-44 pb-20 px-6 animate__animated animate__fadeIn">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="inline-block px-4 py-1.5 mb-6 border border-indigo-500/30 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold tracking-widest uppercase">FRAZX LIVE: Cinematic Engine Updates</div>
+            <h1 class="text-6xl md:text-8xl font-black mb-6 italic uppercase tracking-tighter leading-none">Beyond <span class="gradient-text">Imagination.</span></h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed uppercase tracking-[0.2em] font-light">The world's most elite <span class="text-white font-bold">Neural Prompt Engine</span> for cinematic creators.</p>
+            <button onclick="showPage('tools-hub')" class="btn-premium px-12 py-5 rounded-2xl font-black text-xl shadow-[0_20px_50px_rgba(79,70,229,0.3)]">LAUNCH STUDIO</button>
+        </div>
+    </main>
 
-    <main id="home" class="page-content active-page pt-44 pb-20 px-6 animate__animated animate__fadeIn">
-        <div class="max-w-5xl mx-auto text-center">
-            <div class="inline-block px-4 py-1.5 mb-6 border border-indigo-500/30 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold tracking-widest uppercase">FRAZX LIVE: Cinematic Engine Updates</div>
-            <h1 class="text-6xl md:text-8xl font-black mb-6 italic uppercase tracking-tighter leading-none">Beyond <span class="gradient-text">Imagination.</span></h1>
-            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed uppercase tracking-[0.2em] font-light">The world's most elite <span class="text-white font-bold">Neural Prompt Engine</span> for cinematic AI creators.</p>
-            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-                <button onclick="showPage('tools-hub')" class="btn-premium px-12 py-5 rounded-2xl font-black text-xl shadow-[0_20px_50px_rgba(79,70,229,0.3)] hover:scale-105 transition-all">LAUNCH STUDIO</button>
-                <button onclick="showPage('about-frazx')" class="px-10 py-5 rounded-2xl font-bold text-lg border border-white/10 hover:bg-white/5 transition-all backdrop-blur-sm">LEARN MORE</button>
-            </div>
-        </div>
-    </main>
+    <section id="tools-hub" class="page-content pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter">AI <span class="text-indigo-500">Tools</span> Discovery</h2>
+                <p class="text-gray-500 text-sm uppercase tracking-[0.2em] font-semibold">Premium Neural Engines</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="group glass-card p-8 hover:border-indigo-500/50 transition-all duration-500">
+                    <i class="fas fa-wand-magic-sparkles text-indigo-400 text-3xl mb-6"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Cinematic Vision</h3>
+                    <p class="text-gray-500 text-sm mb-8 leading-relaxed">Generate 8K hyper-realistic AI art with advanced lighting.</p>
+                    <button onclick="showPage('prompt-engine')" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-indigo-500 transition">Launch Engine</button>
+                </div>
+                <div class="group glass-card p-8 hover:border-purple-500/50 transition-all duration-500">
+                    <i class="fas fa-id-badge text-purple-400 text-3xl mb-6"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Portrait Transformer</h3>
+                    <p class="text-gray-500 text-sm mb-8 leading-relaxed">Turn concepts into elite character and avatar portraits.</p>
+                    <button onclick="showPage('portrait-engine')" class="w-full py-4 bg-purple-600 text-white rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-purple-500 transition">Open Studio</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div id="tools-hub" class="hidden min-h-screen pt-24 pb-20 bg-[#050505]">
-    <div class="max-w-7xl mx-auto px-6">
-        
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter">
-                AI <span class="text-indigo-500 underline decoration-indigo-500/30 underline-offset-8">Tools</span> Discovery
-            </h2>
-            <p class="text-gray-500 max-w-xl mx-auto text-sm uppercase tracking-[0.2em] font-semibold">
-                Premium Neural Engines for Creators
-            </p>
-        </div>
+    <section id="prompt-engine" class="page-content pt-32 pb-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2 transition uppercase text-[10px] font-bold">← Back to Hub</button>
+            <h2 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> Prompt Engine</h2>
+            <div class="flex flex-wrap gap-3 mb-8 justify-center">
+                <button onclick="setStyle('cinematic')" id="btn-cinematic" class="style-btn px-6 py-2.5 rounded-full border border-indigo-500/30 text-[10px] font-bold uppercase tracking-widest bg-indigo-500/20 text-indigo-400 style-btn-active">🎬 Cinematic</button>
+                <button onclick="setStyle('anime')" id="btn-anime" class="style-btn px-6 py-2.5 rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-widest text-gray-400">🎨 Anime/3D</button>
+                <button onclick="setStyle('realistic')" id="btn-realistic" class="style-btn px-6 py-2.5 rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-widest text-gray-400">📸 Realistic</button>
+            </div>
+            <div class="glass-card p-3 flex flex-col md:flex-row gap-3 mb-10">
+                <input type="text" id="userInput" placeholder="Describe your vision (Urdu/English)..." class="flex-1 bg-transparent p-4 outline-none text-lg">
+                <button onclick="generatePowerPrompt()" class="btn-premium px-10 py-4 rounded-xl font-bold uppercase tracking-widest text-sm">Generate</button>
+            </div>
+            <div id="resultBox" class="hidden glass-card p-8 border-indigo-500/30 border animate__animated animate__zoomIn">
+                <p id="finalPrompt" class="text-xl italic leading-relaxed text-gray-200"></p>
+                <button onclick="copyPrompt()" class="mt-6 bg-indigo-600 hover:bg-indigo-500 px-8 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition">Copy to Clipboard</button>
+            </div>
+        </div>
+    </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <div class="group bg-white/[0.03] border border-white/10 p-8 rounded-[2rem] hover:bg-white/[0.07] hover:border-indigo-500/50 transition-all duration-500">
-                <div class="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/30 group-hover:scale-110 transition">
-                    <i class="fas fa-wand-magic-sparkles text-indigo-400"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-2">Cinematic Vision</h3>
-                <p class="text-gray-500 text-sm mb-8 leading-relaxed">Generate 8K hyper-realistic AI art with advanced lighting controls.</p>
-                <button class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-indigo-500 shadow-xl shadow-indigo-600/20 transition-all">Launch Engine</button>
-            </div>
+    <section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2 transition uppercase text-[10px] font-bold">← Back to Hub</button>
+            <h2 class="text-5xl font-black italic uppercase text-center mb-16">Portrait <span class="text-indigo-500">Transformer</span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div onclick="generatePortrait('cyberpunk')" class="glass-card p-4 cursor-pointer hover:border-indigo-500/50 transition-all group">
+                    <img src="https://image.pollinations.ai/prompt/cyberpunk%20warrior%20portrait?width=400&height=500&nologo=true" class="w-full h-60 object-cover rounded-xl mb-4 group-hover:scale-105 transition">
+                    <h3 class="text-lg font-bold text-center uppercase tracking-widest text-xs">Cyberpunk</h3>
+                </div>
+                <div onclick="generatePortrait('viking')" class="glass-card p-4 cursor-pointer hover:border-orange-500/50 transition-all group">
+                    <img src="https://image.pollinations.ai/prompt/viking%20warrior%20portrait?width=400&height=500&nologo=true" class="w-full h-60 object-cover rounded-xl mb-4 group-hover:scale-105 transition">
+                    <h3 class="text-lg font-bold text-center uppercase tracking-widest text-xs">Viking</h3>
+                </div>
+            </div>
+            <div id="portraitResult" class="hidden mt-12 glass-card p-8 text-center max-w-2xl mx-auto">
+                <p id="portraitFinalPrompt" class="text-lg italic text-gray-200 mb-6"></p>
+                <button onclick="copyPortraitPrompt()" class="btn-premium px-8 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest">Copy Portrait Prompt</button>
+            </div>
+        </div>
+    </section>
 
-            <div class="group bg-white/[0.03] border border-white/10 p-8 rounded-[2rem] hover:bg-white/[0.07] hover:border-purple-500/50 transition-all duration-500">
-                <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6 border border-purple-500/30 group-hover:scale-110 transition">
-                    <i class="fas fa-brain text-purple-400"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-2">Neural Prompt</h3>
-                <p class="text-gray-500 text-sm mb-8 leading-relaxed">AI-powered prompt engineering for midjourney and stable diffusion.</p>
-                <button class="w-full py-4 bg-purple-600 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-purple-500 shadow-xl shadow-purple-600/20 transition-all">Open Library</button>
-            </div>
+    <section id="samples" class="page-content pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-black mb-12 italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> SHOWCASE</h2>
+            <div id="samples-grid" class="grid grid-cols-1 md:grid-cols-4 gap-6"></div>
+        </div>
+    </section>
 
-            <div class="group bg-white/[0.03] border border-white/10 p-8 rounded-[2rem] hover:bg-white/[0.07] hover:border-blue-500/50 transition-all duration-500">
-                <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30 group-hover:scale-110 transition">
-                    <i class="fas fa-video text-blue-400"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-2">Motion FX</h3>
-                <p class="text-gray-500 text-sm mb-8 leading-relaxed">Animate your AI portraits into cinematic motion clips within seconds.</p>
-                <button class="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-blue-500 shadow-xl shadow-blue-600/20 transition-all">Start Motion</button>
-            </div>
+    <section id="about-dev" class="page-content pt-32 pb-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="glass-card p-12 border-t-4 border-t-indigo-600">
+                <div class="w-40 h-40 bg-indigo-500 rounded-full mx-auto mb-8 overflow-hidden">
+                    <img src="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/profile.png?raw=true" class="w-full h-full object-cover">
+                </div>
+                <h2 class="text-4xl font-black mb-2 uppercase tracking-tighter text-white">Hassan <span class="text-indigo-500 italic">Fraz</span></h2>
+                <p class="text-indigo-400 font-bold text-[10px] uppercase tracking-[0.3em] mb-8">Lead Architect at FRAZX</p>
+                <div class="flex justify-center gap-6">
+                    <a href="https://www.instagram.com/hazzy.996" target="_blank" class="bg-indigo-600 px-10 py-4 rounded-xl font-bold uppercase tracking-widest text-xs">Instagram</a>
+                    <a href="mailto:hassanbuttg998@gmail.com" class="bg-white/5 border border-white/10 px-10 py-4 rounded-xl font-bold uppercase tracking-widest text-xs">Email</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        </div>
-    </div>
-</div>
-</section>
+    <footer class="py-12 border-t border-white/5 bg-black/40">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-gray-500 text-[10px] tracking-[0.3em] uppercase">© 2026 <span class="text-indigo-500 font-bold">FRAZX</span> AI LAB. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
 
-    <section id="prompt-engine" class="page-content pt-32 pb-20 px-6">
-        <div class="max-w-4xl mx-auto">
-            <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2 transition">← Back to Hub</button>
-            <h2 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> Prompt Engine</h2>
-            <div class="flex flex-wrap gap-3 mb-6 justify-center">
-                <button onclick="setStyle('cinematic')" id="btn-cinematic" class="style-btn px-4 py-2 rounded-full border border-indigo-500/30 text-xs font-bold uppercase tracking-widest bg-indigo-500/20 text-indigo-400">🎬 Cinematic</button>
-                <button onclick="setStyle('anime')" id="btn-anime" class="style-btn px-4 py-2 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest hover:border-indigo-500/50 transition">🎨 Anime/3D</button>
-                <button onclick="setStyle('realistic')" id="btn-realistic" class="style-btn px-4 py-2 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest hover:border-indigo-500/50 transition">📸 Realistic</button>
-            </div>
-            <div class="glass-card p-3 flex flex-col md:flex-row gap-3 mb-10">
-                <input type="text" id="userInput" placeholder="Describe your vision (Urdu/English)..." class="flex-1 bg-transparent p-4 outline-none text-lg">
-                <button onclick="generatePowerPrompt()" class="btn-premium px-8 py-4 rounded-xl font-bold">Generate</button>
-            </div>
-            <div id="resultBox" class="hidden glass-card p-8 border-indigo-500/30 border animate__animated animate__zoomIn">
-                <p id="finalPrompt" class="text-xl italic leading-relaxed text-gray-200"></p>
-                <button onclick="copyPrompt()" class="mt-6 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full text-sm transition">Copy to Clipboard</button>
-            </div>
-        </div>
-    </section>
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('sidebar').classList.toggle('translate-x-full');
+        }
 
-    <section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
-        <div class="max-w-6xl mx-auto">
-            <button onclick="showPage('tools-hub')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2 transition">← Back to Hub</button>
-            <div class="text-center mb-16">
-                <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-4 text-white">Portrait <span class="text-indigo-500">Transformer</span></h2>
-                <p class="text-gray-500 uppercase tracking-[0.3em] text-[10px] font-bold">Select a style to generate your elite AI avatar prompt</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div onclick="generatePortrait('cyberpunk')" class="glass-card p-4 cursor-pointer hover:border-indigo-500/50 transition-all group">
-                    <div class="h-48 bg-indigo-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
-                        <img src="https://image.pollinations.ai/prompt/cyberpunk%20warrior%20neon%20lights%20highly%20detailed%208k?width=400&height=500&nologo=true" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">Cyberpunk Neon</h3>
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Neon & Tech Vibe</p>
-                </div>
-                <div onclick="generatePortrait('viking')" class="glass-card p-4 cursor-pointer hover:border-orange-500/50 transition-all group">
-                    <div class="h-48 bg-orange-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
-                        <img src="https://image.pollinations.ai/prompt/ancient%20viking%20warrior%20cinematic%20lighting%20highly%20detailed?width=400&height=500&nologo=true" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">Ancient Viking</h3>
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Raw & Gritty Look</p>
-                </div>
-                <div onclick="generatePortrait('avatar')" class="glass-card p-4 cursor-pointer hover:border-purple-500/50 transition-all group">
-                    <div class="h-48 bg-purple-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
-                        <img src="https://image.pollinations.ai/prompt/pixar%20style%203d%20cute%20character%20highly%20detailed?width=400&height=500&nologo=true" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">3D Pixar Style</h3>
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Modern 3D Art</p>
-                </div>
-                <div onclick="generatePortrait('business')" class="glass-card p-4 cursor-pointer hover:border-blue-500/50 transition-all group">
-                    <div class="h-48 bg-blue-900/20 rounded-xl mb-4 overflow-hidden border border-white/5">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&h=500&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">Pro Headshot</h3>
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Sharp & Corporate</p>
-                </div>
-            </div>
-            <div id="portraitResult" class="hidden mt-16 glass-card p-10 border-indigo-500/30 border animate__animated animate__fadeInUp max-w-2xl mx-auto text-center relative overflow-hidden">
-                <h4 id="portraitStyleName" class="text-indigo-400 font-black uppercase text-[10px] tracking-[0.4em] mb-6">Style Generated</h4>
-                <p id="portraitFinalPrompt" class="text-xl italic text-gray-200 mb-8 leading-relaxed"></p>
-                <button onclick="copyPortraitPrompt()" class="btn-premium px-10 py-4 rounded-2xl font-bold transition shadow-lg">Copy Portrait Prompt</button>
-            </div>
-        </div>
-    </section>
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
+            const target = document.getElementById(pageId);
+            if(target) target.classList.add('active-page');
+            document.getElementById('sidebar').classList.add('translate-x-full');
+            window.scrollTo(0, 0);
+            if(pageId === 'samples') renderSamples();
+        }
 
-    <section id="samples" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-4xl font-black mb-12 italic uppercase tracking-tighter">FRAZ<span class="text-indigo-500">X</span> SHOWCASE</h2>
-            <div id="samples-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                </div>
-        </div>
-    </section>
+        let selectedStyle = 'cinematic';
+        function setStyle(style) {
+            selectedStyle = style;
+            document.querySelectorAll('.style-btn').forEach(btn => btn.classList.remove('style-btn-active'));
+            document.getElementById('btn-' + style).classList.add('style-btn-active');
+        }
 
-    <section id="about-frazx" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
-                <div>
-                    <h4 class="text-indigo-500 font-bold uppercase text-xs tracking-[0.3em] mb-4">The Vision</h4>
-                    <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-6 text-white">Advanced <span class="text-indigo-500">AI Lab.</span></h2>
-                    <p class="text-gray-400 leading-relaxed mb-6 text-lg">FRAZX is an elite AI Cinematic Engine engineered for digital creators. We bridge the gap between simple ideas and visual masterpieces.</p>
-                </div>
-                <div class="glass-card p-8 border-l-4 border-l-indigo-600 relative overflow-hidden">
-                    <h3 class="text-2xl font-bold mb-8 italic">USER <span class="text-indigo-500 text-sm tracking-widest">Workflow</span></h3>
-                    <div class="space-y-8">
-                        <div class="flex gap-5">
-                            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-sm shrink-0 shadow-lg shadow-indigo-500/20">01</div>
-                            <div>
-                                <h4 class="font-bold text-white uppercase text-xs tracking-widest mb-1">Select Module</h4>
-                                <p class="text-gray-500 text-xs">Choose between Prompt Engine or Portrait Transformer.</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-5">
-                            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-sm shrink-0 shadow-lg shadow-indigo-500/20">02</div>
-                            <div>
-                                <h4 class="font-bold text-white uppercase text-xs tracking-widest mb-1">Define Vision</h4>
-                                <p class="text-gray-500 text-xs">Input your concept or select a style card.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        function generatePowerPrompt() {
+            let input = document.getElementById('userInput').value;
+            if(!input) return alert("Hassan bhai, pehle idea toh likhen!");
+            const tags = { cinematic: "movie shot, anamorphic lens, 8k", anime: "niji style, vibrant illustration", realistic: "raw photo, photorealistic, 8k" };
+            document.getElementById('finalPrompt').innerText = `${input}, ${tags[selectedStyle]}, highly detailed, cinematic atmosphere --v 6.0`;
+            document.getElementById('resultBox').classList.remove('hidden');
+        }
 
-    <section id="about-dev" class="page-content pt-32 pb-20 px-6 animate__animated animate__fadeIn">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="glass-card p-12 border-t-4 border-t-indigo-600 relative overflow-hidde">
-                <div class="w-40 h-40 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full mx-auto mb-8 p-1 shadow-2xl flex items-center justify-center">
-                    <div class="w-full h-full bg-[#010413] rounded-full overflow-hidden">
-                        <img src="profile.png" alt="Hassan Fraz" class="w-full h-full object-cover object-top">
-                    </div>
-                </div>
-                <h2 class="text-4xl font-black mb-2 uppercase tracking-tighter text-white">Hassan <span class="text-indigo-500 italic">Fraz</span></h2>
-                <p class="text-indigo-400 font-bold text-xs uppercase tracking-[0.3em] mb-8 border-b border-white/5 pb-4 inline-block">Founder & Lead Architect at FRAZX</p>
-                <div class="flex flex-wrap justify-center gap-6">
-                    <a href="https://www.instagram.com/hazzy.996" target="_blank" class="bg-gradient-to-r from-pink-500 to-orange-500 px-10 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-lg text-white">Instagram</a>
-                    <a href="mailto:hassanbuttg998@gmail.com" class="bg-white/5 border border-white/10 px-10 py-4 rounded-2xl font-bold hover:bg-white/10 transition text-white">Email Founder</a>
-                </div>
-            </div>
-        </div>
-    </section>
+        function copyPrompt() {
+            navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText);
+            alert("Prompt Copied!");
+        }
 
-    <section id="updates" class="py-20 px-6 border-t border-white/5 bg-white/[0.01]">
-        <div class="max-w-4xl mx-auto text-center">
-            <h3 class="text-indigo-500 font-black uppercase text-xs tracking-[0.4em] mb-12">Deployment Roadmap</h3>
-            <div class="space-y-4 text-left">
-                <div class="glass-card p-6 flex justify-between items-center border-l-4 border-indigo-500">
-                    <span class="font-bold text-white uppercase tracking-widest text-sm">V1.0 Global Prompt Engine</span>
-                    <span class="text-[10px] bg-green-500/20 text-green-400 px-3 py-1 rounded-full font-bold">ACTIVE</span>
-                </div>
-                <div class="glass-card p-6 flex justify-between items-center opacity-60 border-l-4 border-gray-700">
-                    <span class="font-bold text-gray-400 uppercase tracking-widest text-sm">V2.0 Negative Prompt Generator</span>
-                    <span class="text-[10px] bg-white/10 text-gray-400 px-3 py-1 rounded-full font-bold">COMING SOON</span>
-                </div>
-            </div>
-        </div>
-    </section>
+        function generatePortrait(style) {
+            const prompts = { cyberpunk: "Cyberpunk elite portrait, neon lights --v 6.0", viking: "Ancient viking warrior portrait, gritty --v 6.0" };
+            document.getElementById('portraitFinalPrompt').innerText = prompts[style];
+            document.getElementById('portraitResult').classList.remove('hidden');
+        }
 
-    <footer class="py-12 border-t border-white/5 bg-black/40">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-        <div class="flex flex-wrap justify-center gap-4 mb-8">
-            <button onclick="showPage('privacy')" class="px-5 py-2 text-xs rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">Privacy Policy</button>
-            <button onclick="showPage('terms')" class="px-5 py-2 text-xs rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">Terms of Service</button>
-            <button onclick="showPage('about-dev')" class="px-5 py-2 text-xs rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">About Us</button>
-            <button onclick="showPage('contact')" class="px-5 py-2 text-xs rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-600/40 hover:text-white transition">Contact Us</button>
-        </div>
+        function copyPortraitPrompt() {
+            navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
+            alert("Portrait Prompt Copied!");
+        }
 
-        <p class="text-gray-500 text-[10px] tracking-[0.3em] uppercase">
-            © 2026 <span class="text-indigo-500 font-bold">FRAZX</span> AI LAB. ALL RIGHTS RESERVED.
-        </p>
-    </div>
-</footer>
+        function renderSamples() {
+            const grid = document.getElementById('samples-grid');
+            if(!grid) return;
+            const items = ["Cyberpunk Cat", "Future City", "Astronaut Art", "Neon Samurai"];
+            grid.innerHTML = items.map(p => `
+                <div class="glass-card p-4 animate__animated animate__fadeInUp">
+                    <img src="https://image.pollinations.ai/prompt/${p}?width=400&height=500&nologo=true" class="w-full h-60 object-cover rounded-xl mb-4">
+                    <p class="text-[10px] font-bold text-indigo-400 uppercase text-center">${p}</p>
+                </div>
+            `).join('');
+        }
 
-    <script>
-        // --- NAVIGATION & SIDEBAR (Problem 3, 8 & 10 Fix) ---
-        function toggleMobileMenu() {
-            document.getElementById('sidebar').classList.toggle('translate-x-full');
-        }
-
-        document.addEventListener('click', (e) => {
-            const sidebar = document.getElementById('sidebar');
-            const menuBtn = document.querySelector('button[onclick*="toggleMobileMenu"]'); 
-            if (sidebar && !sidebar.classList.contains('translate-x-full')) {
-                if (!sidebar.contains(e.target) && (!menuBtn || !menuBtn.contains(e.target))) {
-                    sidebar.classList.add('translate-x-full');
-                }
-            }
-        });
-
-        function showPage(pageId, pushState = true) {
-            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
-            const target = document.getElementById(pageId);
-            if(target) {
-                target.classList.add('active-page');
-                if(pushState) history.pushState({pageId: pageId}, null, "");
-            }
-            document.getElementById('sidebar').classList.add('translate-x-full');
-            window.scrollTo(0, 0);
-            if(pageId === 'samples') renderSamples();
-        }
-
-        window.onpopstate = function(event) {
-            if(event.state && event.state.pageId) showPage(event.state.pageId, false);
-            else showPage('home', false);
-        };
-
-        // --- PROMPT ENGINE LOGIC ---
-        let selectedStyle = 'cinematic';
-        function setStyle(style) {
-            selectedStyle = style;
-            document.querySelectorAll('.style-btn').forEach(btn => {
-                btn.classList.remove('bg-indigo-500/20', 'text-indigo-400', 'border-indigo-500/50');
-                btn.classList.add('border-white/10', 'text-gray-400');
-            });
-            const activeBtn = document.getElementById('btn-' + style);
-            activeBtn.classList.add('bg-indigo-500/20', 'text-indigo-400', 'border-indigo-500/50');
-        }
-
-        function generatePowerPrompt() {
-            let input = document.getElementById('userInput').value;
-            if(input.trim() === "") return alert("Hassan bhai, pehle idea toh likhen!");
-            const styles = {
-                cinematic: { tags: "hollywood movie style, anamorphic lens, teal and orange color grading, volumetric lighting", suffix: "--ar 21:9 --v 6.0" },
-                anime: { tags: "studio ghibli style, vibrant colors, hand-drawn aesthetic, high-quality digital illustration", suffix: "--niji 6" },
-                realistic: { tags: "8k resolution, raw photo, f/1.8 depth of field, hyper-detailed skin pores, Sony A7R IV", suffix: "--style raw --v 6.0" }
-            };
-            const current = styles[selectedStyle];
-            let expandedPrompt = `(Masterpiece:1.3), ${input}, ${current.tags}, intricate background, cinematic atmosphere, highly detailed ${current.suffix}`;
-            document.getElementById('finalPrompt').innerText = expandedPrompt;
-            document.getElementById('resultBox').classList.remove('hidden');
-        }
-
-        function copyPrompt() {
-            navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText);
-            alert("Prompt copied!");
-        }
-
-        // --- PORTRAIT LOGIC ---
-        function generatePortrait(style) {
-            const portraitPrompts = {
-                cyberpunk: "Close-up portrait of a character in cyberpunk gear, neon purple lighting, hyper-realistic, 8k --v 6.0",
-                viking: "Intense close-up of a Viking warrior, war paint, fur and leather armor, cinematic snowy background --v 6.0",
-                avatar: "Cute 3D character portrait, Pixar style, soft studio lighting, Unreal Engine 5 --v 6.0",
-                business: "Professional corporate headshot, confident smile, blurred modern office, high-end photography --v 6.0"
-            };
-            document.getElementById('portraitStyleName').innerText = style.toUpperCase() + " STYLE GENERATED";
-            document.getElementById('portraitFinalPrompt').innerText = portraitPrompts[style];
-            document.getElementById('portraitResult').classList.remove('hidden');
-            setTimeout(() => { document.getElementById('portraitResult').scrollIntoView({ behavior: 'smooth' }); }, 100);
-        }
-
-        function copyPortraitPrompt() {
-            navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
-            alert("Portrait prompt copied!");
-        }
-
-        // --- SHOWCASE LOGIC (Problem 7 Fix) ---
-        function renderSamples() {
-            const grid = document.getElementById('samples-grid');
-            if(!grid) return;
-            const prompts = ["Cyberpunk Cat", "Futuristic City", "Astronaut Art", "Neon Samurai"];
-            grid.innerHTML = ''; 
-            prompts.forEach(p => {
-                grid.innerHTML += `<div class="glass-card p-4 animate__animated animate__fadeInUp">
-                    <div class="h-60 overflow-hidden rounded-xl mb-4">
-                        <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(p)}?width=500&height=700&nologo=true" class="w-full h-full object-cover">
-                    </div>
-                    <p class="text-[10px] font-black text-indigo-400 uppercase text-center italic opacity-60">${p}</p>
-                </div>`;
-            });
-        }
-
-        // --- Problem 2, 7 & 10 Fix: Global Init ---
-        window.onload = () => {
-            showPage('home', true);
-            renderSamples();
-        };
-    </script>
+        window.onload = () => showPage('home');
+    </script>
 </body>
-</html>
+  </html>
