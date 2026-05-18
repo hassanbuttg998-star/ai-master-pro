@@ -166,7 +166,32 @@
         </div>
     </div>
 </section>
+<section id="about-frazx" class="page-content pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+        <button onclick="showPage('home')" class="mb-8 text-gray-500 hover:text-white flex items-center gap-2">← Back to Home</button>
+        
+        <div class="glass p-10 md:p-16 rounded-[3rem] border-t-4 border-indigo-600">
+            <h2 class="text-4xl md:text-5xl font-black italic uppercase text-white mb-8 tracking-tighter">Inside <span class="text-indigo-500">FRAZX</span> Lab</h2>
+            
+            <div class="prose prose-invert text-gray-400 leading-relaxed space-y-6 text-lg">
+                <p>Welcome to <span class="text-white font-bold">FRAZX</span>, an elite-level AI Prompt Engineering laboratory designed for creators who demand cinematic perfection. This isn't just a website; it's a bridge between human imagination and neural network execution.</p>
+                
+                <h3 class="text-2xl font-bold text-white uppercase italic mt-10">Current Arsenal (Tools)</h3>
+                <ul class="list-disc list-inside space-y-4">
+                    <li><span class="text-indigo-400 font-bold">Cinematic Vision:</span> Our flagship engine that converts raw ideas into high-fidelity 8K prompts. It focuses on lighting, camera angles, and textures.</li>
+                    <li><span class="text-purple-400 font-bold">Portrait Transformer:</span> Specialized in human/character design, offering styles from Cyberpunk to Viking and Pixar-3D.</li>
+                </ul>
 
+                <h3 class="text-2xl font-bold text-white uppercase italic mt-10">Future Roadmap (Coming Soon)</h3>
+                <p>We are currently developing <span class="text-indigo-400">FRAZX Video-Core</span>, which will generate high-end prompts specifically for Sora and Runway Gen-2 models. Also, a dedicated "Prompt Library" is in the works where users can save their best results.</p>
+                
+                <div class="mt-12 p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl italic text-sm">
+                    "Our mission is to democratize high-end cinematic art through the power of advanced prompt engineering." — FRAZX Team
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <footer class="py-20 border-t border-white/5 bg-black/60 text-center">
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex flex-col items-center gap-4 mb-8">
@@ -185,45 +210,62 @@
 <script>
     let pageHistory = ['home'];
 
-    function showPage(pageId, saveHistory = true) {
-    // 1. Saare sections ko hide karo
+    // Function to show page with History Support
+function showPage(pageId, pushToHistory = true) {
     const sections = document.querySelectorAll('.page-content');
     sections.forEach(s => {
         s.style.display = 'none';
         s.classList.remove('active-page');
     });
 
-    // 2. Target section ko show karo
     const target = document.getElementById(pageId);
     if (target) {
         target.style.display = 'block';
         target.classList.add('active-page');
         
-        // Back button support
-        if(saveHistory) {
-            history.pushState({page: pageId}, null, "#" + pageId);
+        // Browser history mein add karein taake back button chale
+        if (pushToHistory) {
+            window.history.pushState({ pageId: pageId }, "", "#" + pageId);
         }
     }
 
-    // 3. Sidebar band karo
+    // Sidebar band karein
     document.getElementById('sidebar').classList.add('translate-x-full');
     window.scrollTo(0, 0);
 }
 
-// Back button dabane par page change ho
+// Back Button Event Listener
 window.onpopstate = function(event) {
-    if (event.state && event.state.page) {
-        showPage(event.state.page, false);
+    if (event.state && event.state.pageId) {
+        showPage(event.state.pageId, false);
     } else {
         showPage('home', false);
     }
 };
 
-    function toggleSidebar(e) {
-        e.stopPropagation();
-        document.getElementById('sidebar').classList.toggle('translate-x-full');
-    }
+// Toggle Sidebar
+function toggleSidebar(e) {
+    if(e) e.stopPropagation();
+    document.getElementById('sidebar').classList.toggle('translate-x-full');
+}
 
+// Auto-close Sidebar on empty click
+document.addEventListener('click', function(e) {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar.contains(e.target)) {
+        sidebar.classList.add('translate-x-full');
+    }
+});
+
+// Load Page based on URL Hash
+window.onload = () => {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        showPage(hash, false);
+    } else {
+        showPage('home', false);
+    }
+};
     // Slider ko khali jagah click karne par band karna
     function closeSidebarOnEmptyClick(e) {
         const sidebar = document.getElementById('sidebar');
