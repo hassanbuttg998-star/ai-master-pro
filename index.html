@@ -177,15 +177,25 @@
     let pageHistory = ['home'];
 
     function showPage(pageId) {
-        document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
-        const target = document.getElementById(pageId);
-        if(target) {
-            target.classList.add('active-page');
-            if(pageHistory[pageHistory.length-1] !== pageId) pageHistory.push(pageId);
-        }
-        document.getElementById('sidebar').classList.add('translate-x-full');
-        window.scrollTo(0, 0);
+    // 1. Saare pages ko hide karo
+    document.querySelectorAll('.page-content').forEach(p => {
+        p.style.display = 'none';
+        p.classList.remove('active-page');
+    });
+
+    // 2. Target page ko show karo
+    const target = document.getElementById(pageId);
+    if (target) {
+        target.style.display = 'block';
+        target.classList.add('active-page');
     }
+
+    // 3. Sidebar band karo
+    document.getElementById('sidebar').classList.add('translate-x-full');
+    
+    // 4. Scroll to top
+    window.scrollTo(0, 0);
+}
 
     function toggleSidebar(e) {
         e.stopPropagation();
