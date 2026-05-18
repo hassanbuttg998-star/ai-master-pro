@@ -210,49 +210,71 @@
 <script>
     let pageHistory = ['home'];
 
-    // Function to show page with History Support
+// 1. Navigation Function with History Support
 function showPage(pageId, pushToHistory = true) {
     const sections = document.querySelectorAll('.page-content');
+    
+    // Sab pages hide karo
     sections.forEach(s => {
         s.style.display = 'none';
         s.classList.remove('active-page');
     });
 
+    // Target page dikhao
     const target = document.getElementById(pageId);
     if (target) {
         target.style.display = 'block';
         target.classList.add('active-page');
-        
-        // Browser history mein add karein taake back button chale
+
+        // Sabse important: History mein page add karo
         if (pushToHistory) {
+            // Ye line browser ko batati hai ke hum naye page par hain
             window.history.pushState({ pageId: pageId }, "", "#" + pageId);
         }
     }
 
-    // Sidebar band karein
-    document.getElementById('sidebar').classList.add('translate-x-full');
-    window.scrollTo(0, 0);
+    // Sidebar band karo
+    const sidebar = document.getElementById('sidebar');
+    if(sidebar) sidebar.classList.add('translate-x-full');
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Back Button Event Listener
+// 2. Back Button Detection (The Fix)
 window.onpopstate = function(event) {
+    // Jab user mobile ka back button dabaye
     if (event.state && event.state.pageId) {
-        showPage(event.state.pageId, false);
+        showPage(event.state.pageId, false); // 'false' taake loop na banay
     } else {
+        // Agar history khatam ho jaye to Home par le jao
         showPage('home', false);
     }
 };
 
-// Toggle Sidebar
+// 3. Page Load Check
+window.onload = () => {
+    // Agar URL mein pehle se #about-dev jaisa kuch ho to wahi khulay
+    const currentHash = window.location.hash.substring(1);
+    if (currentHash) {
+        showPage(currentHash, false);
+    } else {
+        // Shuru mein Home page history mein set karo
+        window.history.replaceState({ pageId: 'home' }, "", "");
+        showPage('home', false);
+    }
+};
+
+// 4. Sidebar Toggle Logic
 function toggleSidebar(e) {
     if(e) e.stopPropagation();
     document.getElementById('sidebar').classList.toggle('translate-x-full');
 }
 
-// Auto-close Sidebar on empty click
+// Sidebar auto-close on outside click
 document.addEventListener('click', function(e) {
     const sidebar = document.getElementById('sidebar');
-    if (!sidebar.contains(e.target)) {
+    if (sidebar && !sidebar.contains(e.target)) {
         sidebar.classList.add('translate-x-full');
     }
 });
