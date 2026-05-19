@@ -290,74 +290,60 @@
     }
     
     function toggleTheme() {
-    const html = document.documentElement;
     const body = document.body;
     const themeText = document.getElementById('theme-text');
     const themeIcon = document.getElementById('theme-icon');
     
-    // 1. Core Structural Elements
-    const mainHeadings = document.querySelectorAll('h1, h2, h3, h4, [class*="text-2xl"]');
-    const contentParagraphs = document.querySelectorAll('p:not(.hero-p), .text-gray-400');
-    const glassContainers = document.querySelectorAll('.rounded-3xl, .rounded-2xl, .bg-white\\/5, .border-white\\/10');
+    // Core Elements Secure Variables
+    const mainHeadings = document.querySelectorAll('h1, h2, h3, .text-white');
+    const contentParagraphs = document.querySelectorAll('p');
+    const glassCards = document.querySelectorAll('.bg-white\\/5, .border-white\\/10, [class*="rounded-3xl"]');
     
-    // --- EXACT HOME BUTTONS TARGETING (No Badges or Menus affected) ---
-    // Yeh sirf unhi buttons ko target karega jinki click actions main window par hain
-    const homeHeroButtons = document.querySelectorAll('button[onclick*="Creation"], button[onclick*="Learn"], button[onclick*="creation"], button[onclick*="learn"], .hero-btn');
+    // --- SIDEBAR TARGETS FIXED ---
+    const sidebar = document.getElementById('sidebar');
+    const sidebarLinks = sidebar ? sidebar.querySelectorAll('span, i, a') : [];
 
-    if (!html.classList.contains('light-active')) {
-        // ==========================================
-        // ☀️ LIGHT MODE ACTIVE
-        // ==========================================
-        html.classList.add('light-active');
-        body.classList.add('light-mode-active');
+    if (!body.classList.contains('light-theme-active')) {
+        body.classList.add('light-theme-active');
         
-        body.style.setProperty('background', '#f8f9fa', 'important');
-        body.style.setProperty('color', '#1f2937', 'important');
+        // 1. Light Mode Main Base
+        body.style.setProperty('background', '#f4f4f7', 'important');
+        body.style.setProperty('color', '#111827', 'important');
         
-        // Headings setup
+        // 2. Headings & Main Text Visibility Fix
         mainHeadings.forEach(el => {
             if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
                 el.style.setProperty('color', '#111827', 'important');
             }
         });
 
-        // Paragraph text colors
+        // 3. Paragraphs text color
         contentParagraphs.forEach(p => {
             p.style.setProperty('color', '#4b5563', 'important');
         });
 
-        // Dashboard Containers
-        glassContainers.forEach(card => {
-            // Ensure we don't accidentally style navbar elements or sidebar
-            if (card.id !== 'sidebar' && card.tagName !== 'NAV' && !card.classList.contains('bg-black/40')) {
+        // 4. Main Cards Update (Apple Style)
+        glassCards.forEach(card => {
+            if (card.id !== 'sidebar' && card.tagName !== 'NAV') {
                 card.style.setProperty('background-color', '#ffffff', 'important');
                 card.style.setProperty('border-color', '#e5e7eb', 'important');
-                card.style.setProperty('box-shadow', '0 4px 6px -1px rgba(0, 0, 0, 0.05)', 'important');
+                card.style.setProperty('box-shadow', '0 10px 15px -3px rgba(0, 0, 0, 0.05)', 'important');
             }
         });
 
-        // Sidebar Fix
-        const sidebar = document.getElementById('sidebar');
+        // 5. SIDEBAR LIGHT UI (Sleek Professional White Menu)
         if (sidebar) {
             sidebar.style.setProperty('background-color', '#ffffff', 'important');
             sidebar.style.setProperty('border-left', '1px solid #e5e7eb', 'important');
-            sidebar.querySelectorAll('span, i, a').forEach(link => {
-                if (!link.classList.contains('text-[#6366f1]') && !link.classList.contains('text-indigo-500')) {
-                    link.style.setProperty('color', '#374151', 'important');
-                }
-            });
+            sidebar.style.setProperty('box-shadow', '-10px 0 25px -5px rgba(0, 0, 0, 0.05)', 'important');
         }
-
-        // Home Buttons Text Visibility: Force White color on text inside those main action buttons
-        homeHeroButtons.forEach(btn => {
-            btn.style.setProperty('color', '#ffffff', 'important');
-            // Agar button ke andar text spans hain to unko bhi explicit white lock do
-            btn.querySelectorAll('span').forEach(span => {
-                span.style.setProperty('color', '#ffffff', 'important');
-            });
+        sidebarLinks.forEach(link => {
+            if (!link.classList.contains('text-[#6366f1]') && !link.classList.contains('text-indigo-500')) {
+                link.style.setProperty('color', '#374151', 'important'); // Clear dark gray text for links
+            }
         });
 
-        // Toggle Widget Sync
+        // Toggle Button Appearance
         if (themeText) {
             themeText.innerText = "LIGHT";
             themeText.style.setProperty('color', '#111827', 'important');
@@ -365,40 +351,33 @@
         if (themeIcon) themeIcon.className = "fa-solid fa-sun text-amber-500";
 
     } else {
-        // ==========================================
-        // 🌙 DARK MODE (YOUR ORIGINAL SETUP 100% RESTORED)
-        // ==========================================
-        html.classList.remove('light-active');
-        body.classList.remove('light-mode-active');
+        // --- DARK MODE: AAP KA ORIGINAL SETUP 100% UNTOUCHED RESTORE ---
+        body.classList.remove('light-theme-active');
         
+        // Inline styles delete taake aapki HTML/CSS files ka design chale
         body.style.removeProperty('background');
         body.style.removeProperty('color');
         
         mainHeadings.forEach(el => el.style.removeProperty('color'));
         contentParagraphs.forEach(p => p.style.removeProperty('color'));
         
-        glassContainers.forEach(card => {
+        glassCards.forEach(card => {
             card.style.removeProperty('background-color');
             card.style.removeProperty('border-color');
             card.style.removeProperty('box-shadow');
         });
 
+        // Sidebar Reset (Back to your original cyberpunk dark theme)
         if (sidebar) {
             sidebar.style.removeProperty('background-color');
             sidebar.style.removeProperty('border-left');
             sidebar.style.removeProperty('box-shadow');
-            sidebar.querySelectorAll('span, i, a').forEach(link => link.style.removeProperty('color'));
         }
-
-        // --- THE FIX: Clean Home Buttons Inline Styles Completely ---
-        // Jab dark mode ho to JS ka color remove ho jaye taake aapki native classes (White color) wapas aa jayein!
-        homeHeroButtons.forEach(btn => {
-            btn.style.removeProperty('color');
-            btn.querySelectorAll('span').forEach(span => {
-                span.style.removeProperty('color');
-            });
+        sidebarLinks.forEach(link => {
+            link.style.removeProperty('color');
         });
 
+        // Toggle Button Reset to Dark
         if (themeText) {
             themeText.innerText = "DARK";
             themeText.style.removeProperty('color');
