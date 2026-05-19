@@ -294,33 +294,46 @@
     const body = document.body;
     const themeText = document.getElementById('theme-text');
     const themeIcon = document.getElementById('theme-icon');
-    const themeBtn = document.getElementById('theme-btn');
+    const allPages = document.querySelectorAll('.page-content');
 
-    // Agar abhi dark mode hai to light mode me switch karo
-    if (body.classList.contains('bg-[#050508]')) {
-        // Light Mode Classes Apply Ki
-        body.classList.remove('bg-[#050508]');
-        body.classList.add('bg-[#f4f4f7]', 'text-gray-900');
+    // Agar abhi dark mode hai to Light Mode me switch karo
+    if (!body.classList.contains('light-theme-active')) {
+        body.classList.add('light-theme-active');
         
-        // Button elements ko update kiya
+        // Pure background ko aik dum smooth white base do
+        body.style.background = '#f4f4f7';
+        body.style.color = '#111827';
+        
+        // Sabhi pages ke background aur text ko badlo
+        allPages.forEach(page => {
+            page.style.backgroundColor = '#ffffff';
+            page.style.color = '#111827';
+        });
+
+        // Toggle Button ki looks update karo
         themeText.innerText = "LIGHT";
-        themeText.classList.add('text-gray-900');
+        themeText.style.color = '#111827';
         themeIcon.className = "fa-solid fa-sun text-amber-500";
-        themeBtn.classList.remove('bg-white/5', 'border-white/10', 'text-white');
-        themeBtn.classList.add('bg-black/5', 'border-black/10', 'text-gray-900');
     } else {
-        // Wapas Dark Mode me switch kiya
-        body.classList.add('bg-[#050508]');
-        body.classList.remove('bg-[#f4f4f7]', 'text-gray-900');
+        // Wapas original Dark Mode settings par switch karo
+        body.classList.remove('light-theme-active');
         
-        // Button elements reset kiye
+        // Aapka original radial-gradient wapas restore kiya
+        body.style.background = 'radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%)';
+        body.style.color = '#e2e8f0';
+        
+        // Sabhi pages ko wapas clear/dark background par le aao
+        allPages.forEach(page => {
+            page.style.backgroundColor = 'transparent';
+            page.style.color = '#e2e8f0';
+        });
+
+        // Toggle Button reset karo
         themeText.innerText = "DARK";
-        themeText.classList.remove('text-gray-900');
+        themeText.style.color = '#ffffff';
         themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
-        themeBtn.classList.add('bg-white/5', 'border-white/10', 'text-white');
-        themeBtn.classList.remove('bg-black/5', 'border-black/10', 'text-gray-900');
     }
-    }
+}
 </script>
 </body>
 </html>
