@@ -277,9 +277,9 @@
     }
 
     function copyPrompt() {
-        navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText);
-        showToast("Prompt copied to clipboard!");
-    }
+    navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText);
+    showToast("Prompt copied to clipboard!");
+}
 
     function generatePortrait(style) {
         document.getElementById('portraitFinalPrompt').innerText = `Hyper-realistic close up portrait of ${style} subject, cinematic conceptual studio render, ultra textures, intricate grading --v 6.0`;
@@ -287,9 +287,9 @@
     }
 
     function copyPortraitPrompt() {
-        navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
-        showToast("Prompt copied to clipboard!");
-    }
+    navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
+    showToast("Prompt copied to clipboard!");
+}
     
     function toggleTheme() {
     const body = document.body;
@@ -388,34 +388,40 @@
     }
 }
    
-    // Professional Toast Notification System
+    // Professional Toast Notification System (Fixed Overlap)
 function showToast(message) {
-    // Agar pehle se koi toast active hai to use hata do
+    // Agar pehle se koi toast screen par hai to use fauran delete karo
     const oldToast = document.getElementById('custom-toast');
-    if (oldToast) oldToast.remove();
+    if (oldToast) {
+        oldToast.remove();
+    }
 
-    // Naya toast element create karein
+    // Naya fresh toast container create karein
     const toast = document.createElement('div');
     toast.id = 'custom-toast';
-    toast.innerText = message;
     
-    // Premium Dark Glass Styling classes (Tailwind)
-    toast.className = "fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-3 bg-black/80 text-white border border-white/10 rounded-xl text-sm font-medium tracking-wide shadow-2xl backdrop-blur-md z-[9999] transition-all duration-300 opacity-0 transform translate-y-2";
+    // Text completely reset aur fresh set kiya
+    toast.textContent = message;
+    
+    // Solid layout aur spacing settings text overlap ko rokne ke liye
+    toast.className = "fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-3 bg-[#111827]/95 text-white border border-white/10 rounded-xl text-sm font-bold tracking-wide shadow-2xl backdrop-blur-md z-[9999] transition-all duration-300 opacity-0 transform translate-y-2 whitespace-nowrap text-center block leading-normal min-w-[200px]";
     
     document.body.appendChild(toast);
     
-    // Smooth Fade In
+    // Smooth Fade In Animation
     setTimeout(() => {
         toast.classList.remove('opacity-0', 'translate-y-2');
         toast.classList.add('opacity-100', 'translate-y-0');
     }, 50);
     
-    // 2.5 Seconds baad smooth Fade Out aur remove
+    // 2.2 Seconds baad smooth fade out aur clean exit
     setTimeout(() => {
         toast.classList.remove('opacity-100', 'translate-y-0');
         toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-    }, 2500);
+        setTimeout(() => {
+            if (toast.parentNode) toast.remove();
+        }, 300);
+    }, 2200);
 }
 </script>
 </body>
