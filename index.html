@@ -6,7 +6,7 @@
     <title>FRAZX | Premium AI Studio</title>
     <link rel="icon" type="image/jpeg" href="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/logohui.png?raw=true">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #6366f1; --accent: #a855f7; }
@@ -49,13 +49,31 @@
         <span class="text-white font-black uppercase italic">Menu</span>
         <button onclick="toggleSidebar(event)" class="text-white text-2xl">&times;</button>
     </div>
-    <div class="flex flex-col gap-6 font-bold uppercase tracking-widest text-sm">
-        <a href="javascript:void(0)" onclick="showPage('home')" class="text-indigo-400">Home</a>
-        <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="text-white hover:text-indigo-400">Tools Hub</a>
-        <a href="javascript:void(0)" onclick="showPage('samples')" class="text-white hover:text-indigo-400">Showcase</a>
-        <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="text-white hover:text-indigo-400">About FRAZX</a>
-        <a href="javascript:void(0)" onclick="showPage('about-dev')" class="text-white hover:text-indigo-400">Developer</a>
-    </div>
+    <div class="flex flex-col gap-6 uppercase font-bold text-xs tracking-widest">
+    <a href="javascript:void(0)" onclick="showPage('home')" class="flex items-center gap-4 text-indigo-400 group">
+        <i class="fa-solid fa-house-chimney w-5 text-center group-hover:scale-110 transition-transform"></i>
+        <span>Home</span>
+    </a>
+
+    <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="flex items-center gap-4 text-white group">
+        <i class="fa-solid fa-microchip w-5 text-center group-hover:scale-110 transition-transform"></i>
+        <span>Tools Hub</span>
+    </a>
+
+    <a href="javascript:void(0)" onclick="showPage('samples')" class="flex items-center gap-4 text-white group">
+        <i class="fa-solid fa-clapperboard w-5 text-center group-hover:scale-110 transition-transform"></i>
+        <span>Showcase</span>
+    </a>
+
+    <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="flex items-center gap-4 text-white group">
+        <i class="fa-solid fa-circle-info w-5 text-center group-hover:scale-110 transition-transform"></i>
+        <span>About FrazX</span>
+    </a>
+
+    <a href="javascript:void(0)" onclick="showPage('about-dev')" class="flex items-center gap-4 text-white group border-t border-white/5 pt-6">
+        <i class="fa-solid fa-user-gear w-5 text-center group-hover:scale-110 transition-transform text-indigo-500"></i>
+        <span>Developer</span>
+    </a>
 </div>
 
 <main id="home" class="page-content active-page pt-40 pb-20 px-6 text-center">
