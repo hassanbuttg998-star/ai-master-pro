@@ -288,7 +288,7 @@
 
     function copyPortraitPrompt() {
         navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
-        alert("Character configuration copied.");
+        showToast("Prompt copied to clipboard!");
     }
     
     function toggleTheme() {
@@ -386,6 +386,35 @@
         }
         if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
     }
+}
+    // Professional Toast Notification System
+function showToast(message) {
+    // Agar pehle se koi toast active hai to use hata do
+    const oldToast = document.getElementById('custom-toast');
+    if (oldToast) oldToast.remove();
+
+    // Naya toast element create karein
+    const toast = document.createElement('div');
+    toast.id = 'custom-toast';
+    toast.innerText = message;
+    
+    // Premium Dark Glass Styling classes (Tailwind)
+    toast.className = "fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-3 bg-black/80 text-white border border-white/10 rounded-xl text-sm font-medium tracking-wide shadow-2xl backdrop-blur-md z-[9999] transition-all duration-300 opacity-0 transform translate-y-2";
+    
+    document.body.appendChild(toast);
+    
+    // Smooth Fade In
+    setTimeout(() => {
+        toast.classList.remove('opacity-0', 'translate-y-2');
+        toast.classList.add('opacity-100', 'translate-y-0');
+    }, 50);
+    
+    // 2.5 Seconds baad smooth Fade Out aur remove
+    setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
 }
 </script>
 </body>
