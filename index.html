@@ -290,50 +290,53 @@
     }
     
     function toggleTheme() {
-    const html = document.documentElement; // Tailwind dynamic targeting base
+    const html = document.documentElement;
     const body = document.body;
     const themeText = document.getElementById('theme-text');
     const themeIcon = document.getElementById('theme-icon');
     
-    // Core Elements Target Vehicles
+    // 1. Core Structural Elements
     const mainHeadings = document.querySelectorAll('h1, h2, h3, h4, [class*="text-2xl"]');
-    const contentParagraphs = document.querySelectorAll('p:not(.hero-p), .text-gray-400'); // Fixed specific description targeting
+    const contentParagraphs = document.querySelectorAll('p:not(.hero-p), .text-gray-400');
     const glassContainers = document.querySelectorAll('.rounded-3xl, .rounded-2xl, .bg-white\\/5, .border-white\\/10');
     
-    // --- SPECIAL HOME PAGE BUTTON TEXTS RE-FIX ---
-    const homeHeroButtons = document.querySelectorAll('.hero-btn, button > span.text-white'); // Target both explicit btn and nested white spans
+    // --- EXACT HOME BUTTONS TARGETING (No Badges or Menus affected) ---
+    // Yeh sirf unhi buttons ko target karega jinki click actions main window par hain
+    const homeHeroButtons = document.querySelectorAll('button[onclick*="Creation"], button[onclick*="Learn"], button[onclick*="creation"], button[onclick*="learn"], .hero-btn');
 
     if (!html.classList.contains('light-active')) {
-        // --- ACTIVATING LIGHT MODE: SMOOTH PROFESSIONAL DASHBOARD ---
+        // ==========================================
+        // ☀️ LIGHT MODE ACTIVE
+        // ==========================================
         html.classList.add('light-active');
         body.classList.add('light-mode-active');
         
-        // 1. Premium Light Gray Base
         body.style.setProperty('background', '#f8f9fa', 'important');
         body.style.setProperty('color', '#1f2937', 'important');
         
-        // 2. Headings Visibility (Turning Dark)
+        // Headings setup
         mainHeadings.forEach(el => {
             if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
                 el.style.setProperty('color', '#111827', 'important');
             }
         });
 
-        // 3. Paragraph Descriptions (Smooth Readability)
+        // Paragraph text colors
         contentParagraphs.forEach(p => {
             p.style.setProperty('color', '#4b5563', 'important');
         });
 
-        // 4. Cards Elevated UI
+        // Dashboard Containers
         glassContainers.forEach(card => {
-            if (card.id !== 'sidebar' && card.tagName !== 'NAV') {
+            // Ensure we don't accidentally style navbar elements or sidebar
+            if (card.id !== 'sidebar' && card.tagName !== 'NAV' && !card.classList.contains('bg-black/40')) {
                 card.style.setProperty('background-color', '#ffffff', 'important');
                 card.style.setProperty('border-color', '#e5e7eb', 'important');
-                card.style.setProperty('box-shadow', '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', 'important');
+                card.style.setProperty('box-shadow', '0 4px 6px -1px rgba(0, 0, 0, 0.05)', 'important');
             }
         });
 
-        // 5. Light Sidebar Menu Fix
+        // Sidebar Fix
         const sidebar = document.getElementById('sidebar');
         if (sidebar) {
             sidebar.style.setProperty('background-color', '#ffffff', 'important');
@@ -345,13 +348,16 @@
             });
         }
 
-        // --- BUT BUTTONS KEEP THEIR ORIGINAL (DARK MODE) TEXT ---
-        homeHeroButtons.forEach(span => {
-            span.style.removeProperty('color'); // Remove any JS-applied light text
-            span.style.setProperty('color', '#ffffff', 'important'); // Explicitly force white text even in light mode for consistency with image_16.png
+        // Home Buttons Text Visibility: Force White color on text inside those main action buttons
+        homeHeroButtons.forEach(btn => {
+            btn.style.setProperty('color', '#ffffff', 'important');
+            // Agar button ke andar text spans hain to unko bhi explicit white lock do
+            btn.querySelectorAll('span').forEach(span => {
+                span.style.setProperty('color', '#ffffff', 'important');
+            });
         });
 
-        // Toggle Button Appearance
+        // Toggle Widget Sync
         if (themeText) {
             themeText.innerText = "LIGHT";
             themeText.style.setProperty('color', '#111827', 'important');
@@ -359,11 +365,12 @@
         if (themeIcon) themeIcon.className = "fa-solid fa-sun text-amber-500";
 
     } else {
-        // --- DEACTIVATING LIGHT MODE: 100% UNTOUCHED DARK RESCUE ---
+        // ==========================================
+        // 🌙 DARK MODE (YOUR ORIGINAL SETUP 100% RESTORED)
+        // ==========================================
         html.classList.remove('light-active');
         body.classList.remove('light-mode-active');
         
-        // Inline styles delete taake aapki HTML/CSS files ka dynamic contrast chale
         body.style.removeProperty('background');
         body.style.removeProperty('color');
         
@@ -376,8 +383,6 @@
             card.style.removeProperty('box-shadow');
         });
 
-        // Sidebar Reset (Back to dynamic cyberpunk blur look as in image_15.png)
-        const sidebar = document.getElementById('sidebar');
         if (sidebar) {
             sidebar.style.removeProperty('background-color');
             sidebar.style.removeProperty('border-left');
@@ -385,10 +390,15 @@
             sidebar.querySelectorAll('span, i, a').forEach(link => link.style.removeProperty('color'));
         }
 
-        // --- BUTTONS RESTORE THEIR TEXT COLOR NATIVELY ---
-        homeHeroButtons.forEach(span => span.style.removeProperty('color')); // Remove dynamic JS color and let native classes work (as in image_16.png)
+        // --- THE FIX: Clean Home Buttons Inline Styles Completely ---
+        // Jab dark mode ho to JS ka color remove ho jaye taake aapki native classes (White color) wapas aa jayein!
+        homeHeroButtons.forEach(btn => {
+            btn.style.removeProperty('color');
+            btn.querySelectorAll('span').forEach(span => {
+                span.style.removeProperty('color');
+            });
+        });
 
-        // Toggle Button Reset to Dark
         if (themeText) {
             themeText.innerText = "DARK";
             themeText.style.removeProperty('color');
