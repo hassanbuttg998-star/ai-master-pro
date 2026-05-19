@@ -6,16 +6,20 @@
     <title>FRAZX | Cinematic AI Lab</title>
     <link rel="icon" type="image/jpeg" href="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/logohui.png?raw=true">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        darkMode: 'class'
+    }
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap');
         :root { --primary: #6366f1; --accent: #a855f7; }
-        body { 
-            background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
-            background-attachment: fixed !important;
-            color: #e2e8f0; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden;
-        }
+        body.dark {
+    background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
+    background-attachment: fixed !important;
+}
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .page-content { display: none; }
         .active-page { display: block !important; animation: fadeIn 0.5s ease; }
@@ -25,7 +29,7 @@
         .nav-link:hover { color: #6366f1; }
     </style>
 </head>
-<body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
+<body class="bg-[#f4f4f7] text-gray-900 dark:bg-[#050508] dark:text-gray-100 transition-colors duration-300" onclick="closeSidebarOnEmptyClick(event)">
 
 <nav class="fixed top-0 w-full z-[100] glass bg-black/40 border-b border-white/5">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -291,82 +295,19 @@
     }
     
     function toggleTheme() {
-    const body = document.body;
+    const html = document.documentElement;
     const themeText = document.getElementById('theme-text');
     const themeIcon = document.getElementById('theme-icon');
-    
-    // Sabhi core sections aur layout targets
-    const allPages = document.querySelectorAll('.page-content');
-    const textWhiteElements = document.querySelectorAll('.text-white, h1, h2, h3, p');
-    const cardContainers = document.querySelectorAll('.border-white\\/10, .bg-white\\/5, [class*="rounded-"]');
 
-    if (!body.classList.contains('light-theme-active')) {
-        body.classList.add('light-theme-active');
-        
-        // 1. Premium Light Gray Base Background
-        body.style.background = '#f8f9fa';
-        body.style.color = '#1f2937';
-        
-        allPages.forEach(page => {
-            page.style.backgroundColor = '#f8f9fa';
-            page.style.color = '#1f2937';
-        });
-
-        // 2. Text visibility fix (White text turns to dark premium slate color)
-        textWhiteElements.forEach(el => {
-            if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
-                el.style.setProperty('color', '#111827', 'important');
-            }
-        });
-
-        // 3. Card Containers Fix (Gives a clean Apple-style modern box shadow dashboard)
-        cardContainers.forEach(card => {
-            if (card.tagName !== 'BODY' && card.tagName !== 'NAV') {
-                card.style.setProperty('background-color', '#ffffff', 'important');
-                card.style.setProperty('border-color', '#e5e7eb', 'important');
-                card.style.setProperty('box-shadow', '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', 'important');
-            }
-        });
-
-        // Toggle Button Update
-        if (themeText) {
-            themeText.innerText = "LIGHT";
-            themeText.style.setProperty('color', '#111827', 'important');
-        }
-        if (themeIcon) themeIcon.className = "fa-solid fa-sun text-amber-500";
-
-    } else {
-        body.classList.remove('light-theme-active');
-        
-        // 1. Restore Original Dark Cinematic Cyberpunk Background
-        body.style.background = 'radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%)';
-        body.style.color = '#e2e8f0';
-        
-        allPages.forEach(page => {
-            page.style.backgroundColor = 'transparent';
-            page.style.color = '#e2e8f0';
-        });
-
-        // 2. Restore White/Glow Text for Dark Mode
-        textWhiteElements.forEach(el => {
-            if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
-                el.style.removeProperty('color');
-            }
-        });
-
-        // 3. Restore Transparent Glassmorphic Containers for Dark Mode
-        cardContainers.forEach(card => {
-            card.style.removeProperty('background-color');
-            card.style.removeProperty('border-color');
-            card.style.removeProperty('box-shadow');
-        });
-
-        // Toggle Button Reset
-        if (themeText) {
-            themeText.innerText = "DARK";
-            themeText.style.removeProperty('color');
-        }
+    // Agar abhi 'dark' class nahi hai, to light mode chal raha hai. Dark active karo.
+    if (!html.classList.contains('dark')) {
+        html.classList.add('dark');
+        if (themeText) themeText.innerText = "DARK";
         if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
+    } else {
+        html.classList.remove('dark');
+        if (themeText) themeText.innerText = "LIGHT";
+        if (themeIcon) themeIcon.className = "fa-solid fa-sun text-amber-500";
     }
 }
 </script>
