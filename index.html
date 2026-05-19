@@ -278,7 +278,7 @@
 
     function copyPrompt() {
         navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText);
-        alert("Prompt successfully copied to laboratory clipboard.");
+        showToast("Prompt copied to clipboard!");
     }
 
     function generatePortrait(style) {
@@ -387,6 +387,7 @@
         if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
     }
 }
+   
     // Professional Toast Notification System
 function showToast(message) {
     // Agar pehle se koi toast active hai to use hata do
