@@ -60,6 +60,14 @@
         <a href="javascript:void(0)" onclick="showPage('about-dev')" class="flex items-center gap-4 text-white border-t border-white/5 pt-6 nav-link">
             <i class="fa-solid fa-user-gear w-5 text-center text-indigo-500"></i><span>Developer</span>
         </a>
+        <div class="border-t border-white/5 pt-6 mt-6 px-4">
+    <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-gray-400 tracking-widest uppercase">Theme</span>
+        <button onclick="toggleTheme()" id="theme-btn" class="p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition flex items-center gap-2 text-xs font-bold tracking-wider">
+            <i class="fa-solid fa-moon text-[#6366f1]" id="theme-icon"></i>
+            <span id="theme-text">DARK</span>
+        </button>
+    </div>
     </div>
 </div>
 
@@ -279,6 +287,38 @@
     function copyPortraitPrompt() {
         navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
         alert("Character configuration copied.");
+    }
+    
+    function toggleTheme() {
+    const body = document.body;
+    const themeText = document.getElementById('theme-text');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeBtn = document.getElementById('theme-btn');
+
+    // Agar abhi dark mode hai to light mode me switch karo
+    if (body.classList.contains('bg-[#050508]')) {
+        // Light Mode Classes Apply Ki
+        body.classList.remove('bg-[#050508]');
+        body.classList.add('bg-[#f4f4f7]', 'text-gray-900');
+        
+        // Button elements ko update kiya
+        themeText.innerText = "LIGHT";
+        themeText.classList.add('text-gray-900');
+        themeIcon.className = "fa-solid fa-sun text-amber-500";
+        themeBtn.classList.remove('bg-white/5', 'border-white/10', 'text-white');
+        themeBtn.classList.add('bg-black/5', 'border-black/10', 'text-gray-900');
+    } else {
+        // Wapas Dark Mode me switch kiya
+        body.classList.add('bg-[#050508]');
+        body.classList.remove('bg-[#f4f4f7]', 'text-gray-900');
+        
+        // Button elements reset kiye
+        themeText.innerText = "DARK";
+        themeText.classList.remove('text-gray-900');
+        themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
+        themeBtn.classList.add('bg-white/5', 'border-white/10', 'text-white');
+        themeBtn.classList.remove('bg-black/5', 'border-black/10', 'text-gray-900');
+    }
     }
 </script>
 </body>
