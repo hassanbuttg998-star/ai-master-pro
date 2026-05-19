@@ -17,10 +17,22 @@
         }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .gradient-text { background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .page-content { display: none; min-height: 100vh; }
-        .active-page { display: block; animation: fadeIn 0.5s ease; }
+        .page-content { 
+    display: none; 
+    min-height: 100vh; 
+    width: 100%;
+    position: relative;
+    z-index: 10; /* Sidebar se peeche rahega */
+}
+.active-page { 
+    display: block !important; 
+    animation: fadeIn 0.5s ease; 
+}
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        #sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        #sidebar { 
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    z-index: 200 !important; /* Sidebar sab ke upar rahega */
+        }
         .tool-card:hover { transform: scale(1.02); border-color: var(--primary); }
     </style>
 </head>
