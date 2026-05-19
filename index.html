@@ -294,32 +294,35 @@
     const themeText = document.getElementById('theme-text');
     const themeIcon = document.getElementById('theme-icon');
     
-    // Elements ko secure variable me pakra
+    // Core Elements Secure Variables
     const mainHeadings = document.querySelectorAll('h1, h2, h3, .text-white');
     const contentParagraphs = document.querySelectorAll('p');
     const glassCards = document.querySelectorAll('.bg-white\\/5, .border-white\\/10, [class*="rounded-3xl"]');
-    const actionButtons = document.querySelectorAll('button:not(#theme-btn), a.nav-link');
+    
+    // --- SIDEBAR TARGETS FIXED ---
+    const sidebar = document.getElementById('sidebar');
+    const sidebarLinks = sidebar ? sidebar.querySelectorAll('span, i, a') : [];
 
     if (!body.classList.contains('light-theme-active')) {
         body.classList.add('light-theme-active');
         
-        // 1. Light Mode Ka Premium Dynamic Base
+        // 1. Light Mode Main Base
         body.style.setProperty('background', '#f4f4f7', 'important');
         body.style.setProperty('color', '#111827', 'important');
         
-        // 2. Headings ka Color Light Mode me Slate Black kiya
+        // 2. Headings & Main Text Visibility Fix
         mainHeadings.forEach(el => {
             if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
                 el.style.setProperty('color', '#111827', 'important');
             }
         });
 
-        // 3. Paragraphs ki readability smooth ki
+        // 3. Paragraphs text color
         contentParagraphs.forEach(p => {
             p.style.setProperty('color', '#4b5563', 'important');
         });
 
-        // 4. Glass Cards ko Apple-Style Light UI me convert kiya
+        // 4. Main Cards Update (Apple Style)
         glassCards.forEach(card => {
             if (card.id !== 'sidebar' && card.tagName !== 'NAV') {
                 card.style.setProperty('background-color', '#ffffff', 'important');
@@ -328,7 +331,19 @@
             }
         });
 
-        // Toggle Button Looks
+        // 5. SIDEBAR LIGHT UI (Sleek Professional White Menu)
+        if (sidebar) {
+            sidebar.style.setProperty('background-color', '#ffffff', 'important');
+            sidebar.style.setProperty('border-left', '1px solid #e5e7eb', 'important');
+            sidebar.style.setProperty('box-shadow', '-10px 0 25px -5px rgba(0, 0, 0, 0.05)', 'important');
+        }
+        sidebarLinks.forEach(link => {
+            if (!link.classList.contains('text-[#6366f1]') && !link.classList.contains('text-indigo-500')) {
+                link.style.setProperty('color', '#374151', 'important'); // Clear dark gray text for links
+            }
+        });
+
+        // Toggle Button Appearance
         if (themeText) {
             themeText.innerText = "LIGHT";
             themeText.style.setProperty('color', '#111827', 'important');
@@ -336,10 +351,10 @@
         if (themeIcon) themeIcon.className = "fa-solid fa-sun text-amber-500";
 
     } else {
-        // --- DARK MODE: AAP KA ORIGINAL SETUP 100% WAPAS RESTORE ---
+        // --- DARK MODE: AAP KA ORIGINAL SETUP 100% UNTOUCHED RESTORE ---
         body.classList.remove('light-theme-active');
         
-        // In-line styles clear kiye taake aapka original CSS/Tailwind chalay
+        // Inline styles delete taake aapki HTML/CSS files ka design chale
         body.style.removeProperty('background');
         body.style.removeProperty('color');
         
@@ -350,6 +365,16 @@
             card.style.removeProperty('background-color');
             card.style.removeProperty('border-color');
             card.style.removeProperty('box-shadow');
+        });
+
+        // Sidebar Reset (Back to your original cyberpunk dark theme)
+        if (sidebar) {
+            sidebar.style.removeProperty('background-color');
+            sidebar.style.removeProperty('border-left');
+            sidebar.style.removeProperty('box-shadow');
+        }
+        sidebarLinks.forEach(link => {
+            link.style.removeProperty('color');
         });
 
         // Toggle Button Reset to Dark
