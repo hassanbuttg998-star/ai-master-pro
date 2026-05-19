@@ -294,44 +294,79 @@
     const body = document.body;
     const themeText = document.getElementById('theme-text');
     const themeIcon = document.getElementById('theme-icon');
+    
+    // Sabhi core sections aur layout targets
     const allPages = document.querySelectorAll('.page-content');
+    const textWhiteElements = document.querySelectorAll('.text-white, h1, h2, h3, p');
+    const cardContainers = document.querySelectorAll('.border-white\\/10, .bg-white\\/5, [class*="rounded-"]');
 
-    // Agar abhi dark mode hai to Light Mode me switch karo
     if (!body.classList.contains('light-theme-active')) {
         body.classList.add('light-theme-active');
         
-        // Pure background ko aik dum smooth white base do
-        body.style.background = '#f4f4f7';
-        body.style.color = '#111827';
+        // 1. Premium Light Gray Base Background
+        body.style.background = '#f8f9fa';
+        body.style.color = '#1f2937';
         
-        // Sabhi pages ke background aur text ko badlo
         allPages.forEach(page => {
-            page.style.backgroundColor = '#ffffff';
-            page.style.color = '#111827';
+            page.style.backgroundColor = '#f8f9fa';
+            page.style.color = '#1f2937';
         });
 
-        // Toggle Button ki looks update karo
-        themeText.innerText = "LIGHT";
-        themeText.style.color = '#111827';
-        themeIcon.className = "fa-solid fa-sun text-amber-500";
+        // 2. Text visibility fix (White text turns to dark premium slate color)
+        textWhiteElements.forEach(el => {
+            if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
+                el.style.setProperty('color', '#111827', 'important');
+            }
+        });
+
+        // 3. Card Containers Fix (Gives a clean Apple-style modern box shadow dashboard)
+        cardContainers.forEach(card => {
+            if (card.tagName !== 'BODY' && card.tagName !== 'NAV') {
+                card.style.setProperty('background-color', '#ffffff', 'important');
+                card.style.setProperty('border-color', '#e5e7eb', 'important');
+                card.style.setProperty('box-shadow', '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', 'important');
+            }
+        });
+
+        // Toggle Button Update
+        if (themeText) {
+            themeText.innerText = "LIGHT";
+            themeText.style.setProperty('color', '#111827', 'important');
+        }
+        if (themeIcon) themeIcon.className = "fa-solid fa-sun text-amber-500";
+
     } else {
-        // Wapas original Dark Mode settings par switch karo
         body.classList.remove('light-theme-active');
         
-        // Aapka original radial-gradient wapas restore kiya
+        // 1. Restore Original Dark Cinematic Cyberpunk Background
         body.style.background = 'radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%)';
         body.style.color = '#e2e8f0';
         
-        // Sabhi pages ko wapas clear/dark background par le aao
         allPages.forEach(page => {
             page.style.backgroundColor = 'transparent';
             page.style.color = '#e2e8f0';
         });
 
-        // Toggle Button reset karo
-        themeText.innerText = "DARK";
-        themeText.style.color = '#ffffff';
-        themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
+        // 2. Restore White/Glow Text for Dark Mode
+        textWhiteElements.forEach(el => {
+            if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
+                el.style.removeProperty('color');
+            }
+        });
+
+        // 3. Restore Transparent Glassmorphic Containers for Dark Mode
+        cardContainers.forEach(card => {
+            card.style.removeProperty('background-color');
+            card.style.removeProperty('border-color');
+            card.style.removeProperty('box-shadow');
+        });
+
+        // Toggle Button Reset
+        if (themeText) {
+            themeText.innerText = "DARK";
+            themeText.style.removeProperty('color');
+        }
+        if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
     }
 }
 </script>
