@@ -6,11 +6,6 @@
     <title>FRAZX | Cinematic AI Lab</title>
     <link rel="icon" type="image/jpeg" href="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/pics.png?raw=true">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-    tailwind.config = {
-        darkMode: 'class'
-    }
-</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -29,7 +24,7 @@
         .nav-link:hover { color: #6366f1; }
     </style>
 </head>
-<body class="bg-[#f4f4f7] text-gray-900 dark:bg-[#050508] dark:text-gray-100 transition-colors duration-300" onclick="closeSidebarOnEmptyClick(event)">
+<body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
 
 <nav class="fixed top-0 w-full z-[100] glass bg-black/40 border-b border-white/5">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -295,19 +290,74 @@
     }
     
     function toggleTheme() {
-    const html = document.documentElement;
+    const body = document.body;
     const themeText = document.getElementById('theme-text');
     const themeIcon = document.getElementById('theme-icon');
+    
+    // Elements ko secure variable me pakra
+    const mainHeadings = document.querySelectorAll('h1, h2, h3, .text-white');
+    const contentParagraphs = document.querySelectorAll('p');
+    const glassCards = document.querySelectorAll('.bg-white\\/5, .border-white\\/10, [class*="rounded-3xl"]');
+    const actionButtons = document.querySelectorAll('button:not(#theme-btn), a.nav-link');
 
-    // Agar abhi 'dark' class nahi hai, to light mode chal raha hai. Dark active karo.
-    if (!html.classList.contains('dark')) {
-        html.classList.add('dark');
-        if (themeText) themeText.innerText = "DARK";
-        if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
-    } else {
-        html.classList.remove('dark');
-        if (themeText) themeText.innerText = "LIGHT";
+    if (!body.classList.contains('light-theme-active')) {
+        body.classList.add('light-theme-active');
+        
+        // 1. Light Mode Ka Premium Dynamic Base
+        body.style.setProperty('background', '#f4f4f7', 'important');
+        body.style.setProperty('color', '#111827', 'important');
+        
+        // 2. Headings ka Color Light Mode me Slate Black kiya
+        mainHeadings.forEach(el => {
+            if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
+                el.style.setProperty('color', '#111827', 'important');
+            }
+        });
+
+        // 3. Paragraphs ki readability smooth ki
+        contentParagraphs.forEach(p => {
+            p.style.setProperty('color', '#4b5563', 'important');
+        });
+
+        // 4. Glass Cards ko Apple-Style Light UI me convert kiya
+        glassCards.forEach(card => {
+            if (card.id !== 'sidebar' && card.tagName !== 'NAV') {
+                card.style.setProperty('background-color', '#ffffff', 'important');
+                card.style.setProperty('border-color', '#e5e7eb', 'important');
+                card.style.setProperty('box-shadow', '0 10px 15px -3px rgba(0, 0, 0, 0.05)', 'important');
+            }
+        });
+
+        // Toggle Button Looks
+        if (themeText) {
+            themeText.innerText = "LIGHT";
+            themeText.style.setProperty('color', '#111827', 'important');
+        }
         if (themeIcon) themeIcon.className = "fa-solid fa-sun text-amber-500";
+
+    } else {
+        // --- DARK MODE: AAP KA ORIGINAL SETUP 100% WAPAS RESTORE ---
+        body.classList.remove('light-theme-active');
+        
+        // In-line styles clear kiye taake aapka original CSS/Tailwind chalay
+        body.style.removeProperty('background');
+        body.style.removeProperty('color');
+        
+        mainHeadings.forEach(el => el.style.removeProperty('color'));
+        contentParagraphs.forEach(p => p.style.removeProperty('color'));
+        
+        glassCards.forEach(card => {
+            card.style.removeProperty('background-color');
+            card.style.removeProperty('border-color');
+            card.style.removeProperty('box-shadow');
+        });
+
+        // Toggle Button Reset to Dark
+        if (themeText) {
+            themeText.innerText = "DARK";
+            themeText.style.removeProperty('color');
+        }
+        if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
     }
 }
 </script>
