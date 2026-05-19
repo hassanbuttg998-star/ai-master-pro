@@ -244,21 +244,20 @@
 function showPage(pageId, pushToHistory = true) {
     const sections = document.querySelectorAll('.page-content');
     
-    // Sab pages hide karo
+    // Sab sections hide karo
     sections.forEach(s => {
         s.style.display = 'none';
         s.classList.remove('active-page');
     });
 
-    // Target page dikhao
+    // Target section show karo
     const target = document.getElementById(pageId);
     if (target) {
         target.style.display = 'block';
         target.classList.add('active-page');
 
-        // Sabse important: History mein page add karo
+        // 🔥 FIX: Yahan "" ki jagah "#" lagana hai
         if (pushToHistory) {
-            // Ye line browser ko batati hai ke hum naye page par hain
             window.history.pushState({ pageId: pageId }, "", "#" + pageId);
         }
     }
@@ -267,29 +266,27 @@ function showPage(pageId, pushToHistory = true) {
     const sidebar = document.getElementById('sidebar');
     if(sidebar) sidebar.classList.add('translate-x-full');
     
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
 // 2. Back Button Detection (The Fix)
+// Mobile ka Back Button dabne par ye chalay ga
 window.onpopstate = function(event) {
-    // Jab user mobile ka back button dabaye
     if (event.state && event.state.pageId) {
-        showPage(event.state.pageId, false); // 'false' taake loop na banay
+        // Agar history mein pichla page safe hai to us par jao
+        showPage(event.state.pageId, false); 
     } else {
-        // Agar history khatam ho jaye to Home par le jao
+        // Agar bilkul shuruat mein aa jayein to Home dikhao
         showPage('home', false);
     }
 };
 
 // 3. Page Load Check
 window.onload = () => {
-    // Agar URL mein pehle se #about-dev jaisa kuch ho to wahi khulay
     const currentHash = window.location.hash.substring(1);
     if (currentHash) {
         showPage(currentHash, false);
     } else {
-        // Shuru mein Home page history mein set karo
+        // Pehle page (Home) ko history ki base state banayein
         window.history.replaceState({ pageId: 'home' }, "", "");
         showPage('home', false);
     }
