@@ -341,55 +341,35 @@
 
 <script>
     // 1. Core Navigation with Standard URL Hash Control
-    function showPage(pageId, pushToHistory = true) {
-        const sections = document.querySelectorAll('.page-content');
-        
-        // Hide all template views natively
-        sections.forEach(s => {
-            s.style.display = 'none';
-            s.classList.remove('active-page');
-        });
-
-        // Activate targeted matrix view
-        const target = document.getElementById(pageId);
-        if (target) {
-            target.style.display = 'block';
-            target.classList.add('active-page');
-
-            // Force mobile browsers to append a safe layout step natively
-            if (pushToHistory) {
-                window.location.hash = pageId;
-            }
-        }
-
-        // Collapse navigation slider automatically
-        const sidebar = document.getElementById('sidebar');
-        if(sidebar) sidebar.classList.add('translate-x-full');
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    function showPage(pageId) {
+    // 1. AAPKA PURANA LOGIC (Bina chhere wese hi chalega)
+    const pages = document.querySelectorAll('.page-content');
+    pages.forEach(page => {
+        page.classList.remove('active-page');
+        page.classList.add('hidden');
+    });
+    
+    const activePage = document.getElementById(pageId);
+    if (activePage) {
+        activePage.classList.remove('hidden');
+        activePage.classList.add('active-page');
     }
 
-    // 2. Direct Hardware Back Key Interception (Zero Exit Glitch)
-    window.addEventListener('hashchange', function() {
-        const activeHash = window.location.hash.substring(1);
-        if (activeHash) {
-            showPage(activeHash, false);
+    // ⚡ 2. AUTOMATIC SYSTEM: SAARE BUTTONS KO UPDATE KARNE KE LIYE
+    const allNavButtons = document.querySelectorAll('[onclick^="showPage"]');
+    
+    allNavButtons.forEach(btn => {
+        if (btn.getAttribute('onclick').includes(pageId)) {
+            // Active State: Soft Indigo Highlight Capsule Look
+            btn.classList.add('bg-indigo-600/10', 'text-white', 'border-indigo-500/30');
+            btn.classList.remove('text-gray-400', 'bg-transparent', 'border-transparent');
         } else {
-            showPage('home', false);
+            // Normal State: Transparent Profile
+            btn.classList.remove('bg-indigo-600/10', 'text-white', 'border-indigo-500/30');
+            btn.classList.add('text-gray-400', 'bg-transparent', 'border-transparent');
         }
     });
-
-    // 3. Absolute Initialization Matrix
-    window.addEventListener('DOMContentLoaded', () => {
-        const startingHash = window.location.hash.substring(1);
-        if (startingHash) {
-            showPage(startingHash, false);
-        } else {
-            window.location.hash = 'home';
-            showPage('home', false);
-        }
-    });
-
+}
     // 4. UI Layer Mechanisms
     function toggleSidebar(e) {
         if(e) e.stopPropagation();
