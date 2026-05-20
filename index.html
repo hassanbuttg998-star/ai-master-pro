@@ -26,15 +26,51 @@
 </head>
 <body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
 
-<nav class="fixed top-0 w-full z-[100] glass bg-black/40 border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-4 cursor-pointer" onclick="showPage('home')">
-            <img src="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/logohu.png?raw=true" class="w-10 h-10 animate__animated animate__fadeIn">
-            <span class="text-2xl font-black text-white uppercase tracking-tighter">FRAZ<span class="text-[#6366f1]">X</span><span class="ml-2 text-xs font-extrabold bg-white/10 text-white border border-white/10 px-2 py-0.5 rounded-md align-middle tracking-normal">PRO</span></span>
+<nav class="fixed top-0 w-full z-[100] bg-black/40 border-b border-white/5 backdrop-blur-md px-4 lg:px-12 py-5 transition-all duration-300">
+    <div class="max-w-[1800px] mx-auto flex items-center justify-between">
+        
+        <div class="flex items-center gap-4 group cursor-pointer" onclick="showPage('home')">
+            <div class="relative flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 bg-white/5 rounded-xl border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.02)] group-hover:border-indigo-500/50 transition-all duration-300">
+                <img src="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/logohu.png?raw=true" 
+                     alt="FRAZX Logo" 
+                     class="w-8 h-8 lg:w-9 lg:h-9 object-contain animate__animated animate__fadeIn group-hover:scale-110 transition-transform duration-300">
+                <div class="absolute inset-0 bg-indigo-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            
+            <div class="flex flex-col justify-center">
+                <div class="flex items-center gap-1.5">
+                    <span class="text-2xl lg:text-3xl font-black tracking-tighter bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent uppercase">
+                        FRAZX
+                    </span>
+                    <span class="px-2 py-0.5 text-[10px] lg:text-xs font-bold bg-[#6366f1] text-white rounded shadow-[0_0_10px_rgba(99,102,241,0.4)] tracking-widest uppercase">
+                        PRO
+                    </span>
+                </div>
+                <span class="text-[9px] lg:text-[11px] text-gray-500 font-medium tracking-[0.25em] uppercase mt-0.5 group-hover:text-indigo-400 transition-colors duration-300">
+                    Neural Lab
+                </span>
+            </div>
         </div>
-        <button onclick="toggleSidebar(event)" class="p-2 text-white bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition z-[110]">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-        </button>
+
+        <div class="flex items-center gap-4 lg:gap-6">
+            <div onclick="toggleTheme()" class="flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition-all duration-300 active:scale-95 select-none">
+                <i id="theme-icon" class="fa-solid fa-moon text-[#6366f1] text-sm lg:text-base"></i>
+                <span id="theme-text" class="text-[11px] lg:text-xs font-black tracking-wider text-gray-400">DARK</span>
+            </div>
+
+            <div class="hidden md:flex items-center gap-6 text-[11px] font-black tracking-widest text-gray-400 uppercase">
+                <a href="#" onclick="showPage('tools-hub')" class="hover:text-white transition-colors">Tools</a>
+                <a href="#" onclick="showPage('prompt-engine')" class="hover:text-white transition-colors">Lab Docs</a>
+                <a href="#" class="hover:text-white transition-colors">Showcase</a>
+            </div>
+
+            <button onclick="toggleSidebar(event)" class="p-2 text-white bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition duration-300 md:hidden">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
     </div>
 </nav>
 
