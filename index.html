@@ -11,28 +11,18 @@
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap');
     :root { --primary: #6366f1; --accent: #a855f7; }
-    
-    /* 🌌 Forced Premium Cinematic Radial Background */
     body.dark {
-        background: radial-gradient(circle at center, #131435 0%, #080810 60%, #050508 100%) !important;
+        background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
         background-attachment: fixed !important;
     }
 
-    /* 📊 Fixed Glassmorphism Panel Layer */
-    .glass-panel { 
-        background: rgba(255, 255, 255, 0.02) !important; 
-        backdrop-filter: blur(16px) !important; 
-        -webkit-backdrop-filter: blur(16px) !important; 
-        border: 1px solid rgba(255, 255, 255, 0.05) !important; 
-    }
-
+    .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .page-content { display: none; }
     .active-page { display: block !important; animation: fadeIn 0.5s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     #sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1); z-index: 200; }
-    
-    /* Forced White Utility for Buttons Text */
-    .force-white { color: #ffffff !important; }
+    .nav-link { cursor: pointer; transition: all 0.3s; }
+    .nav-link:hover { color: #6366f1; }
 </style>
 </head>
 <body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
