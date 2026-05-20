@@ -343,52 +343,53 @@
     // 1. Core Navigation with Standard URL Hash Control
     // 1. AAPKA ORIGINAL FUNCTION (With Safe Button Highlight Integration)
 function showPage(pageId, pushToHistory = true) {
-    const sections = document.querySelectorAll('.page-content');
-    sections.forEach(s => {
-        s.style.display = 'none';
-        s.classList.remove('active-page');
-    });
-    
-    const target = document.getElementById(pageId);
-    if (target) {
-        target.style.display = 'block';
-        target.classList.add('active-page');
+        const sections = document.querySelectorAll('.page-content');
         
-        if (pushToHistory) {
-            window.location.hash = pageId;
+        // Hide all template views natively
+        sections.forEach(s => {
+            s.style.display = 'none';
+            s.classList.remove('active-page');
+        });
+
+        // Activate targeted matrix view
+        const target = document.getElementById(pageId);
+        if (target) {
+            target.style.display = 'block';
+            target.classList.add('active-page');
+
+            // Force mobile browsers to append a safe layout step natively
+            if (pushToHistory) {
+                window.location.hash = pageId;
+            }
         }
-    }
-    
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) sidebar.classList.add('translate-x-full');
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // ⚡ AUTOMATIC BUTTON HIGHLIGHT SYSTEM (Safe Method)
-    // 1. Pehle saare buttons se active color saaf karo
-    const allButtons = document.querySelectorAll('[onclick^="showPage"]');
-    allButtons.forEach(btn => {
-        btn.classList.remove('text-white', 'bg-indigo-600/10');
-        btn.classList.add('text-gray-400');
+        // Collapse navigation slider automatically
+        const sidebar = document.getElementById('sidebar');
+        if(sidebar) sidebar.classList.add('translate-x-full');
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 2. Direct Hardware Back Key Interception (Zero Exit Glitch)
+    window.addEventListener('hashchange', function() {
+        const activeHash = window.location.hash.substring(1);
+        if (activeHash) {
+            showPage(activeHash, false);
+        } else {
+            showPage('home', false);
+        }
     });
 
-    // 2. Ab sirf us button ko rang do jo khula hai (Sidebar aur Navbar dono auto handle honge)
-    const targetButtons = document.querySelectorAll(`[onclick*="'${pageId}'"]`);
-    targetButtons.forEach(btn => {
-        btn.classList.add('text-white', 'bg-indigo-600/10');
-        btn.classList.remove('text-gray-400');
+    // 3. Absolute Initialization Matrix
+    window.addEventListener('DOMContentLoaded', () => {
+        const startingHash = window.location.hash.substring(1);
+        if (startingHash) {
+            showPage(startingHash, false);
+        } else {
+            window.location.hash = 'home';
+            showPage('home', false);
+        }
     });
-}
-
-// 2. Direct Hardware Back Key Interception (Bilkul safe aur original logic)
-window.addEventListener('hashchange', function() {
-    const activeHash = window.location.hash.substring(1);
-    if (activeHash) {
-        showPage(activeHash, false);
-    } else {
-        showPage('home', false);
-    }
-});
     // 4. UI Layer Mechanisms
     function toggleSidebar(e) {
         if(e) e.stopPropagation();
