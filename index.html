@@ -9,20 +9,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap');
-        :root { --primary: #6366f1; --accent: #a855f7; }
-        body.dark {
-    background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
-    background-attachment: fixed !important;
-}
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .page-content { display: none; }
-        .active-page { display: block !important; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        #sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 200; }
-        .nav-link { cursor: pointer; transition: all 0.3s; }
-        .nav-link:hover { color: #6366f1; }
-    </style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap');
+    :root { --primary: #6366f1; --accent: #a855f7; }
+    
+    /* 🌌 Forced Premium Cinematic Radial Background */
+    body.dark {
+        background: radial-gradient(circle at center, #131435 0%, #080810 60%, #050508 100%) !important;
+        background-attachment: fixed !important;
+    }
+
+    /* 📊 Fixed Glassmorphism Panel Layer */
+    .glass-panel { 
+        background: rgba(255, 255, 255, 0.02) !important; 
+        backdrop-filter: blur(16px) !important; 
+        -webkit-backdrop-filter: blur(16px) !important; 
+        border: 1px solid rgba(255, 255, 255, 0.05) !important; 
+    }
+
+    .page-content { display: none; }
+    .active-page { display: block !important; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    #sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1); z-index: 200; }
+    
+    /* Forced White Utility for Buttons Text */
+    .force-white { color: #ffffff !important; }
+</style>
 </head>
 <body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
 
@@ -119,52 +130,55 @@
     </div>  
 </div>
     
-<main id="home" class="page-content active-page relative min-h-screen pt-44 pb-20 px-6 text-center overflow-hidden" style="background: radial-gradient(circle at center, #13142e 0%, #050508 100%);">
+<main id="home" class="page-content active-page relative min-h-screen pt-44 pb-20 px-6 text-center overflow-hidden">
     
-    <div class="absolute inset-0 pointer-events-none z-0">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-indigo-500/20 rounded-full blur-[120px]"></div>
+    <div class="absolute inset-0 z-0 pointer-events-none opacity-40">
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:30px_30px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_60%,transparent_100%)]"></div>
     </div>
 
     <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
-        <div class="inline-block px-4 py-1 mb-6 border border-indigo-500/30 bg-indigo-500/10 rounded-full text-indigo-400 text-[10px] font-black tracking-widest uppercase animate__animated animate__fadeInDown">
+        
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-6 border border-indigo-500/30 bg-indigo-500/10 rounded-full text-indigo-400 text-[10px] font-black tracking-widest uppercase animate__animated animate__fadeInDown">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-ping"></span>
             System Online v2.0
         </div>
 
         <h1 class="text-5xl md:text-7xl font-black text-white uppercase italic tracking-tighter leading-none animate__animated animate__fadeInUp">
             CINEMATIC <br>
-            <span class="bg-gradient-to-r from-[#6366f1] to-purple-400 bg-clip-text text-transparent not-italic block mt-2" style="text-shadow: 0 0 40px rgba(99, 102, 241, 0.4);">
+            <span class="bg-gradient-to-r from-[#6366f1] via-purple-400 to-indigo-300 bg-clip-text text-transparent not-italic block mt-2 drop-shadow-[0_0_35px_rgba(99,102,241,0.35)]">
                 VISION
             </span>
         </h1>
 
-        <p class="text-gray-400 tracking-[0.4em] uppercase text-xs mt-6 mb-12 max-w-md mx-auto">
+        <p class="text-gray-400 tracking-[0.4em] uppercase text-[10px] sm:text-xs mt-6 mb-12 max-w-md mx-auto leading-relaxed">
             Advanced Cinematic AI Generation Lab
         </p>
 
-        <div class="grid grid-cols-3 gap-2 sm:gap-6 max-w-xl w-full mx-auto my-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] backdrop-blur-md">
+        <div class="grid grid-cols-3 gap-2 sm:gap-6 max-w-xl w-full mx-auto my-6 p-5 rounded-2xl glass-panel animate__animated animate__fadeIn animate__delay-1s">
             <div class="text-center border-r border-white/5">
-                <div class="text-base sm:text-xl font-black text-white">01.<span class="text-indigo-400">8B</span></div>
+                <div class="text-base sm:text-xl font-black text-white tracking-tight">01.<span class="text-indigo-400">8B</span></div>
                 <div class="text-[9px] font-bold text-gray-500 tracking-wider uppercase mt-1">Models</div>
             </div>
             <div class="text-center border-r border-white/5">
-                <div class="text-base sm:text-xl font-black text-white">&lt; <span class="text-purple-400">1.2s</span></div>
+                <div class="text-base sm:text-xl font-black text-white tracking-tight">&lt; <span class="text-purple-400">1.2s</span></div>
                 <div class="text-[9px] font-bold text-gray-500 tracking-wider uppercase mt-1">Latency</div>
             </div>
             <div class="text-center">
-                <div class="text-base sm:text-xl font-black text-white">99.<span class="text-emerald-400">9%</span></div>
+                <div class="text-base sm:text-xl font-black text-white tracking-tight">99.<span class="text-emerald-400">9%</span></div>
                 <div class="text-[9px] font-bold text-gray-500 tracking-wider uppercase mt-1">Uptime</div>
             </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6 w-full max-w-xs sm:max-w-none">
-            <button onclick="showPage('tools-hub')" class="w-full sm:w-auto px-10 py-4 bg-[#6366f1] hover:bg-indigo-700 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all duration-300 font-black text-xs tracking-widest uppercase" style="color: #ffffff !important;">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6 w-full max-w-xs sm:max-w-none animate__animated animate__fadeInUp animate__delay-1s">
+            <button onclick="showPage('tools-hub')" class="w-full sm:w-auto px-10 py-4 bg-[#6366f1] hover:bg-indigo-700 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all duration-300 font-black text-xs tracking-widest uppercase force-white">
                 Start Creation
             </button>
             
-            <button onclick="showPage('about-frazx')" class="w-full sm:w-auto px-10 py-4 bg-white/[0.03] hover:bg-white/10 border border-white/20 rounded-xl transition-all duration-300 font-black text-xs tracking-widest uppercase backdrop-blur-sm" style="color: #ffffff !important;">
+            <button onclick="showPage('about-frazx')" class="w-full sm:w-auto px-10 py-4 bg-white/[0.03] hover:bg-white/10 border border-white/20 rounded-xl transition-all duration-300 font-black text-xs tracking-widest uppercase backdrop-blur-sm force-white">
                 Learn More
             </button>
         </div>
+
     </div>
 </main>
 
