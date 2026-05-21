@@ -233,81 +233,81 @@
             Neural <span class="text-indigo-500">TOOLS</span>
         </h2>
         
-        <div class="grid md:grid-cols-2 gap-12 items-start">
+        <div class="grid md:grid-cols-2 gap-8 items-start">
             
-            <div class="flex flex-col gap-4">
-                <div class="glass rounded-[2.5rem] border-t-2 border-indigo-500/40 p-8 md:p-10 pb-6">
+            <div class="glass rounded-[2.5rem] border-t-2 border-indigo-500/40 p-8 md:p-10 pb-8 flex flex-col justify-between h-full">
+                <div>
                     <div class="w-12 h-12 bg-indigo-500/10 border border-indigo-500/30 rounded-2xl flex items-center justify-center mb-6 text-indigo-400 text-xl">
                         <i class="fa-solid fa-eye"></i>
                     </div>
                     <h3 class="text-2xl font-black mb-4 uppercase text-white">Cinematic Vision</h3>
-                    <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                    <p class="text-gray-400 text-sm mb-8 leading-relaxed">
                         Generate ultra-realistic, multi-angle production prompts with elite studio configurations automatically loaded.
                     </p>
-                    <button onclick="showPage('prompt-engine')" class="w-full py-4 bg-indigo-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-indigo-500 transition">
-                        Open Vision Engine
-                    </button>
                 </div>
-                
-                <div class="glass rounded-[2rem] border border-indigo-500/20 overflow-hidden shadow-xl group">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/result.png" alt="Cinematic Vision Preview" class="w-full h-auto object-cover opacity-90 group-hover:scale-102 group-hover:opacity-100 transition duration-500 block">
-                </div>
+                <button onclick="showPage('prompt-engine')" class="w-full py-4 bg-indigo-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-indigo-500 transition">
+                    Open Vision Engine
+                </button>
             </div>
 
-            <div class="flex flex-col gap-4">
-                <div class="glass rounded-[2.5rem] border-t-2 border-purple-500/40 p-8 md:p-10 pb-6">
+            <div class="glass rounded-[2.5rem] border-t-2 border-purple-500/40 p-8 md:p-10 pb-8 flex flex-col justify-between h-full">
+                <div>
                     <div class="w-12 h-12 bg-purple-500/10 border border-purple-500/30 rounded-2xl flex items-center justify-center mb-6 text-purple-400 text-xl">
                         <i class="fa-solid fa-user-astronaut"></i>
                     </div>
                     <h3 class="text-2xl font-black mb-4 uppercase text-white">Portrait Transformer</h3>
-                    <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                    <p class="text-gray-400 text-sm mb-8 leading-relaxed">
                         Render standard descriptions into highly-detailed character profile algorithms for supreme rendering engines.
                     </p>
-                    <button onclick="showPage('portrait-engine')" class="w-full py-4 bg-purple-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-purple-500 transition">
-                        Open Portrait Lab
-                    </button>
                 </div>
-                
-                <div class="glass rounded-[2rem] border border-purple-500/20 overflow-hidden shadow-xl group">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/havey.png" alt="Portrait Transformer Preview" class="w-full h-auto object-cover opacity-90 group-hover:scale-102 group-hover:opacity-100 transition duration-500 block">
-                </div>
+                <button onclick="showPage('portrait-engine')" class="w-full py-4 bg-purple-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-purple-500 transition">
+                    Open Portrait Lab
+                </button>
             </div>
 
         </div>
     </div>
 </section>
 
-<section id="prompt-engine" class="page-content pt-32 pb-20 px-6">
+
+<section id="prompt-engine" class="page-content pt-32 pb-20 px-6 hidden">
     <div class="max-w-3xl mx-auto glass p-8 md:p-12 rounded-[2.5rem]">
-        <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-white mb-6 transition flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to Modules</button>
-        <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Vision Engine <span class="text-indigo-500">v1.0</span></h2>
+        <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">← Back To Tools</button>
+        <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Vision Engine <span class="text-indigo-500">V1.0</span></h2>
         <p class="text-gray-400 text-sm mb-8">Enter your basic concept below to append cinematic parameters.</p>
+        
         <div class="space-y-6">
-            <textarea id="userInput" onfocus="closeSidebarOnType()" placeholder="Describe your base scene (e.g., a cyber warrior in rain)..." class="w-full h-32 bg-black/40 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500 transition placeholder:text-gray-600 resize-none"></textarea>
-            <button onclick="generatePowerPrompt()" class="w-full py-4 bg-indigo-600 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-indigo-500 transition">Compile Hyper-Prompt</button>
-            <div id="resultBox" class="hidden glass p-6 rounded-xl border border-indigo-500/30 bg-indigo-500/5 animate__animated animate__fadeIn">
+            <textarea id="userInput" onfocus="closeSidebarOnType()" placeholder="Describe your base scene (e.g., a cyber warrior in rain)..." class="w-full h-32 bg-black/40 border border-indigo-500/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
+            <button onclick="generatePowerPrompt()" class="w-full py-4 bg-indigo-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-indigo-500 transition">Compile Hyper-Prompt</button>
+            
+            <div id="resultBox" class="hidden glass p-6 rounded-xl border border-indigo-500/30 bg-indigo-500/5">
                 <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-2">Compiled Output</p>
                 <p id="finalPrompt" class="text-white text-sm leading-relaxed select-all italic"></p>
-                <button onclick="copyPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition">Copy to Clipboard</button>
+                <button onclick="copyPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase text-white transition">Copy To Clipboard</button>
+            </div>
+
+            <div class="mt-8 border border-indigo-500/20 rounded-2xl overflow-hidden bg-black/40 shadow-2xl">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 p-4 pb-0">Engine Reference Blueprint:</p>
+                <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/result.png" alt="Cinematic Vision Guide" class="w-full h-auto object-cover block">
             </div>
         </div>
     </div>
 </section>
 
-<section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
-    <div class="max-w-4xl mx-auto glass p-8 md:p-12 rounded-[2.5rem]">
-        <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-white mb-6 transition flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to Modules</button>
-        <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Portrait <span class="text-purple-500">Transformer</span></h2>
-        <p class="text-gray-400 text-sm mb-10">Select a pre-configured biological structure style preset.</p>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <button onclick="generatePortrait('Cyberpunk Cyborg')" class="glass p-4 rounded-xl hover:bg-purple-600/20 text-xs font-bold uppercase tracking-wider text-white border-white/10 transition">Cyberpunk</button>
-            <button onclick="generatePortrait('Ancient Viking Warrior')" class="glass p-4 rounded-xl hover:bg-purple-600/20 text-xs font-bold uppercase tracking-wider text-white border-white/10 transition">Viking</button>
-            <button onclick="generatePortrait('Pixar 3D Stylized')" class="glass p-4 rounded-xl hover:bg-purple-600/20 text-xs font-bold uppercase tracking-wider text-white border-white/10 transition">Pixar 3D</button>
-            <button onclick="generatePortrait('Dark Fantasy Overlord')" class="glass p-4 rounded-xl hover:bg-purple-600/20 text-xs font-bold uppercase tracking-wider text-white border-white/10 transition">Fantasy</button>
-        </div>
-        <div id="portraitResult" class="hidden glass p-6 rounded-xl border border-purple-500/30 bg-purple-500/5 animate__animated animate__fadeIn">
-            <p id="portraitFinalPrompt" class="text-white text-sm italic leading-relaxed"></p>
-            <button onclick="copyPortraitPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition">Copy Prompt</button>
+<section id="portrait-engine" class="page-content pt-32 pb-20 px-6 hidden">
+    <div class="max-w-3xl mx-auto glass p-8 md:p-12 rounded-[2.5rem]">
+        <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">← Back To Tools</button>
+        <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Portrait Lab <span class="text-purple-500">V1.0</span></h2>
+        <p class="text-gray-400 text-sm mb-8">Render standard descriptions into highly-detailed character profile algorithms.</p>
+        
+        <div class="space-y-6">
+            <textarea id="portraitInput" placeholder="Describe face or character aesthetics..." class="w-full h-32 bg-black/40 border border-purple-500/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 transition resize-none"></textarea>
+            <button onclick="generatePortraitPrompt()" class="w-full py-4 bg-purple-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-purple-500 transition">Open Portrait Lab</button>
+            
+            <div class="mt-8 border border-purple-500/20 rounded-2xl overflow-hidden bg-black/40 shadow-2xl">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-purple-400 p-4 pb-0">Transformer Reference Blueprint:</p>
+                <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/havey.png" alt="Portrait Transformer Guide" class="w-full h-auto object-cover block">
+            </div>
         </div>
     </div>
 </section>
