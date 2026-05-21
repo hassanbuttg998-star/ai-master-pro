@@ -510,10 +510,38 @@ function showPage(pageId, pushToHistory = true) {
     showToast("Prompt copied to clipboard!");
 }
 
-    function generatePortrait(style) {
-        document.getElementById('portraitFinalPrompt').innerText = `Hyper-realistic close up portrait of ${style} subject, cinematic conceptual studio render, ultra textures, intricate grading --v 6.0`;
-        document.getElementById('portraitResult').classList.remove('hidden');
+    function generatePortrait(stylePreset, targetBoxId) {
+    // 1. Pehle chalne wale saare boxes ko hide karo back-end par direct style se
+    document.querySelectorAll('.portrait-local-box').forEach(box => {
+        box.style.display = 'none';
+    });
+
+    // 2. Aapka bataya hua custom mandatory starting text
+    const customPrefix = "use my reference picture and create a ";
+    let coreEnginePrompt = "";
+
+    // 3. Style text assign karna aur direct target text selector pick karna
+    let specificTextId = "";
+    if (targetBoxId === 'res-cyberpunk') {
+        specificTextId = "text-cyberpunk";
+        coreEnginePrompt = "cyberpunk cyborg with glowing neon cybernetic implants, atmospheric dark synthwave aesthetic, 8k render.";
+    } else if (targetBoxId === 'res-pixar') {
+        specificTextId = "text-pixar";
+        coreEnginePrompt = "3D Pixar stylized character animation sheet, clean smooth clay material style, studio lighting, highly polished.";
+    } else if (targetBoxId === 'res-profile') {
+        specificTextId = "text-profile";
+        coreEnginePrompt = "professional corporate profile headshot, pristine studio cinematic lighting, corporate setting background, 8k resolution sharp focus.";
+    } else if (targetBoxId === 'res-sketch') {
+        specificTextId = "text-sketch";
+        coreEnginePrompt = "premium hand-drawn detailed pencil sketch portrait, fine art texture cross-hatching shade layers, dramatic realistic masterpiece.";
     }
+
+    // 4. Content write karna aur target box ko button ke thik niche display block karwana
+    if (specificTextId !== "") {
+        document.getElementById(specificTextId).innerText = customPrefix + coreEnginePrompt;
+        document.getElementById(targetBoxId).style.display = 'block';
+    }
+}
 
     function copyPortraitPrompt() {
     navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
