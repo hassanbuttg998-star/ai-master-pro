@@ -271,29 +271,38 @@
 
 
 <section id="prompt-engine" class="page-content pt-32 pb-20 px-6 hidden">
-    <div class="max-w-3xl mx-auto glass p-8 md:p-12 rounded-[2.5rem]">
-        <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">← Back To Tools</button>
-        <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Vision Engine <span class="text-indigo-500">V1.0</span></h2>
-        <p class="text-gray-400 text-sm mb-8">Enter your basic concept below to append cinematic parameters.</p>
+    <div class="max-w-3xl mx-auto flex flex-col gap-8">
         
-        <div class="space-y-6">
-            <textarea id="userInput" onfocus="closeSidebarOnType()" placeholder="Describe your base scene (e.g., a cyber warrior in rain)..." class="w-full h-32 bg-black/40 border border-indigo-500/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
-            <button onclick="generatePowerPrompt()" class="w-full py-4 bg-indigo-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-indigo-500 transition">Compile Hyper-Prompt</button>
+        <div class="glass p-8 md:p-12 rounded-[2.5rem] border-t-2 border-indigo-500/40 shadow-xl">
+            <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">← Back To Tools</button>
+            <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Vision Engine <span class="text-indigo-500">V1.0</span></h2>
+            <p class="text-gray-400 text-sm mb-8">Enter your basic concept below to append cinematic parameters.</p>
             
-            <div id="resultBox" class="hidden glass p-6 rounded-xl border border-indigo-500/30 bg-indigo-500/5">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-2">Compiled Output</p>
-                <p id="finalPrompt" class="text-white text-sm leading-relaxed select-all italic"></p>
-                <button onclick="copyPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase text-white transition">Copy To Clipboard</button>
-            </div>
-
-            <div class="mt-8 border border-indigo-500/20 rounded-2xl overflow-hidden bg-black/40 shadow-2xl">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 p-4 pb-0">Engine Reference Blueprint:</p>
-                <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/result.png" alt="Cinematic Vision Guide" class="w-full h-auto object-cover block">
+            <div class="space-y-6">
+                <textarea id="userInput" onfocus="closeSidebarOnType()" placeholder="Describe your base scene (e.g., a cyber warrior in rain)..." class="w-full h-32 bg-black/40 border border-indigo-500/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
+                <button onclick="generatePowerPrompt()" class="w-full py-4 bg-indigo-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-indigo-500 transition">Compile Hyper-Prompt</button>
+                
+                <div id="resultBox" class="hidden glass p-6 rounded-xl border border-indigo-500/30 bg-indigo-500/5">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-2">Compiled Output</p>
+                    <p id="finalPrompt" class="text-white text-sm leading-relaxed select-all italic"></p>
+                    <button onclick="copyPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase text-white transition">Copy To Clipboard</button>
+                </div>
             </div>
         </div>
+
+        <div class="text-center mt-4">
+            <h3 class="text-xl md:text-2xl font-black italic uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400">
+                ⚡ See The Magic In Action! Below Is A Visual Guide On How The Engine Works
+            </h3>
+            <p class="text-indigo-500 text-lg mt-2 font-bold animate-pulse">↓↓↓</p>
+        </div>
+
+        <div class="glass rounded-[2rem] border border-indigo-500/20 overflow-hidden shadow-2xl p-2 bg-black/20">
+            <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/result.png" alt="Cinematic Vision Guide" class="w-full h-auto object-cover rounded-[1.5rem] block opacity-95">
+        </div>
+
     </div>
 </section>
-
 <section id="portrait-engine" class="page-content pt-32 pb-20 px-6 hidden">
     <div class="max-w-3xl mx-auto glass p-8 md:p-12 rounded-[2.5rem]">
         <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">← Back To Tools</button>
