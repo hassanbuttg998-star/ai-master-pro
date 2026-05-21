@@ -305,18 +305,20 @@
 
 <section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
     <div class="max-w-4xl mx-auto glass p-8 md:p-12 rounded-[2.5rem]">
-        <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-white mb-6 transition flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to Modules</button>
-        <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Portrait <span class="text-purple-500">Transformer</span></h2>
+        <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">← BACK TO MODULES</button>
+        <h2 class="text-3xl font-black uppercase italic mb-2 text-white">PORTRAIT <span class="text-purple-500">TRANSFORMER</span></h2>
         <p class="text-gray-400 text-sm mb-10">Select a pre-configured biological structure style preset.</p>
+        
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <button onclick="generatePortrait('Cyberpunk Cyborg')" class="glass p-4 rounded-xl hover:bg-purple-600/20 text-xs font-bold uppercase tracking-wider text-white border-white/10 transition">Cyberpunk</button>
-            <button onclick="generatePortrait('Ancient Viking Warrior')" class="glass p-4 rounded-xl hover:bg-purple-600/20 text-xs font-bold uppercase tracking-wider text-white border-white/10 transition">Viking</button>
-            <button onclick="generatePortrait('Pixar 3D Stylized')" class="glass p-4 rounded-xl hover:bg-purple-600/20 text-xs font-bold uppercase tracking-wider text-white border-white/10 transition">Pixar 3D</button>
-            <button onclick="generatePortrait('Dark Fantasy Overlord')" class="glass p-4 rounded-xl hover:bg-purple-600/20 text-xs font-bold uppercase tracking-wider text-white border-white/10 transition">Fantasy</button>
+            <button onclick="generatePortrait('Cyberpunk Cyborg')" class="glass p-4 rounded-xl font-bold uppercase text-xs tracking-widest text-white hover:bg-purple-500/20 transition">CYBERPUNK</button>
+            <button onclick="generatePortrait('Pixar 3D Stylized')" class="glass p-4 rounded-xl font-bold uppercase text-xs tracking-widest text-white hover:bg-purple-500/20 transition">PIXAR 3D</button>
+            <button onclick="generatePortrait('Professional Profile Photo')" class="glass p-4 rounded-xl font-bold uppercase text-xs tracking-widest text-white hover:bg-purple-500/20 transition">PROFILE PHOTO</button>
+            <button onclick="generatePortrait('Professional Sketch Photo')" class="glass p-4 rounded-xl font-bold uppercase text-xs tracking-widest text-white hover:bg-purple-500/20 transition">SKETCH</button>
         </div>
-        <div id="portraitResult" class="hidden glass p-6 rounded-xl border border-purple-500/30 bg-purple-500/5 animate__animated animate__fadeIn">
-            <p id="portraitFinalPrompt" class="text-white text-sm italic leading-relaxed"></p>
-            <button onclick="copyPortraitPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition">Copy Prompt</button>
+
+        <div id="portraitResult" class="hidden glass p-6 rounded-xl border border-purple-500/30">
+            <p id="portraitFinalPrompt" class="text-white text-sm italic leading-relaxed select-all"></p>
+            <button onclick="copyPortraitPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase text-white transition">Copy Prompt</button>
         </div>
     </div>
 </section>
