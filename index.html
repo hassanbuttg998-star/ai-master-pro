@@ -302,22 +302,41 @@
         </div>
 
     </div>
-</section>
 <section id="portrait-engine" class="page-content pt-32 pb-20 px-6 hidden">
-    <div class="max-w-3xl mx-auto glass p-8 md:p-12 rounded-[2.5rem]">
-        <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">← Back To Tools</button>
-        <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Portrait Lab <span class="text-purple-500">V1.0</span></h2>
-        <p class="text-gray-400 text-sm mb-8">Render standard descriptions into highly-detailed character profile algorithms.</p>
+    <div class="max-w-3xl mx-auto flex flex-col gap-8">
         
-        <div class="space-y-6">
-            <textarea id="portraitInput" placeholder="Describe face or character aesthetics..." class="w-full h-32 bg-black/40 border border-purple-500/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 transition resize-none"></textarea>
-            <button onclick="generatePortraitPrompt()" class="w-full py-4 bg-purple-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-purple-500 transition">Open Portrait Lab</button>
+        <div class="glass p-8 md:p-12 rounded-[2.5rem] border-t-2 border-purple-500/40 shadow-xl">
+            <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">← Back To Tools</button>
+            <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Portrait Lab <span class="text-purple-500">V1.0</span></h2>
+            <p class="text-gray-400 text-sm mb-8">Select a style protocol below to render premium character profile algorithms.</p>
             
-            <div class="mt-8 border border-purple-500/20 rounded-2xl overflow-hidden bg-black/40 shadow-2xl">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-purple-400 p-4 pb-0">Transformer Reference Blueprint:</p>
-                <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/havey.png" alt="Portrait Transformer Guide" class="w-full h-auto object-cover block">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+                <button onclick="loadPortraitPreset('cyberpunk')" class="py-3 px-4 bg-purple-500/10 border border-purple-500/20 hover:border-purple-500 rounded-xl text-xs font-bold uppercase tracking-wider text-purple-300 hover:text-white transition">Cyberpunk</button>
+                <button onclick="loadPortraitPreset('cinematic')" class="py-3 px-4 bg-purple-500/10 border border-purple-500/20 hover:border-purple-500 rounded-xl text-xs font-bold uppercase tracking-wider text-purple-300 hover:text-white transition">Cinematic</button>
+                <button onclick="loadPortraitPreset('anime')" class="py-3 px-4 bg-purple-500/10 border border-purple-500/20 hover:border-purple-500 rounded-xl text-xs font-bold uppercase tracking-wider text-purple-300 hover:text-white transition">Anime Style</button>
+                <button onclick="loadPortraitPreset('hyper-real')" class="py-3 px-4 bg-purple-500/10 border border-purple-500/20 hover:border-purple-500 rounded-xl text-xs font-bold uppercase tracking-wider text-purple-300 hover:text-white transition">Hyper-Real</button>
+                <button onclick="loadPortraitPreset('vintage')" class="py-3 px-4 bg-purple-500/10 border border-purple-500/20 hover:border-purple-500 rounded-xl text-xs font-bold uppercase tracking-wider text-purple-300 hover:text-white transition">Vintage</button>
+                <button onclick="loadPortraitPreset('3d-render')" class="py-3 px-4 bg-purple-500/10 border border-purple-500/20 hover:border-purple-500 rounded-xl text-xs font-bold uppercase tracking-wider text-purple-300 hover:text-white transition">3D Render</button>
+            </div>
+
+            <div id="portraitResultBox" class="glass p-6 rounded-xl border border-purple-500/30 bg-purple-500/5">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-purple-400 mb-2">Generated Profile Algorithm</p>
+                <p id="finalPortraitPrompt" class="text-white text-sm leading-relaxed select-all italic">Select a category protocol from above to inject prompt configuration...</p>
+                <button onclick="copyPortraitPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase text-white transition">Copy Protocol</button>
             </div>
         </div>
+
+        <div class="text-center mt-4">
+            <h3 class="text-xl md:text-2xl font-black italic uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-purple-400">
+                ⚡ Transformer Blueprint! Check out the face-modification conversion matrix
+            </h3>
+            <p class="text-purple-500 text-lg mt-2 font-bold animate-pulse">↓↓↓</p>
+        </div>
+
+        <div class="glass rounded-[2rem] border border-purple-500/20 overflow-hidden shadow-2xl p-2 bg-black/20">
+            <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/havey.png" alt="Portrait Transformer Guide" class="w-full h-auto object-cover rounded-[1.5rem] block opacity-95">
+        </div>
+
     </div>
 </section>
 
