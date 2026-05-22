@@ -877,22 +877,43 @@ function showToast(message) {
         }, 300);
     }, 2200);
 }
-    // 🖼️ BACKGROUND REMOVER PORTAL OPEN & CLOSE ENGINE
+    // 🌌 SMART BACKGROUND REMOVER PORTAL INTERACTION WITH BACK BUTTON FIX
 function launchBgEngine() {
     const portal = document.getElementById('bg-engine-portal');
     if (portal) {
         portal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+
+        // 🚀 CRUCIAL FIX: Browser ki history mein ek state push karein taake back button par web close na ho
+        if (window.history && window.history.pushState) {
+            window.history.pushState({ activePortal: 'bg-engine' }, null, './#bg-engine');
+        }
     }
 }
 
 function closeBgEngine() {
     const portal = document.getElementById('bg-engine-portal');
-    if (portal) {
+    if (portal && !portal.classList.contains('hidden')) {
+        portal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+
+        // Agar user screen par mojud CLOSE button dabaye, toh history state ko clean karein
+        if (window.history && window.history.state && window.history.state.activePortal === 'bg-engine') {
+            window.history.back();
+        }
+    }
+}
+
+// 🛡️ BACK BUTTON LISTENER (Jab user mobile ya browser ka back button dabaye)
+window.addEventListener('popstate', function (event) {
+    const portal = document.getElementById('bg-engine-portal');
+    
+    // Agar humne 'bg-engine' ka state active kiya tha aur user ne back dabaya, toh sirf portal band karo
+    if (portal && !portal.classList.contains('hidden')) {
         portal.classList.add('hidden');
         document.body.style.overflow = 'auto';
     }
-}
+});
 </script>
 </body>
 </html>
