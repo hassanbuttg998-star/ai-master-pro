@@ -250,28 +250,6 @@
                 </button>
             </div>
 
-            <div class="glass rounded-[2.5rem] border-t-2 border-fuchsia-500/40 p-8 md:p-10 pb-8 flex flex-col justify-between bg-black/20 hover:border-fuchsia-500/60 transition duration-300 group">
-                <div>
-                    <div class="w-12 h-12 bg-fuchsia-500/10 border border-fuchsia-500/30 rounded-2xl flex items-center justify-center mb-6 text-fuchsia-400 group-hover:bg-fuchsia-600 group-hover:text-white transition duration-300">
-                        <i class="fa-solid fa-scissors"></i>
-                    </div>
-                    
-                    <h3 class="text-2xl font-black mb-4 uppercase tracking-wide text-white">
-                        Background Remover
-                    </h3>
-                    
-                    <p class="text-gray-400 text-sm mb-8 leading-relaxed">
-                        Isolate subjects with extreme edge precision. Extract professional transparent cut-outs from any portrait or asset within seconds.
-                    </p>
-                </div>
-
-                <div class="mt-auto">
-                    <button onclick="launchBgEngine()" class="w-full py-4 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl transition duration-200">
-                        Launch BG Engine
-                    </button>
-                </div>
-            </div>
-            
             <div class="glass rounded-[2.5rem] border-t-2 border-purple-500/40 p-8 md:p-10 pb-8 flex flex-col justify-between h-full">
                 <div>
                     <div class="w-12 h-12 bg-purple-500/10 border border-purple-500/30 rounded-2xl flex items-center justify-center mb-6 text-purple-400 text-xl">
@@ -291,62 +269,6 @@
     </div>
 </section>
 
-    <div id="bg-engine-portal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col p-4 md:p-8 hidden">
-    <div id="bg-engine-portal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col p-4 md:p-8 hidden">
-    
-    <div class="flex justify-between items-center max-w-5xl w-full mx-auto mb-6 border-b border-white/5 pb-4">
-        <div class="flex items-center gap-3">
-            <span class="flex h-2 w-2 relative">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-fuchsia-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-fuchsia-500"></span>
-            </span>
-            <h2 class="text-lg md:text-xl font-black text-white uppercase tracking-widest">NEURAL BG ENGINE <span class="text-fuchsia-400 text-xs font-bold">V1.0</span></h2>
-        </div>
-        <button onclick="closeBgEngine()" class="px-4 py-2 bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/30 rounded-xl text-xs font-black uppercase tracking-wider text-gray-400 hover:text-white transition duration-200">
-            [ CLOSE ENGINE ]
-        </button>
-    </div>
-
-    <div class="max-w-5xl w-full mx-auto flex-grow flex flex-col items-center justify-center border-2 border-dashed border-fuchsia-500/20 hover:border-fuchsia-500/40 rounded-3xl p-6 bg-black/40 transition duration-300 relative" id="drop-zone">
-        
-        <input type="file" id="bg-file-input" class="hidden" accept="image/*" onchange="handleFileSelect(event)">
-
-        <div id="upload-view" class="text-center">
-            <div class="w-16 h-16 bg-fuchsia-500/5 border border-fuchsia-500/20 text-fuchsia-400 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse">
-                <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
-            </div>
-            <h3 class="text-white font-black uppercase text-sm tracking-wider mb-2">Drop your image here</h3>
-            <p class="text-gray-400 text-xs max-w-xs mx-auto leading-relaxed mb-6">Supports PNG, JPG, or WebP. Subject isolation processes automatically.</p>
-            <button onclick="document.getElementById('bg-file-input').click()" class="px-6 py-3 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-black uppercase text-[11px] tracking-widest rounded-xl transition">
-                Browse Asset
-            </button>
-        </div>
-
-        <div id="loading-view" class="text-center hidden">
-            <div class="inline-block relative w-12 h-12 mb-4">
-                <div class="absolute inset-0 border-4 border-fuchsia-500/20 rounded-full"></div>
-                <div class="absolute inset-0 border-4 border-t-fuchsia-500 rounded-full animate-spin"></div>
-            </div>
-            <h3 class="text-fuchsia-400 font-black uppercase text-xs tracking-[0.2em] mb-1">Processing Neural Layer...</h3>
-            <p class="text-gray-500 text-[10px] uppercase tracking-widest animate-pulse">Isolating complex edges & subject mask</p>
-        </div>
-
-        <div id="result-view" class="w-full h-full flex flex-col items-center justify-between hidden">
-            <div class="flex-grow w-full max-h-[400px] rounded-2xl border border-white/5 overflow-hidden flex items-center justify-center bg-[linear-gradient(45deg,#111_25%,transparent_25%),linear-gradient(-45deg,#111_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#111_75%),linear-gradient(-45deg,transparent_75%,#111_75%)] bg-[size:20px_20px] bg-[position:0_0,0_10px,10px_-10px,-10px_0] p-4">
-                <img id="output-image" class="max-w-full max-h-full object-contain drop-shadow-[0_10px_30px_rgba(168,85,247,0.3)]" src="" alt="Neural Cutout">
-            </div>
-            <div class="flex gap-4 w-full mt-6">
-                <button onclick="resetBgEngine()" class="flex-1 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 font-black uppercase text-xs tracking-wider rounded-xl transition">
-                    Reset Asset
-                </button>
-                <a id="download-link" download="frazx-pro-cutout.png" class="flex-1 py-4 bg-fuchsia-600 hover:bg-fuchsia-700 text-white text-center font-black uppercase text-xs tracking-wider rounded-xl shadow-lg shadow-fuchsia-600/20 transition">
-                    Download PNG
-                </a>
-            </div>
-        </div>
-
-    </div>
-</div>
 
 <section id="prompt-engine" class="page-content pt-32 pb-20 px-6 hidden">
     <div class="max-w-3xl mx-auto flex flex-col gap-8">
@@ -610,6 +532,8 @@
         </div>
         <p class="text-gray-600 text-[9px] tracking-[0.4em] uppercase">© 2026 CRAFTED NATIVELY BY HASSAN FRAZ. ALL RIGHTS RESERVED.</p>
     </div>
+        
+      </div>
 </footer>
 
 <script>
@@ -879,56 +803,7 @@ function showToast(message) {
         }, 300);
     }, 2200);
 }
-    // 🖼️ LAUNCH & CLOSE BACKGROUND REMOVER PORTAL
-function launchBgEngine() {
-    const portal = document.getElementById('bg-engine-portal');
-    if (portal) {
-        portal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-function closeBgEngine() {
-    const portal = document.getElementById('bg-engine-portal');
-    if (portal) {
-        portal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    }
-            }
-    // 🔄 STATE ENGINE FOR BACKGROUND REMOVER VIEW PORTS
-function handleFileSelect(event) {
-    const file = event.target.files[0];
-    if (file) {
-        processImageWithAI(file);
-    }
-}
-
-function processImageWithAI(file) {
-    // 1. Shift states to loading sequence
-    document.getElementById('upload-view').classList.add('hidden');
-    document.getElementById('loading-view').classList.remove('hidden');
-    
-    // 💥 YAHAN SE APNE API ENGINE KO TARGET KARENGE
-    // Abhi temporarily checkout verify karne ke liye 2 seconds ka dummy timeout chalate hain
-    setTimeout(() => {
-        // Mocking image response preview
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('loading-view').classList.add('hidden');
-            document.getElementById('result-view').classList.remove('hidden');
-            document.getElementById('output-image').src = e.target.result;
-            document.getElementById('download-link').href = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }, 2000);
-}
-
-function resetBgEngine() {
-    document.getElementById('result-view').classList.add('hidden');
-    document.getElementById('loading-view').classList.add('hidden');
-    document.getElementById('upload-view').classList.remove('hidden');
-    document.getElementById('bg-file-input').value = "";
-}
 </script>
 </body>
 </html>
+
