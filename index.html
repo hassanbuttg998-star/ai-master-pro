@@ -270,22 +270,22 @@
             </div>
         </div>
 
-            <div class="glass rounded-[2.5rem] border-t-2 border-fuchsia-500/40 p-8 md:p-10 pb-8 flex flex-col justify-between min-h-[380px] bg-black/20 hover:border-fuchsia-500/60 transition duration-300 group">
-                <div>
-                    <div class="w-12 h-12 bg-fuchsia-500/10 border border-fuchsia-500/30 rounded-2xl flex items-center justify-center mb-6 text-fuchsia-400 group-hover:bg-fuchsia-600 group-hover:text-white transition duration-300">
-                        <i class="fa-solid fa-scissors"></i>
-                    </div>
-                    <h3 class="text-2xl font-black mb-4 uppercase tracking-wide text-white">Background Remover</h3>
-                    <p class="text-gray-400 text-sm mb-8 leading-relaxed">
-                        Isolate subjects with extreme edge precision. Extract professional transparent cut-outs from any asset within seconds.
-                    </p>
+            <div class="glass rounded-[2.5rem] border-t-2 border-cyan-500/40 p-8 md:p-10 pb-8 flex flex-col justify-between h-full">
+            <div>
+                <div class="w-12 h-12 bg-cyan-500 rounded-full flex items-center justify-center text-black text-xl mb-8 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                    <i class="fa-solid fa-scissors"></i>
                 </div>
-                <div class="mt-auto">
-                    <button onclick="launchBgEngine()" class="w-full py-4 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl transition duration-200">
-                        Launch BG Engine
-                    </button>
-                </div>
+                <h3 class="text-white font-black text-2xl mb-4 uppercase tracking-wide">Background Remover</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Isolate subjects with extreme edge precision. Extract professional transparent cut-outs from any asset within seconds.
+                </p>
             </div>
+            <div class="mt-auto">
+                <button onclick="showPage('bg-engine')" class="w-full py-4 bg-cyan-500 hover:bg-cyan-600 text-black font-black text-sm tracking-widest rounded-2xl transition-all duration-300 uppercase shadow-[0_4px_20px_rgba(6,182,212,0.3)]">
+                    Launch BG Engine
+                </button>
+            </div>
+        </div>
 
         </div> </section> <div id="bg-engine-portal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col p-4 md:p-8 hidden">
         <div class="flex justify-between items-center max-w-5xl w-full mx-auto mb-6 border-b border-white/5 pb-4">
