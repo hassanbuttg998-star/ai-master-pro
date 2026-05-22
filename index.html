@@ -341,6 +341,9 @@
                 <div id="res-pixar" class="portrait-local-box mt-4 p-4 glass rounded-xl border border-purple-500/30 bg-purple-500/5" style="display: none;">
                     <p class="text-[10px] font-bold uppercase text-purple-400 mb-2 tracking-wider">COMPILED PROMPT:</p>
                     <p id="text-pixar" class="text-white text-xs italic leading-relaxed select-all"></p>
+                    <button onclick="copyLocalPrompt('text-pixar', this)" class="w-full mt-3 py-1.5 bg-white/5 hover:bg-purple-500/20 border border-white/10 rounded-lg text-[10px] font-bold tracking-wider text-gray-300 hover:text-white transition flex items-center justify-center gap-1">
+    COPY PROMPT
+                    </button>
                 </div>
             </div>
 
@@ -353,6 +356,9 @@
                 <div id="res-profile" class="portrait-local-box mt-4 p-4 glass rounded-xl border border-purple-500/30 bg-purple-500/5" style="display: none;">
                     <p class="text-[10px] font-bold uppercase text-purple-400 mb-2 tracking-wider">COMPILED PROMPT:</p>
                     <p id="text-profile" class="text-white text-xs italic leading-relaxed select-all"></p>
+                    <button onclick="copyLocalPrompt('text-profile', this)" class="w-full mt-3 py-1.5 bg-white/5 hover:bg-purple-500/20 border border-white/10 rounded-lg text-[10px] font-bold tracking-wider text-gray-300 hover:text-white transition flex items-center justify-center gap-1">
+    COPY PROMPT
+                    </button>
                 </div>
             </div>
 
@@ -365,6 +371,9 @@
                 <div id="res-sketch" class="portrait-local-box mt-4 p-4 glass rounded-xl border border-purple-500/30 bg-purple-500/5" style="display: none;">
                     <p class="text-[10px] font-bold uppercase text-purple-400 mb-2 tracking-wider">COMPILED PROMPT:</p>
                     <p id="text-sketch" class="text-white text-xs italic leading-relaxed select-all"></p>
+                    <button onclick="copyLocalPrompt('text-sketch', this)" class="w-full mt-3 py-1.5 bg-white/5 hover:bg-purple-500/20 border border-white/10 rounded-lg text-[10px] font-bold tracking-wider text-gray-300 hover:text-white transition flex items-center justify-center gap-1">
+    COPY PROMPT
+                    </button>
                 </div>
             </div>
 
@@ -604,6 +613,22 @@ function showPage(pageId, pushToHistory = true) {
     navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
     showToast("Prompt copied to clipboard!");
 }
+    function copyLocalPrompt(textElementId, buttonElement) {
+    const textToCopy = document.getElementById(textElementId).innerText;
+    
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = buttonElement.innerHTML;
+        buttonElement.innerHTML = "✓ COPIED!";
+        buttonElement.classList.add('text-purple-400', 'border-purple-500/40');
+        
+        setTimeout(() => {
+            buttonElement.innerHTML = originalText;
+            buttonElement.classList.remove('text-purple-400', 'border-purple-500/40');
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+    }
     
     function toggleTheme() {
     const body = document.body;
