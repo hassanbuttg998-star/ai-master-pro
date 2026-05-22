@@ -877,6 +877,22 @@ function showToast(message) {
         }, 300);
     }, 2200);
 }
+    // 🖼️ BACKGROUND REMOVER PORTAL OPEN & CLOSE ENGINE
+function launchBgEngine() {
+    const portal = document.getElementById('bg-engine-portal');
+    if (portal) {
+        portal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeBgEngine() {
+    const portal = document.getElementById('bg-engine-portal');
+    if (portal) {
+        portal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+}
 </script>
 </body>
 </html>
