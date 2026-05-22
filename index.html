@@ -292,6 +292,7 @@
 </section>
 
     <div id="bg-engine-portal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col p-4 md:p-8 hidden">
+    <div id="bg-engine-portal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col p-4 md:p-8 hidden">
     
     <div class="flex justify-between items-center max-w-5xl w-full mx-auto mb-6 border-b border-white/5 pb-4">
         <div class="flex items-center gap-3">
@@ -306,22 +307,46 @@
         </button>
     </div>
 
-    <div class="max-w-5xl w-full mx-auto flex-grow flex flex-col items-center justify-center border-2 border-dashed border-fuchsia-500/20 hover:border-fuchsia-500/40 rounded-3xl p-6 bg-black/40 transition duration-300">
+    <div class="max-w-5xl w-full mx-auto flex-grow flex flex-col items-center justify-center border-2 border-dashed border-fuchsia-500/20 hover:border-fuchsia-500/40 rounded-3xl p-6 bg-black/40 transition duration-300 relative" id="drop-zone">
         
-        <div class="text-center">
+        <input type="file" id="bg-file-input" class="hidden" accept="image/*" onchange="handleFileSelect(event)">
+
+        <div id="upload-view" class="text-center">
             <div class="w-16 h-16 bg-fuchsia-500/5 border border-fuchsia-500/20 text-fuchsia-400 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse">
                 <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
             </div>
             <h3 class="text-white font-black uppercase text-sm tracking-wider mb-2">Drop your image here</h3>
             <p class="text-gray-400 text-xs max-w-xs mx-auto leading-relaxed mb-6">Supports PNG, JPG, or WebP. Subject isolation processes automatically.</p>
-            
-            <button class="px-6 py-3 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-black uppercase text-[11px] tracking-widest rounded-xl transition">
+            <button onclick="document.getElementById('bg-file-input').click()" class="px-6 py-3 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-black uppercase text-[11px] tracking-widest rounded-xl transition">
                 Browse Asset
             </button>
         </div>
 
+        <div id="loading-view" class="text-center hidden">
+            <div class="inline-block relative w-12 h-12 mb-4">
+                <div class="absolute inset-0 border-4 border-fuchsia-500/20 rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-t-fuchsia-500 rounded-full animate-spin"></div>
+            </div>
+            <h3 class="text-fuchsia-400 font-black uppercase text-xs tracking-[0.2em] mb-1">Processing Neural Layer...</h3>
+            <p class="text-gray-500 text-[10px] uppercase tracking-widest animate-pulse">Isolating complex edges & subject mask</p>
+        </div>
+
+        <div id="result-view" class="w-full h-full flex flex-col items-center justify-between hidden">
+            <div class="flex-grow w-full max-h-[400px] rounded-2xl border border-white/5 overflow-hidden flex items-center justify-center bg-[linear-gradient(45deg,#111_25%,transparent_25%),linear-gradient(-45deg,#111_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#111_75%),linear-gradient(-45deg,transparent_75%,#111_75%)] bg-[size:20px_20px] bg-[position:0_0,0_10px,10px_-10px,-10px_0] p-4">
+                <img id="output-image" class="max-w-full max-h-full object-contain drop-shadow-[0_10px_30px_rgba(168,85,247,0.3)]" src="" alt="Neural Cutout">
+            </div>
+            <div class="flex gap-4 w-full mt-6">
+                <button onclick="resetBgEngine()" class="flex-1 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 font-black uppercase text-xs tracking-wider rounded-xl transition">
+                    Reset Asset
+                </button>
+                <a id="download-link" download="frazx-pro-cutout.png" class="flex-1 py-4 bg-fuchsia-600 hover:bg-fuchsia-700 text-white text-center font-black uppercase text-xs tracking-wider rounded-xl shadow-lg shadow-fuchsia-600/20 transition">
+                    Download PNG
+                </a>
+            </div>
+        </div>
+
     </div>
-    </div>
+</div>
 
 <section id="prompt-engine" class="page-content pt-32 pb-20 px-6 hidden">
     <div class="max-w-3xl mx-auto flex flex-col gap-8">
@@ -870,6 +895,40 @@ function closeBgEngine() {
         document.body.style.overflow = 'auto';
     }
             }
+    // 🔄 STATE ENGINE FOR BACKGROUND REMOVER VIEW PORTS
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        processImageWithAI(file);
+    }
+}
+
+function processImageWithAI(file) {
+    // 1. Shift states to loading sequence
+    document.getElementById('upload-view').classList.add('hidden');
+    document.getElementById('loading-view').classList.remove('hidden');
+    
+    // 💥 YAHAN SE APNE API ENGINE KO TARGET KARENGE
+    // Abhi temporarily checkout verify karne ke liye 2 seconds ka dummy timeout chalate hain
+    setTimeout(() => {
+        // Mocking image response preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('loading-view').classList.add('hidden');
+            document.getElementById('result-view').classList.remove('hidden');
+            document.getElementById('output-image').src = e.target.result;
+            document.getElementById('download-link').href = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }, 2000);
+}
+
+function resetBgEngine() {
+    document.getElementById('result-view').classList.add('hidden');
+    document.getElementById('loading-view').classList.add('hidden');
+    document.getElementById('upload-view').classList.remove('hidden');
+    document.getElementById('bg-file-input').value = "";
+}
 </script>
 </body>
 </html>
