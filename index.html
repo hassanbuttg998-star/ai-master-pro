@@ -877,14 +877,15 @@ function showToast(message) {
         }, 300);
     }, 2200);
 }
-    // 🌌 SMART BACKGROUND REMOVER PORTAL INTERACTION WITH BACK BUTTON FIX
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🌌 BACKGROUND REMOVER AI ENGINE - COMPLETE PRODUCTION BLOCK
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 function launchBgEngine() {
     const portal = document.getElementById('bg-engine-portal');
     if (portal) {
         portal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
-
-        // 🚀 CRUCIAL FIX: Browser ki history mein ek state push karein taake back button par web close na ho
         if (window.history && window.history.pushState) {
             window.history.pushState({ activePortal: 'bg-engine' }, null, './#bg-engine');
         }
@@ -896,24 +897,75 @@ function closeBgEngine() {
     if (portal && !portal.classList.contains('hidden')) {
         portal.classList.add('hidden');
         document.body.style.overflow = 'auto';
-
-        // Agar user screen par mojud CLOSE button dabaye, toh history state ko clean karein
         if (window.history && window.history.state && window.history.state.activePortal === 'bg-engine') {
             window.history.back();
         }
     }
 }
 
-// 🛡️ BACK BUTTON LISTENER (Jab user mobile ya browser ka back button dabaye)
+// 🛡️ BACK BUTTON ENGINE LISTENER
 window.addEventListener('popstate', function (event) {
     const portal = document.getElementById('bg-engine-portal');
-    
-    // Agar humne 'bg-engine' ka state active kiya tha aur user ne back dabaya, toh sirf portal band karo
     if (portal && !portal.classList.contains('hidden')) {
         portal.classList.add('hidden');
         document.body.style.overflow = 'auto';
     }
 });
+
+// 🔄 AI BG REMOVER DETECTOR & ASYNC UPLOADER
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        processImageWithAI(file);
+    }
+}
+
+async function processImageWithAI(file) {
+    // Views Toggle
+    document.getElementById('upload-view').classList.add('hidden');
+    document.getElementById('loading-view').classList.remove('hidden');
+    
+    try {
+        const imageData = await file.arrayBuffer();
+        
+        // Calling RMBG-1.4 Neural Engine Model via Hugging Face Cloud
+        const response = await fetch(
+            "https://api-inference.huggingface.co/models/briaai/RMBG-1.4",
+            {
+                headers: { 
+                    "Authorization": "Bearer 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",
+                    "Content-Type": "application/octet-stream"
+                },
+                method: "POST",
+                body: imageData,
+            }
+        );
+
+        if (!response.ok) throw new Error("AI Core is busy.");
+
+        const resultBlob = await response.blob();
+        const outputObjectURL = URL.createObjectURL(resultBlob);
+
+        // Render Clean Output Cuts
+        document.getElementById('loading-view').classList.add('hidden');
+        document.getElementById('result-view').classList.remove('hidden');
+        
+        document.getElementById('output-image').src = outputObjectURL;
+        document.getElementById('download-link').href = outputObjectURL;
+
+    } catch (error) {
+        console.error("AI Core Error:", error);
+        alert("Hassan bhai, AI server busy hai. Ek baar dobara image upload karein!");
+        resetBgEngine();
+    }
+}
+
+function resetBgEngine() {
+    document.getElementById('result-view').classList.add('hidden');
+    document.getElementById('loading-view').classList.add('hidden');
+    document.getElementById('upload-view').classList.remove('hidden');
+    document.getElementById('bg-file-input').value = "";
+}
 </script>
 </body>
 </html>
