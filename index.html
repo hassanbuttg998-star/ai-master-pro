@@ -651,24 +651,6 @@ function showPage(pageId, pushToHistory = true) {
             showPage('home', false);
         }
     });
-    const sidebarButtons = document.querySelectorAll('#sidebar nav a, #sidebar nav button');
-    sidebarButtons.forEach(btn => {
-        btn.classList.remove('sidebar-active');
-    });
-
-    // Jo page open hai, uske matching button par glow apply karo
-    sidebarButtons.forEach(btn => {
-        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(pageId)) {
-            btn.classList.add('sidebar-active');
-        }
-    });
-
-    // Sidebar open ho to automatic close ho jaye mobile par
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar && !sidebar.classList.contains('translate-x-full')) {
-        sidebar.classList.add('translate-x-full');
-    }
-    });
     // 4. UI Layer Mechanisms
     function toggleSidebar(e) {
         if(e) e.stopPropagation();
