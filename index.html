@@ -496,6 +496,31 @@
         </div>
     </div>
 </section>
+
+    <section id="bg-engine" class="page-content pt-32 pb-20 px-6 hidden min-h-screen flex flex-col items-center justify-center text-center">
+    <div class="glass max-w-md w-full rounded-[2.5rem] border border-cyan-500/30 p-8 md:p-10 shadow-[0_0_50px_rgba(6,182,212,0.15)] flex flex-col items-center mx-auto">
+        
+        <div class="w-16 h-16 bg-cyan-500 rounded-full flex items-center justify-center text-black text-2xl mb-6 shadow-[0_0_20px_rgba(6,182,212,0.4)]">
+            <i class="fa-solid fa-scissors"></i>
+        </div>
+
+        <h1 class="text-white font-black text-3xl mb-2 uppercase tracking-wide">
+            AI BG REMOVER
+        </h1>
+        
+        <p class="text-cyan-400 font-black text-4xl mb-4 tracking-widest uppercase filter drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+            COMING SOON
+        </p>
+        
+        <p class="text-gray-400 text-sm leading-relaxed mb-8 max-w-xs">
+            Hassan bhai is cooking something massive! Highly stable Cloudflare AI Enterprise Engine is being deployed for ultra-fast cutouts.
+        </p>
+        
+        <button onclick="showPage('dashboard')" class="w-full py-4 bg-cyan-500 hover:bg-cyan-600 text-black font-black text-sm tracking-widest rounded-2xl transition-all duration-300 uppercase shadow-[0_4px_20px_rgba(6,182,212,0.3)] transform active:scale-95 cursor-pointer">
+            Back to Dashboard
+        </button>
+    </div>
+    </section>
     
 <section id="samples" class="page-content pt-32 pb-20 px-6">
     <div class="max-w-7xl mx-auto text-center">
@@ -826,55 +851,7 @@ function showToast(message) {
         }, 300);
     }, 2200);
 }
-    <section id="bg-engine" class="page-content pt-32 pb-20 px-6 hidden min-h-screen flex flex-col items-center justify-center text-center">
-    <div class="glass max-w-md w-full rounded-[2.5rem] border border-cyan-500/30 p-8 md:p-10 shadow-[0_0_50px_rgba(6,182,212,0.15)] flex flex-col items-center mx-auto">
-        
-        <div class="w-16 h-16 bg-cyan-500 rounded-full flex items-center justify-center text-black text-2xl mb-6 shadow-[0_0_20px_rgba(6,182,212,0.4)]">
-            <i class="fa-solid fa-scissors"></i>
-        </div>
-
-        <h1 class="text-white font-black text-3xl mb-2 uppercase tracking-wide">
-            AI BG REMOVER
-        </h1>
-        
-        <p class="text-cyan-400 font-black text-4xl mb-4 tracking-widest uppercase filter drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]">
-            COMING SOON
-        </p>
-        
-        <p class="text-gray-400 text-sm leading-relaxed mb-8 max-w-xs">
-            Hassan bhai is cooking something massive! Highly stable Cloudflare AI Enterprise Engine is being deployed for ultra-fast cutouts.
-        </p>
-        
-        <button onclick="showPage('tools-hub')" class="w-full py-4 bg-cyan-500 hover:bg-cyan-600 text-black font-black text-sm tracking-widest rounded-2xl transition-all duration-300 uppercase shadow-[0_4px_20px_rgba(6,182,212,0.3)] transform active:scale-95 cursor-pointer">
-            Back to Tools
-        </button>
-    </div>
-</section>
-
-<script>
-function showPage(pageId) {
-    // 1. Saare pages/sections ko select karo aur unko mitao (hide)
-    const allPages = document.querySelectorAll('.page-content, section, main');
-    allPages.forEach(page => {
-        page.style.display = 'none';
-        page.classList.remove('active-page');
-    });
-
-    // 2. Jo page click kiya hai uski exact ID dhoondo
-    const activePage = document.getElementById(pageId);
-    if (activePage) {
-        // Tailwind block handling aur custom visibility triggers
-        activePage.style.display = 'block';
-        activePage.classList.remove('hidden');
-        activePage.classList.add('active-page');
-    }
     
-    // Sidebar open ho to automatic close ho jaye page change par
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-        sidebar.classList.add('translate-x-full');
-    }
-}
 </script>
 </body>
 </html>
