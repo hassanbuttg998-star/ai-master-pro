@@ -679,21 +679,26 @@
     appId: "1:574351306354:web:92f3f01141a1eda0ce5ceb"
   };
 
+  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
 
-  // Explicit window scoping taaki modal button isko dhoond sake
-  window.loginWithGoogle = function() {
-      signInWithPopup(auth, provider)
-          .then((result) => {
-              alert("Welcome " + result.user.displayName + "!");
+  // Global scope mein function attach karne ka sahi tareeqa
+  window.loginWithGoogle = async function() {
+      try {
+          const auth = getAuth(app);
+          const provider = new GoogleAuthProvider();
+          
+          // Google authentication popup trigger
+          const result = await signInWithPopup(auth, provider);
+          
+          alert("Welcome " + result.user.displayName + "!");
+          if (typeof toggleLoginModal === 'function') {
               toggleLoginModal(false);
-          })
-          .catch((error) => {
-              console.error("Auth Error:", error.message);
-              alert("Login failed! Please try again. " + error.message);
-          });
+          }
+      } catch (error) {
+          console.error("Auth Error details:", error);
+          alert("Login Failed: " + error.message);
+      }
   }
 </script>
 
