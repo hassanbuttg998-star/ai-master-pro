@@ -23,6 +23,18 @@
     #sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1); z-index: 200; }
     .nav-link { cursor: pointer; transition: all 0.3s; }
     .nav-link:hover { color: #6366f1; }
+        /* 🎯 PREMIUM CYAN GLOW ACTIVE STATE FOR SIDEBAR BUTTONS */
+.sidebar-active {
+    background: linear-gradient(to right, rgba(6, 182, 212, 0.15), rgba(99, 102, 241, 0.05)) !important;
+    border-left: 3px solid #06b6d4 !important;
+    color: #22d3ee !important;
+    box-shadow: inset 10px 0 20px rgba(6, 182, 212, 0.05);
+    font-weight: 900 !important;
+}
+.sidebar-active i {
+    color: #22d3ee !important;
+    filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.6));
+}
 </style>
 </head>
 <body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
@@ -638,6 +650,24 @@ function showPage(pageId, pushToHistory = true) {
             window.location.hash = 'home';
             showPage('home', false);
         }
+    });
+    const sidebarButtons = document.querySelectorAll('#sidebar nav a, #sidebar nav button');
+    sidebarButtons.forEach(btn => {
+        btn.classList.remove('sidebar-active');
+    });
+
+    // Jo page open hai, uske matching button par glow apply karo
+    sidebarButtons.forEach(btn => {
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(pageId)) {
+            btn.classList.add('sidebar-active');
+        }
+    });
+
+    // Sidebar open ho to automatic close ho jaye mobile par
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && !sidebar.classList.contains('translate-x-full')) {
+        sidebar.classList.add('translate-x-full');
+    }
     });
     // 4. UI Layer Mechanisms
     function toggleSidebar(e) {
