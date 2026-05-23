@@ -44,6 +44,13 @@
     color: #818cf8 !important;
     filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
 }
+        /* 🔐 PREMIUM LOGIN MODAL GLOW EFFECTS */
+#login-modal {
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#login-modal > div {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 </style>
 </head>
 <body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
@@ -114,6 +121,20 @@
         <button onclick="toggleSidebar(event)" class="text-white text-2xl hover:text-indigo-500 transition">&times;</button>
     </div>
     <div class="flex flex-col gap-6 uppercase font-bold text-xs tracking-widest">
+        <div class="mb-4 p-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-between group normal-case font-sans">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-[10px] text-white/40 uppercase tracking-widest font-bold">Guest Mode</p>
+                    <p class="text-white text-xs font-bold">Anonymous</p>
+                </div>
+            </div>
+            <button onclick="toggleLoginModal(true)" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer">
+                Sign In
+            </button>
+        </div>
         <a href="#home" onclick="showPage('home')" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-house-chimney w-5 text-center"></i><span>Home</span>
         </a>
@@ -608,8 +629,70 @@
         
       </div>
 </footer>
+    
+<div id="login-modal" class="fixed inset-0 bg-[#050508]/80 backdrop-blur-xl z-[10000] flex items-center justify-center hidden opacity-0 transition-all duration-500">
+    <div class="bg-[#111827]/40 border border-white/10 p-8 rounded-3xl w-full max-w-md backdrop-blur-md relative transform scale-95 transition-all duration-500 shadow-[0_0_50px_rgba(99,102,241,0.1)]">
+        
+        <button onclick="toggleLoginModal(false)" class="absolute top-5 right-5 text-white/50 hover:text-white transition-colors cursor-pointer pointer-events-auto">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
 
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 uppercase">FRAZX PRO</h2>
+            <p class="text-white/60 text-xs mt-2 tracking-wide">Enter the Neural Gateway</p>
+        </div>
+
+        <button class="w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl flex items-center justify-center gap-3 text-white text-sm font-semibold tracking-wide transition-all duration-300 group shadow-[0_4px_12px_rgba(0,0,0,0.1)] cursor-pointer pointer-events-auto">
+            <img src="https://www.svgrepo.com/show/355037/google-icon.svg" class="w-5 h-5 group-hover:scale-110 transition-transform" alt="Google">
+            <span>Continue with Google</span>
+        </button>
+
+        <div class="flex items-center my-6 text-white/20 text-xs tracking-widest uppercase">
+            <div class="flex-1 h-[1px] bg-white/10"></div>
+            <span class="px-3">OR</span>
+            <div class="flex-1 h-[1px] bg-white/10"></div>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-white/50 text-[10px] uppercase tracking-widest font-bold mb-2">Neural Email Address</label>
+                <input type="email" placeholder="name@domain.com" class="w-full bg-[#050508]/60 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+            <div>
+                <label class="block text-white/50 text-[10px] uppercase tracking-widest font-bold mb-2">Access Password</label>
+                <input type="password" placeholder="••••••••" class="w-full bg-[#050508]/60 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+        </div>
+
+        <button class="w-full py-4 mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(99,102,241,0.3)] hover:shadow-[0_4px_25px_rgba(99,102,241,0.5)] cursor-pointer pointer-events-auto">
+            Initialize Session
+        </button>
+
+        <p class="text-center text-[11px] text-white/40 mt-6 tracking-wide">
+            Don't have an access key? <a href="#" class="text-indigo-400 hover:underline">Request Access</a>
+        </p>
+    </div>
+</div>
+    
 <script>
+
+    function toggleLoginModal(show) {
+        const modal = document.getElementById('login-modal');
+        if (!modal) return;
+        if (show) {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                if(modal.querySelector('div')) modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        } else {
+            modal.classList.add('opacity-0');
+            if(modal.querySelector('div')) modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 500);
+        }
+    }
     // 1. Core Navigation with Standard URL Hash Control
     // 1. AAPKA ORIGINAL FUNCTION (With Safe Button Highlight Integration)
 function showPage(pageId, pushToHistory = true) {
