@@ -23,17 +23,26 @@
     #sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1); z-index: 200; }
     .nav-link { cursor: pointer; transition: all 0.3s; }
     .nav-link:hover { color: #6366f1; }
-        /* 🎯 PREMIUM CYAN GLOW ACTIVE STATE FOR SIDEBAR BUTTONS */
-.sidebar-active {
-    background: linear-gradient(to right, rgba(6, 182, 212, 0.15), rgba(99, 102, 241, 0.05)) !important;
-    border-left: 3px solid #06b6d4 !important;
-    color: #22d3ee !important;
-    box-shadow: inset 10px 0 20px rgba(6, 182, 212, 0.05);
+/* 🎯 100% SAFE SIDEBAR ACTIVE STATE MANAGER (NO JAVASCRIPT) */
+#home:target ~ #sidebar nav a[onclick*="home"],
+#tools-hub:target ~ #sidebar nav a[onclick*="tools-hub"],
+#samples:target ~ #sidebar nav a[onclick*="samples"],
+#about-frazx:target ~ #sidebar nav a[onclick*="about-frazx"],
+#about-dev:target ~ #sidebar nav a[onclick*="about-dev"] {
+    background: linear-gradient(to right, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.05)) !important;
+    border-left: 3px solid #6366f1 !important;
+    color: #818cf8 !important;
     font-weight: 900 !important;
+    box-shadow: inset 10px 0 20px rgba(99, 102, 241, 0.05);
 }
-.sidebar-active i {
-    color: #22d3ee !important;
-    filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.6));
+
+#home:target ~ #sidebar nav a[onclick*="home"] i,
+#tools-hub:target ~ #sidebar nav a[onclick*="tools-hub"] i,
+#samples:target ~ #sidebar nav a[onclick*="samples"] i,
+#about-frazx:target ~ #sidebar nav a[onclick*="about-frazx"] i,
+#about-dev:target ~ #sidebar nav a[onclick*="about-dev"] i {
+    color: #818cf8 !important;
+    filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
 }
 </style>
 </head>
@@ -105,19 +114,19 @@
         <button onclick="toggleSidebar(event)" class="text-white text-2xl hover:text-indigo-500 transition">&times;</button>
     </div>
     <div class="flex flex-col gap-6 uppercase font-bold text-xs tracking-widest">
-        <a href="javascript:void(0)" onclick="showPage('home')" class="flex items-center gap-4 text-indigo-400 nav-link">
+        <a href="#home" onclick="showPage('home')" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-house-chimney w-5 text-center"></i><span>Home</span>
         </a>
-        <a href="javascript:void(0)" onclick="showPage('tools-hub')" class="flex items-center gap-4 text-white nav-link">
+        <a href="#tools-hub" onclick="showPage('tools-hub')" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-microchip w-5 text-center"></i><span>Tools Hub</span>
         </a>
-        <a href="javascript:void(0)" onclick="showPage('samples')" class="flex items-center gap-4 text-white nav-link">
+        <a href="#samples" onclick="showPage('samples')" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-clapperboard w-5 text-center"></i><span>Showcase</span>
         </a>
-        <a href="javascript:void(0)" onclick="showPage('about-frazx')" class="flex items-center gap-4 text-white nav-link">
+        <a href="#about-frazx" onclick="showPage('about-frazx')" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-circle-info w-5 text-center"></i><span>About FrazX</span>
         </a>
-        <a href="javascript:void(0)" onclick="showPage('about-dev')" class="flex items-center gap-4 text-white border-t border-white/5 pt-6 nav-link">
+        <a href="#about-dev" onclick="showPage('about-dev')" class="flex items-center gap-4 text-white border-t border-white/5 pt-6 nav-link">
             <i class="fa-solid fa-user-gear w-5 text-center text-indigo-500"></i><span>Developer</span>
         </a>
         <div class="border-t border-white/5 pt-6 mt-6 px-4">
