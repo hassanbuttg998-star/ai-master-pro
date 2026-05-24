@@ -75,7 +75,9 @@
         </div>
 
        <div class="flex items-center gap-8 lg:gap-12">
-    
+           
+    <div id="user-box"></div>
+           
     <div class="hidden md:flex items-center gap-6 lg:gap-8 text-[11px] font-black tracking-widest text-gray-400 uppercase">
         <button onclick="showPage('home')" class="hover:text-white transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
             Home
@@ -609,6 +611,57 @@
         
       </div>
 </footer>
+
+   <!-- LOGIN MODAL -->
+<div id="loginModal"
+class="fixed inset-0 bg-black/70 backdrop-blur-md hidden z-[9999] flex items-center justify-center p-6">
+
+<div class="bg-[#0f0f1a] border border-white/10 rounded-3xl p-8 w-full max-w-md">
+
+<h2 class="text-3xl font-black text-white uppercase mb-6">
+FRAZX LOGIN
+</h2>
+
+<div class="space-y-4">
+
+<input
+id="email"
+type="email"
+placeholder="Enter Email"
+class="w-full p-4 rounded-xl bg-black/40 border border-white/10 text-white outline-none"
+/>
+
+<input
+id="password"
+type="password"
+placeholder="Enter Password"
+class="w-full p-4 rounded-xl bg-black/40 border border-white/10 text-white outline-none"
+/>
+
+<button onclick="login()"
+class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-xl font-black uppercase text-sm text-white">
+Login
+</button>
+
+<button onclick="signup()"
+class="w-full bg-purple-600 hover:bg-purple-500 py-4 rounded-xl font-black uppercase text-sm text-white">
+Create Account
+</button>
+
+<button onclick="googleLogin()"
+class="w-full bg-white text-black py-4 rounded-xl font-black uppercase text-sm">
+Continue With Google
+</button>
+
+<button onclick="closeLogin()"
+class="w-full text-gray-400 text-sm mt-2">
+Close
+</button>
+
+</div>
+
+</div>
+</div>
     
 <script>
 
@@ -877,7 +930,143 @@ function showToast(message) {
         }, 300);
     }, 2200);
 }
+  function openLogin(){
+  document.getElementById('loginModal').classList.remove('hidden');
+}
+
+function closeLogin(){
+  document.getElementById('loginModal').classList.add('hidden');
+}
     
+</script>
+    
+    <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBXqQoTB0Lwhdog2HR7U1hgIsiQ_QBsZw",
+  authDomain: "frazxpro-a6c32.firebaseapp.com",
+  projectId: "frazxpro-a6c32",
+  storageBucket: "frazxpro-a6c32.firebasestorage.app",
+  messagingSenderId: "574351306354",
+  appId: "1:574351306354:web:92f3f01141a1eda0ce5ceb",
+  measurementId: "G-QFRZM3NTVQ"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.signup = async function () {
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try {
+
+    await createUserWithEmailAndPassword(auth, email, password);
+
+    alert("Account Created Successfully!");
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+
+};
+
+window.login = async function () {
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try {
+
+    await signInWithEmailAndPassword(auth, email, password);
+
+    alert("Login Successful!");
+
+    closeLogin();
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+
+};
+
+window.googleLogin = async function () {
+
+  const provider = new GoogleAuthProvider();
+
+  try {
+
+    await signInWithPopup(auth, provider);
+
+    alert("Google Login Successful!");
+
+    closeLogin();
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+
+};
+
+window.logout = async function () {
+
+  await signOut(auth);
+
+  alert("Logged Out!");
+
+};
+
+onAuthStateChanged(auth, (user) => {
+
+  const userBox = document.getElementById("user-box");
+
+  if(user){
+
+    userBox.innerHTML = `
+      <div class="flex items-center gap-3">
+        <span class="text-green-400 text-xs font-bold">
+          ${user.email}
+        </span>
+
+        <button onclick="logout()"
+        class="bg-red-500 px-4 py-2 rounded-xl text-white text-xs font-bold">
+          Logout
+        </button>
+      </div>
+    `;
+
+  } else {
+
+    userBox.innerHTML = `
+      <button onclick="openLogin()"
+      class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl text-white text-xs font-black tracking-wider uppercase">
+        Login
+      </button>
+    `;
+
+  }
+
+});
+
 </script>
 </body>
 </html>
