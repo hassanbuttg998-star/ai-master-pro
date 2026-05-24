@@ -409,137 +409,117 @@
 </section>
 
 <section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
-    <div class="max-w-5xl mx-auto flex flex-col gap-10">
+    <div class="max-w-4xl mx-auto flex flex-col gap-10">
 
-        <div class="w-full text-center md:text-left mb-10 mt-6 px-2">
+        <!-- Header -->
+        <div class="text-center mb-4 mt-6">
+            <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-6 block mx-auto">← Back To Tools</button>
             <h2 class="text-3xl md:text-4xl font-black uppercase italic mb-3 text-white tracking-wide">
                 PORTRAIT <span class="text-purple-500">TRANSFORMER</span>
             </h2>
-            <p class="text-gray-400 text-sm max-w-2xl font-medium leading-relaxed">
-                Select a style protocol below to render premium character profile algorithms.
+            <p class="text-gray-400 text-sm max-w-xl mx-auto font-medium leading-relaxed">
+                Describe yourself, pick a style — get a hyper-detailed AI portrait prompt instantly.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition">
-                <div class="w-full aspect-[16/10] bg-black/40 rounded-xl overflow-hidden mb-3 border border-white/5">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/Before.png" alt="Cyberpunk" class="w-full h-full object-cover">
-                </div>
-                <button onclick="generatePortrait('Cyberpunk Cyborg', 'res-cyberpunk')" class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">CYBERPUNK</button>
-                
-                <div id="res-cyberpunk" class="portrait-local-box mt-4 p-4 glass rounded-xl border border-purple-500/30 bg-purple-500/5" style="display: none;">
-                    <p class="text-[10px] font-bold uppercase text-purple-400 mb-2 tracking-wider">COMPILED PROMPT:</p>
-                    <p id="text-cyberpunk" class="text-white text-xs italic leading-relaxed select-all"></p>
-                    <button onclick="copyLocalPrompt('text-cyberpunk', this)" class="w-full mt-3 py-1.5 bg-white/5 hover:bg-purple-500/20 border border-white/10 rounded-lg text-[10px] font-bold tracking-wider text-gray-300 hover:text-white transition flex items-center justify-center gap-1">
-    COPY PROMPT
-                    </button>
-                </div>
-            </div>
-
-            <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition">
-                <div class="w-full aspect-[16/10] bg-black/40 rounded-xl overflow-hidden mb-3 border border-white/5">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/havey.png" alt="Pixar 3D" class="w-full h-full object-cover">
-                </div>
-                <button onclick="generatePortrait('Pixar 3D Stylized', 'res-pixar')" class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">PIXAR 3D</button>
-                
-                <div id="res-pixar" class="portrait-local-box mt-4 p-4 glass rounded-xl border border-purple-500/30 bg-purple-500/5" style="display: none;">
-                    <p class="text-[10px] font-bold uppercase text-purple-400 mb-2 tracking-wider">COMPILED PROMPT:</p>
-                    <p id="text-pixar" class="text-white text-xs italic leading-relaxed select-all"></p>
-                    <button onclick="copyLocalPrompt('text-pixar', this)" class="w-full mt-3 py-1.5 bg-white/5 hover:bg-purple-500/20 border border-white/10 rounded-lg text-[10px] font-bold tracking-wider text-gray-300 hover:text-white transition flex items-center justify-center gap-1">
-    COPY PROMPT
-                    </button>
-                </div>
-            </div>
-
-            <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition">
-                <div class="w-full aspect-[16/10] bg-black/40 rounded-xl overflow-hidden mb-3 border border-white/5">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/like.png" alt="Profile Photo" class="w-full h-full object-cover">
-                </div>
-                <button onclick="generatePortrait('Professional Profile Photo', 'res-profile')" class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">PROFILE PHOTO</button>
-                
-                <div id="res-profile" class="portrait-local-box mt-4 p-4 glass rounded-xl border border-purple-500/30 bg-purple-500/5" style="display: none;">
-                    <p class="text-[10px] font-bold uppercase text-purple-400 mb-2 tracking-wider">COMPILED PROMPT:</p>
-                    <p id="text-profile" class="text-white text-xs italic leading-relaxed select-all"></p>
-                    <button onclick="copyLocalPrompt('text-profile', this)" class="w-full mt-3 py-1.5 bg-white/5 hover:bg-purple-500/20 border border-white/10 rounded-lg text-[10px] font-bold tracking-wider text-gray-300 hover:text-white transition flex items-center justify-center gap-1">
-    COPY PROMPT
-                    </button>
-                </div>
-            </div>
-
-            <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition">
-                <div class="w-full aspect-[16/10] bg-black/40 rounded-xl overflow-hidden mb-3 border border-white/5">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/after.png" alt="Sketch" class="w-full h-full object-cover">
-                </div>
-                <button onclick="generatePortrait('Professional Sketch Photo', 'res-sketch')" class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">SKETCH</button>
-                
-                <div id="res-sketch" class="portrait-local-box mt-4 p-4 glass rounded-xl border border-purple-500/30 bg-purple-500/5" style="display: none;">
-                    <p class="text-[10px] font-bold uppercase text-purple-400 mb-2 tracking-wider">COMPILED PROMPT:</p>
-                    <p id="text-sketch" class="text-white text-xs italic leading-relaxed select-all"></p>
-                    <button onclick="copyLocalPrompt('text-sketch', this)" class="w-full mt-3 py-1.5 bg-white/5 hover:bg-purple-500/20 border border-white/10 rounded-lg text-[10px] font-bold tracking-wider text-gray-300 hover:text-white transition flex items-center justify-center gap-1">
-    COPY PROMPT
-                    </button>
-                </div>
-            </div>
-
+        <!-- User Description Input -->
+        <div class="glass p-6 md:p-8 rounded-[2rem] border border-purple-500/20">
+            <p class="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-3">Step 1 — Describe Yourself (Optional)</p>
+            <textarea id="portraitUserDesc" placeholder="e.g. male, brown eyes, short beard, dark hair, strong jawline..." 
+                class="w-full h-24 bg-black/40 border border-purple-500/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 transition resize-none text-sm"></textarea>
+            <p class="text-gray-600 text-[10px] mt-2 tracking-wide">The more you describe, the more personalized your prompt will be.</p>
         </div>
-        <div class="w-full mt-16 pt-10 border-t border-purple-500/10 px-4">
-            <div class="text-center mb-12">
-                <h3 class="text-sm font-black uppercase tracking-[0.25em] bg-gradient-to-r from-purple-400 via-fuchsia-400 to-purple-500 bg-clip-text text-transparent inline-flex items-center gap-3">
-                    <span class="flex h-2 w-2 relative">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-                    </span>
-                    How To Use Portrait Protocols
-                </h3>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-                
-                <div class="flex flex-col items-center md:items-start text-center md:text-left group">
-                    <div class="w-12 h-12 rounded-xl bg-purple-500/5 border border-purple-500/10 flex items-center justify-center mb-4 group-hover:border-purple-500/30 group-hover:bg-purple-500/10 transition-all duration-300">
-                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94-3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                        </svg>
+
+        <!-- Style Grid -->
+        <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-6 text-center">Step 2 — Select Your Style</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+                <!-- Cyberpunk -->
+                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('cyberpunk')">
+                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-purple-900/60 to-cyan-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-robot text-3xl text-cyan-400"></i>
                     </div>
-                    <span class="text-[10px] font-bold text-purple-500/50 uppercase tracking-widest mb-1.5 block">Protocol 01</span>
-                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-2">Select Style</h4>
-                    <p class="text-xs text-gray-400 font-medium leading-relaxed max-w-sm">
-                        Choose your desired artistic style from the neural cards above (<span class="text-purple-400 font-semibold">Cyberpunk, Pixar 3D, Profile Photo, or Sketch</span>).
-                    </p>
+                    <button class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">CYBERPUNK</button>
                 </div>
 
-                <div class="flex flex-col items-center md:items-start text-center md:text-left group">
-                    <div class="w-12 h-12 rounded-xl bg-purple-500/5 border border-purple-500/10 flex items-center justify-center mb-4 group-hover:border-purple-500/30 group-hover:bg-purple-500/10 transition-all duration-300">
-                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 0011.25 2.42 11.962 11.962 0 005.25 10c0 2.115.545 4.102 1.51 5.842m11.16-4.472a11.956 11.956 0 00-2.316-5.83M12 14.25a15.994 15.994 0 01-6.16 3.12m5.014-4.881A4.8 4.8 0 0112 12.75A4.8 4.8 0 0115.75 14.25M3 21a2.25 2.25 0 01-2.25-2.25A2.25 2.25 0 013 16.5h3.75V21H3z" />
-                        </svg>
+                <!-- Pixar 3D -->
+                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('pixar')">
+                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-yellow-900/60 to-orange-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-star text-3xl text-yellow-400"></i>
                     </div>
-                    <span class="text-[10px] font-bold text-purple-500/50 uppercase tracking-widest mb-1.5 block">Protocol 02</span>
-                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-2">Trigger Engine</h4>
-                    <p class="text-xs text-gray-400 font-medium leading-relaxed max-w-sm">
-                        Click the action button directly on the card to instantly trigger and compile the custom <span class="text-white">AI script engine</span>.
-                    </p>
+                    <button class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">PIXAR 3D</button>
                 </div>
 
-                <div class="flex flex-col items-center md:items-start text-center md:text-left group">
-                    <div class="w-12 h-12 rounded-xl bg-purple-500/5 border border-purple-500/10 flex items-center justify-center mb-4 group-hover:border-purple-500/30 group-hover:bg-purple-500/10 transition-all duration-300">
-                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0A2.25 2.25 0 0113.5 4.5h-3a2.25 2.25 0 01-2.166-1.612m7.332 0c.055.194.084.4.084.612v1.5c0 .621-.504 1.125-1.125 1.125h-9.75c-.621 0-1.125-.504-1.125-1.125V3c0-.212.03-.418.084-.612m7.332 0c.346.102.633.28.806.509M7.5 12h9m-9 3.75h9m-9 3.75h3" />
-                        </svg>
+                <!-- Profile Photo -->
+                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('profile')">
+                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-blue-900/60 to-indigo-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-user-tie text-3xl text-blue-400"></i>
                     </div>
-                    <span class="text-[10px] font-bold text-purple-500/50 uppercase tracking-widest mb-1.5 block">Protocol 03</span>
-                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-2">Deploy Prompt</h4>
-                    <p class="text-xs text-gray-400 font-medium leading-relaxed max-w-sm">
-                        The compiled hyper-prompt will immediately generate below the button—simply <span class="text-purple-400 font-semibold">tap to copy</span> and paste it into your favorite generator.
-                    </p>
+                    <button class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">PROFILE PHOTO</button>
                 </div>
-            </div>
+
+                <!-- Sketch -->
+                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('sketch')">
+                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-gray-800/60 to-gray-600/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-pencil text-3xl text-gray-300"></i>
+                    </div>
+                    <button class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">SKETCH</button>
+                </div>
+
+                <!-- Anime -->
+                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('anime')">
+                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-pink-900/60 to-purple-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-wand-sparkles text-3xl text-pink-400"></i>
+                    </div>
+                    <button class="w-full py-3 bg-pink-500/10 border border-pink-500/20 hover:bg-pink-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-pink-300 hover:text-white transition">ANIME</button>
+                </div>
+
+                <!-- Oil Painting -->
+                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('oilpainting')">
+                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-amber-900/60 to-red-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-palette text-3xl text-amber-400"></i>
+                    </div>
+                    <button class="w-full py-3 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-amber-300 hover:text-white transition">OIL PAINTING</button>
+                </div>
+
+                <!-- Ghibli -->
+                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('ghibli')">
+                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-green-900/60 to-teal-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-leaf text-3xl text-green-400"></i>
+                    </div>
+                    <button class="w-full py-3 bg-green-500/10 border border-green-500/20 hover:bg-green-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-green-300 hover:text-white transition">GHIBLI</button>
+                </div>
+
+                <!-- Viking / Fantasy -->
+                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('fantasy')">
+                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-red-900/60 to-orange-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-shield-halved text-3xl text-red-400"></i>
+                    </div>
+                    <button class="w-full py-3 bg-red-500/10 border border-red-500/20 hover:bg-red-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-red-300 hover:text-white transition">FANTASY / VIKING</button>
+                </div>
+
             </div>
         </div>
+
+        <!-- Result Box -->
+        <div id="portraitResultBox" class="hidden glass p-6 rounded-2xl border border-purple-500/30 bg-purple-500/5">
+            <div class="flex items-center justify-between mb-3">
+                <p class="text-[10px] font-black uppercase tracking-widest text-purple-400">⚡ AI-Generated Portrait Prompt</p>
+                <span id="portraitStyleBadge" class="text-[9px] px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 font-bold uppercase tracking-wider"></span>
+            </div>
+            <div id="portraitLoading" class="hidden flex items-center gap-3 py-4">
+                <i class="fa-solid fa-circle-notch fa-spin text-purple-400"></i>
+                <span class="text-gray-400 text-xs">AI is crafting your ultra prompt...</span>
+            </div>
+            <p id="portraitFinalPrompt" class="text-white text-sm leading-relaxed italic select-all"></p>
+            <button onclick="copyPortraitPromptNew()" class="mt-5 w-full px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-xl text-xs font-black uppercase tracking-widest text-white transition">
+                Copy Prompt
+            </button>
+        </div>
+
     </div>
 </section>
-
     <section id="bg-engine" class="page-content pt-32 pb-20 px-6 hidden min-h-screen flex flex-col items-center justify-center text-center">
     <div class="glass max-w-md w-full rounded-[2.5rem] border border-cyan-500/30 p-8 md:p-10 shadow-[0_0_50px_rgba(6,182,212,0.15)] flex flex-col items-center mx-auto">
         
@@ -825,38 +805,59 @@ function showPage(pageId, pushToHistory = true) {
     showToast("Prompt copied to clipboard!");
 }
 
+    async function generatePortraitAI(style) {
+        const userDesc = document.getElementById('portraitUserDesc').value.trim();
+        
+        const styleMap = {
+            cyberpunk:  { label: 'Cyberpunk', desc: 'cyberpunk neon cyborg aesthetic, glowing implants, synthwave dark city, electric blue and purple lighting' },
+            pixar:      { label: 'Pixar 3D',  desc: 'Pixar 3D animated character, smooth clay material, warm studio lighting, vibrant colors, polished render' },
+            profile:    { label: 'Profile',   desc: 'professional corporate headshot, clean studio lighting, neutral background, sharp 8k resolution, business formal' },
+            sketch:     { label: 'Sketch',    desc: 'premium pencil sketch portrait, fine cross-hatching, dramatic shadows, fine art masterpiece, charcoal texture' },
+            anime:      { label: 'Anime',     desc: 'high-quality anime illustration, vivid cel-shading, detailed eyes, dramatic lighting, Studio Ghibli or Makoto Shinkai style' },
+            oilpainting:{ label: 'Oil Painting', desc: 'classical oil painting portrait, rich brushstrokes, chiaroscuro lighting, Renaissance master style, deep saturated colors' },
+            ghibli:     { label: 'Ghibli',    desc: 'Studio Ghibli watercolor animation style, soft warm palette, hand-painted texture, magical atmosphere, Hayao Miyazaki aesthetic' },
+            fantasy:    { label: 'Fantasy/Viking', desc: 'epic fantasy Viking warrior portrait, fur armor, battle-worn, dramatic stormy sky, cinematic lighting, highly detailed' }
+        };
+
+        const chosen = styleMap[style];
+        if (!chosen) return;
+
+        const resultBox = document.getElementById('portraitResultBox');
+        const loadingEl = document.getElementById('portraitLoading');
+        const promptEl = document.getElementById('portraitFinalPrompt');
+        const badgeEl = document.getElementById('portraitStyleBadge');
+
+        resultBox.classList.remove('hidden');
+        loadingEl.classList.remove('hidden');
+        promptEl.innerText = '';
+        badgeEl.innerText = chosen.label;
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        const personDesc = userDesc ? `Person details: ${userDesc}.` : 'No specific person description provided — create a generic stunning portrait.';
+        const systemPrompt = `You are an elite AI portrait prompt engineer. Generate a hyper-detailed, ultra-professional AI image generation prompt for portrait photography. The prompt should include: facial features, skin texture, lighting setup, camera lens, background, color grade, mood, and render quality. Start with "use my reference picture and create a". Keep under 160 words. Return ONLY the prompt.`;
+        const userMsg = `Style: ${chosen.desc}. ${personDesc}`;
+
+        try {
+            const seed = Math.floor(Math.random() * 99999);
+            const url = `https://text.pollinations.ai/${encodeURIComponent(userMsg)}?system=${encodeURIComponent(systemPrompt)}&model=openai&seed=${seed}`;
+            const res = await fetch(url);
+            const prompt = (await res.text()).trim();
+            loadingEl.classList.add('hidden');
+            promptEl.innerText = prompt;
+        } catch(e) {
+            loadingEl.classList.add('hidden');
+            promptEl.innerText = 'AI Error! Please check your connection and try again.';
+        }
+    }
+
+    function copyPortraitPromptNew() {
+        const text = document.getElementById('portraitFinalPrompt').innerText;
+        navigator.clipboard.writeText(text).then(() => showToast("Portrait prompt copied!"));
+    }
+
     function generatePortrait(stylePreset, targetBoxId) {
-    // 1. Pehle chalne wale saare boxes ko hide karo back-end par direct style se
-    document.querySelectorAll('.portrait-local-box').forEach(box => {
-        box.style.display = 'none';
-    });
-
-    // 2. Aapka bataya hua custom mandatory starting text
-    const customPrefix = "use my reference picture and create a ";
-    let coreEnginePrompt = "";
-
-    // 3. Style text assign karna aur direct target text selector pick karna
-    let specificTextId = "";
-    if (targetBoxId === 'res-cyberpunk') {
-        specificTextId = "text-cyberpunk";
-        coreEnginePrompt = "cyberpunk cyborg with glowing neon cybernetic implants, atmospheric dark synthwave aesthetic, 8k render.";
-    } else if (targetBoxId === 'res-pixar') {
-        specificTextId = "text-pixar";
-        coreEnginePrompt = "3D Pixar stylized character animation sheet, clean smooth clay material style, studio lighting, highly polished.";
-    } else if (targetBoxId === 'res-profile') {
-        specificTextId = "text-profile";
-        coreEnginePrompt = "professional corporate profile headshot, pristine studio cinematic lighting, corporate setting background, 8k resolution sharp focus.";
-    } else if (targetBoxId === 'res-sketch') {
-        specificTextId = "text-sketch";
-        coreEnginePrompt = "premium hand-drawn detailed pencil sketch portrait, fine art texture cross-hatching shade layers, dramatic realistic masterpiece.";
+        // legacy stub — no longer used
     }
-
-    // 4. Content write karna aur target box ko button ke thik niche display block karwana
-    if (specificTextId !== "") {
-        document.getElementById(specificTextId).innerText = customPrefix + coreEnginePrompt;
-        document.getElementById(targetBoxId).style.display = 'block';
-    }
-}
 
     function copyPortraitPrompt() {
     navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
