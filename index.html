@@ -105,6 +105,13 @@
         <span id="theme-text" class="text-xs font-black tracking-wider text-gray-400">DARK</span>
     </div>
 
+    <!-- Navbar Account Button -->
+    <div id="navbar-auth-btn" onclick="toggleLoginModal(true)" class="hidden md:flex items-center gap-2 px-4 py-2 bg-indigo-600/20 border border-indigo-500/30 rounded-xl cursor-pointer hover:bg-indigo-600/40 transition-all duration-300 active:scale-95 select-none">
+        <i id="navbar-avatar-icon" class="fa-solid fa-user text-indigo-400 text-base"></i>
+        <img id="navbar-avatar-img" src="" class="w-6 h-6 rounded-full object-cover hidden" alt="avatar">
+        <span id="navbar-auth-text" class="text-xs font-black tracking-wider text-indigo-300">SIGN IN</span>
+    </div>
+
 </div>
             <button onclick="toggleSidebar(event)" class="p-2 text-white bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition duration-300 md:hidden">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,17 +128,18 @@
         <button onclick="toggleSidebar(event)" class="text-white text-2xl hover:text-indigo-500 transition">&times;</button>
     </div>
     <div class="flex flex-col gap-6 uppercase font-bold text-xs tracking-widest">
-        <div class="mb-4 p-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-between group normal-case font-sans">
+        <div class="mb-4 p-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-between group normal-case font-sans cursor-pointer" onclick="handleSidebarProfileClick()">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-user-astronaut"></i>
+                <div id="sidebar-avatar-wrap" class="w-8 h-8 rounded-full bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 overflow-hidden group-hover:scale-105 transition-transform">
+                    <i id="sidebar-avatar-icon" class="fa-solid fa-user-astronaut"></i>
+                    <img id="sidebar-avatar-img" src="" class="w-full h-full object-cover hidden" alt="avatar">
                 </div>
                 <div class="text-left">
-                    <p class="text-[10px] text-white/40 uppercase tracking-widest font-bold">Guest Mode</p>
-                    <p class="text-white text-xs font-bold">Anonymous</p>
+                    <p id="sidebar-status-label" class="text-[10px] text-white/40 uppercase tracking-widest font-bold">Guest Mode</p>
+                    <p id="sidebar-user-name" class="text-white text-xs font-bold">Anonymous</p>
                 </div>
             </div>
-            <button onclick="toggleLoginModal(true)" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer">
+            <button id="sidebar-auth-btn" onclick="event.stopPropagation(); toggleLoginModal(true)" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer">
                 Sign In
             </button>
         </div>
@@ -549,17 +557,135 @@
     </div>
     </section>
     
-<section id="samples" class="page-content pt-32 pb-20 px-6">
-    <div class="max-w-7xl mx-auto text-center">
-        <h2 class="text-3xl font-black mb-4 italic uppercase text-white tracking-widest">Laboratory <span class="text-indigo-500">Showcase</span></h2>
-        <p class="text-gray-400 text-xs tracking-widest uppercase mb-12">Visual outputs generated natively via FRAZ<span class="text-indigo-500">X</span> algorithms</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="glass p-4 rounded-2xl border-white/5 hover:border-indigo-500/30 transition"><img src="https://image.pollinations.ai/prompt/cinematic%20cyborg,%20neon%20lighting,%208k?nologo=true" class="rounded-xl w-full h-64 object-cover"></div>
-            <div class="glass p-4 rounded-2xl border-white/5 hover:border-indigo-500/30 transition"><img src="https://image.pollinations.ai/prompt/neon%20city%20street,%20rain,%20unreal%20engine%205?nologo=true" class="rounded-xl w-full h-64 object-cover"></div>
-            <div class="glass p-4 rounded-2xl border-white/5 hover:border-indigo-500/30 transition"><img src="https://image.pollinations.ai/prompt/viking%20warrior%20portrait,%20cinematic%20lighting?nologo=true" class="rounded-xl w-full h-64 object-cover"></div>
+<section id="samples" class="page-content pt-28 pb-20 px-4 md:px-6">
+<div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+        <div>
+            <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">Community <span class="text-indigo-500">Feed</span></h2>
+            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
+        </div>
+        <button onclick="openUploadModal()" class="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition shadow-[0_4px_20px_rgba(99,102,241,0.3)] whitespace-nowrap">
+            <i class="fa-solid fa-plus"></i> Share Your Creation
+        </button>
+    </div>
+
+    <!-- Feed Grid -->
+    <div id="community-feed" class="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
+        <!-- Posts load here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="feed-empty" class="hidden text-center py-24">
+        <i class="fa-solid fa-images text-5xl text-gray-700 mb-4"></i>
+        <p class="text-gray-500 font-bold uppercase tracking-widest text-sm">No creations yet</p>
+        <p class="text-gray-600 text-xs mt-2">Be the first to share your AI art!</p>
+        <button onclick="openUploadModal()" class="mt-6 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition">
+            Upload First Creation
+        </button>
+    </div>
+
+    <!-- Loading State -->
+    <div id="feed-loading" class="text-center py-24">
+        <i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-500 mb-4"></i>
+        <p class="text-gray-500 text-xs uppercase tracking-widest mt-3">Loading community feed...</p>
+    </div>
+
+</div>
+</section>
+
+<!-- Upload Modal -->
+<div id="upload-modal" class="fixed inset-0 bg-[#050508]/90 backdrop-blur-xl z-[10001] flex items-center justify-center hidden">
+    <div class="bg-[#111827] border border-white/10 p-6 md:p-8 rounded-3xl w-full max-w-lg mx-4 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+        <button onclick="closeUploadModal()" class="absolute top-5 right-5 text-white/50 hover:text-white transition cursor-pointer">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <h3 class="text-xl font-black uppercase tracking-widest text-white mb-1">Share Creation</h3>
+        <p class="text-gray-500 text-xs tracking-wide mb-6">Upload your AI-generated image to the community</p>
+
+        <!-- Image Upload -->
+        <div id="upload-drop-zone" class="border-2 border-dashed border-indigo-500/30 rounded-2xl p-8 text-center mb-5 cursor-pointer hover:border-indigo-500/60 transition" onclick="document.getElementById('image-file-input').click()">
+            <div id="upload-preview-wrap" class="hidden">
+                <img id="upload-preview-img" src="" class="max-h-48 mx-auto rounded-xl object-cover mb-3" alt="preview">
+                <p class="text-xs text-gray-400">Click to change image</p>
+            </div>
+            <div id="upload-placeholder">
+                <i class="fa-solid fa-cloud-arrow-up text-3xl text-indigo-400 mb-3"></i>
+                <p class="text-white font-bold text-sm mb-1">Click to upload image</p>
+                <p class="text-gray-500 text-xs">JPG, PNG, WEBP — Max 5MB</p>
+            </div>
+            <input type="file" id="image-file-input" accept="image/*" class="hidden" onchange="previewUploadImage(event)">
+        </div>
+
+        <!-- Prompt Input -->
+        <div class="mb-5">
+            <label class="block text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-2">Your AI Prompt</label>
+            <textarea id="upload-prompt-input" placeholder="Paste the prompt you used to generate this image..." class="w-full h-24 bg-black/40 border border-white/10 rounded-xl p-4 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
+        </div>
+
+        <!-- Upload Status -->
+        <div id="upload-status" class="hidden mb-4 text-center">
+            <i class="fa-solid fa-circle-notch fa-spin text-indigo-400 mr-2"></i>
+            <span id="upload-status-text" class="text-gray-400 text-xs">Uploading...</span>
+        </div>
+
+        <button onclick="submitCommunityPost()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition shadow-[0_4px_20px_rgba(99,102,241,0.3)]">
+            <i class="fa-solid fa-paper-plane mr-2"></i>Publish to Community
+        </button>
+    </div>
+</div>
+
+<!-- Post Detail Modal -->
+<div id="post-modal" class="fixed inset-0 bg-[#050508]/95 backdrop-blur-xl z-[10002] flex items-center justify-center hidden">
+    <div class="bg-[#0d1117] border border-white/10 rounded-3xl w-full max-w-2xl mx-4 relative shadow-2xl max-h-[92vh] overflow-y-auto">
+        <button onclick="closePostModal()" class="absolute top-4 right-4 z-10 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition cursor-pointer">
+            <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+
+        <!-- Post Image -->
+        <div class="w-full aspect-video bg-black/40 rounded-t-3xl overflow-hidden">
+            <img id="post-modal-img" src="" class="w-full h-full object-cover" alt="">
+        </div>
+
+        <div class="p-6">
+            <!-- Creator Info -->
+            <div class="flex items-center gap-3 mb-4">
+                <img id="post-modal-avatar" src="" class="w-8 h-8 rounded-full object-cover border border-white/10" alt="">
+                <div>
+                    <p id="post-modal-creator" class="text-white font-black text-sm"></p>
+                    <p id="post-modal-time" class="text-gray-500 text-[10px]"></p>
+                </div>
+                <div class="ml-auto flex items-center gap-3">
+                    <button id="post-modal-like-btn" onclick="toggleLikePost()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 rounded-xl transition text-xs font-bold text-gray-300 hover:text-red-400">
+                        <i class="fa-regular fa-heart"></i>
+                        <span id="post-modal-likes">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Prompt -->
+            <div class="glass p-4 rounded-xl border border-indigo-500/20 mb-5">
+                <p class="text-[9px] font-black uppercase tracking-widest text-indigo-400 mb-2">AI Prompt</p>
+                <p id="post-modal-prompt" class="text-gray-300 text-xs leading-relaxed italic"></p>
+                <button onclick="copyPostPrompt()" class="mt-3 px-4 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] font-bold uppercase text-gray-300 transition">Copy Prompt</button>
+            </div>
+
+            <!-- Comments -->
+            <div>
+                <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Comments</p>
+                <div id="post-modal-comments" class="space-y-3 mb-4 max-h-48 overflow-y-auto"></div>
+
+                <!-- Add Comment -->
+                <div id="comment-input-wrap" class="flex gap-2">
+                    <input id="comment-input" type="text" placeholder="Add a comment..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white text-xs placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition">
+                    <button onclick="submitComment()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-black text-xs transition">Post</button>
+                </div>
+                <p id="comment-login-hint" class="hidden text-gray-600 text-xs mt-2">Sign in to comment</p>
+            </div>
         </div>
     </div>
-</section>
+</div>
 
 <section id="about-frazx" class="page-content pt-32 pb-20 px-6">
     <div class="max-w-4xl mx-auto">
@@ -590,6 +716,70 @@
         <p class="text-indigo-400 font-bold text-xs tracking-widest mb-6 uppercase">Lead Systems Architect</p>
         <p class="text-gray-400 text-sm leading-relaxed mb-8 max-w-md mx-auto">Engineering highly-optimized structural components and contextual layout algorithms for advanced neural terminal layouts.</p>
         <a href="https://www.instagram.com/hazzy.996" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 transition px-8 py-3 rounded-xl font-bold text-xs uppercase tracking-widest inline-flex items-center gap-2 text-white"><i class="fa-brands fa-instagram text-sm"></i> Secure Connection</a>
+    </div>
+</section>
+
+<section id="account" class="page-content pt-32 pb-20 px-6">
+    <div class="max-w-2xl mx-auto flex flex-col gap-8">
+
+        <!-- Profile Card -->
+        <div class="glass rounded-[2.5rem] border border-indigo-500/20 p-8 md:p-10 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-600/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl"></div>
+
+            <!-- Avatar -->
+            <div class="relative mx-auto w-24 h-24 mb-5">
+                <div id="account-avatar-wrap" class="w-24 h-24 rounded-full bg-indigo-500/20 border-2 border-indigo-500/50 flex items-center justify-center overflow-hidden mx-auto shadow-[0_0_30px_rgba(99,102,241,0.3)]">
+                    <i id="account-avatar-icon" class="fa-solid fa-user-astronaut text-3xl text-indigo-400"></i>
+                    <img id="account-avatar-img" src="" class="w-full h-full object-cover hidden" alt="profile">
+                </div>
+                <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-[#050508] flex items-center justify-center">
+                    <i class="fa-solid fa-check text-[8px] text-white"></i>
+                </div>
+            </div>
+
+            <!-- User Info -->
+            <h2 id="account-name" class="text-2xl font-black text-white uppercase tracking-wide mb-1">Loading...</h2>
+            <p id="account-email" class="text-gray-400 text-xs tracking-widest mb-2">—</p>
+            <span id="account-provider" class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-[9px] font-black uppercase tracking-widest text-indigo-400 mb-6">Google Account</span>
+
+            <!-- Stats Row -->
+            <div class="grid grid-cols-3 gap-4 mb-8">
+                <div class="glass rounded-2xl p-4 border border-white/5">
+                    <p class="text-2xl font-black text-white">∞</p>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Prompts</p>
+                </div>
+                <div class="glass rounded-2xl p-4 border border-white/5">
+                    <p class="text-2xl font-black text-indigo-400">PRO</p>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Plan</p>
+                </div>
+                <div class="glass rounded-2xl p-4 border border-white/5">
+                    <p class="text-2xl font-black text-purple-400">V2</p>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Access</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col gap-3">
+                <button onclick="showPage('tools-hub')" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(99,102,241,0.3)]">
+                    <i class="fa-solid fa-microchip mr-2"></i>Go To Tools
+                </button>
+                <button onclick="window.logoutUser()" class="w-full py-3.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-white hover:text-red-400 font-black text-xs tracking-widest uppercase rounded-xl transition-all duration-300">
+                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Sign Out
+                </button>
+            </div>
+        </div>
+
+        <!-- Guest State (shown when logged out) -->
+        <div id="account-guest-card" class="hidden glass rounded-[2rem] border border-white/10 p-8 text-center">
+            <i class="fa-solid fa-user-slash text-4xl text-gray-600 mb-4"></i>
+            <h3 class="text-white font-black uppercase tracking-wide mb-2">Not Signed In</h3>
+            <p class="text-gray-400 text-sm mb-6">Sign in to access your profile and save your work.</p>
+            <button onclick="toggleLoginModal(true)" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition">
+                Sign In Now
+            </button>
+        </div>
+
     </div>
 </section>
 
@@ -650,6 +840,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, arrayUnion, arrayRemove, orderBy, query, onSnapshot, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBXqQoTB0OLwhdog2HR7U1hg1siq_QBsZw",
@@ -663,18 +854,135 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
+  const db = getFirestore(app);
+  window._db = db;
+  window._auth = auth;
+  // Cloudinary config
+  window._cloudinary = {
+    cloudName: 'dt8nzlmgk',
+    uploadPreset: 'frazx_community'
+  };
 
-  // Explicit window scoping taaki modal button isko dhoond sake
+  // Auth state observer — updates sidebar + account page
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+  function updateUI(user) {
+    if (user) {
+      // --- SIDEBAR UPDATE ---
+      const nameEl = document.getElementById('sidebar-user-name');
+      const labelEl = document.getElementById('sidebar-status-label');
+      const iconEl = document.getElementById('sidebar-avatar-icon');
+      const imgEl = document.getElementById('sidebar-avatar-img');
+      const btnEl = document.getElementById('sidebar-auth-btn');
+
+      if (nameEl) nameEl.innerText = user.displayName ? user.displayName.split(' ')[0] : 'User';
+      if (labelEl) labelEl.innerText = 'Logged In';
+      if (user.photoURL && imgEl && iconEl) {
+        imgEl.src = user.photoURL;
+        imgEl.classList.remove('hidden');
+        iconEl.classList.add('hidden');
+      }
+      if (btnEl) {
+        btnEl.innerText = 'Profile';
+        btnEl.onclick = (e) => { e.stopPropagation(); showPage('account'); document.getElementById('sidebar').classList.add('translate-x-full'); };
+        btnEl.className = 'text-[10px] bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
+      }
+
+      // --- ACCOUNT PAGE UPDATE ---
+      const accName = document.getElementById('account-name');
+      const accEmail = document.getElementById('account-email');
+      const accImgEl = document.getElementById('account-avatar-img');
+      const accIconEl = document.getElementById('account-avatar-icon');
+      const accGuest = document.getElementById('account-guest-card');
+
+      if (accName) accName.innerText = user.displayName || 'FRAZX User';
+      if (accEmail) accEmail.innerText = user.email || '';
+      if (user.photoURL && accImgEl && accIconEl) {
+        accImgEl.src = user.photoURL;
+        accImgEl.classList.remove('hidden');
+        accIconEl.classList.add('hidden');
+      }
+      if (accGuest) accGuest.classList.add('hidden');
+
+      // --- NAVBAR UPDATE (logged in) ---
+      const navBtn = document.getElementById('navbar-auth-btn');
+      const navText = document.getElementById('navbar-auth-text');
+      const navIcon = document.getElementById('navbar-avatar-icon');
+      const navImg = document.getElementById('navbar-avatar-img');
+      if (navBtn) { navBtn.onclick = () => showPage('account'); }
+      if (navText) navText.innerText = user.displayName ? user.displayName.split(' ')[0].toUpperCase() : 'ACCOUNT';
+      if (user.photoURL && navImg && navIcon) {
+        navImg.src = user.photoURL;
+        navImg.classList.remove('hidden');
+        navIcon.classList.add('hidden');
+      }
+
+    } else {
+      // --- LOGGED OUT STATE ---
+      const nameEl = document.getElementById('sidebar-user-name');
+      const labelEl = document.getElementById('sidebar-status-label');
+      const iconEl = document.getElementById('sidebar-avatar-icon');
+      const imgEl = document.getElementById('sidebar-avatar-img');
+      const btnEl = document.getElementById('sidebar-auth-btn');
+
+      if (nameEl) nameEl.innerText = 'Anonymous';
+      if (labelEl) labelEl.innerText = 'Guest Mode';
+      if (imgEl) imgEl.classList.add('hidden');
+      if (iconEl) iconEl.classList.remove('hidden');
+      if (btnEl) {
+        btnEl.innerText = 'Sign In';
+        btnEl.onclick = (e) => { e.stopPropagation(); toggleLoginModal(true); };
+        btnEl.className = 'text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
+      }
+
+      const accName = document.getElementById('account-name');
+      const accGuest = document.getElementById('account-guest-card');
+      if (accName) accName.innerText = 'Guest User';
+      if (accGuest) accGuest.classList.remove('hidden');
+
+      // --- NAVBAR RESET ---
+      const navBtn = document.getElementById('navbar-auth-btn');
+      const navText = document.getElementById('navbar-auth-text');
+      const navIcon = document.getElementById('navbar-avatar-icon');
+      const navImg = document.getElementById('navbar-avatar-img');
+      if (navBtn) { navBtn.onclick = () => toggleLoginModal(true); }
+      if (navText) navText.innerText = 'SIGN IN';
+      if (navImg) navImg.classList.add('hidden');
+      if (navIcon) navIcon.classList.remove('hidden');
+    }
+  }
+
+  onAuthStateChanged(auth, updateUI);
+
   window.loginWithGoogle = function() {
       signInWithPopup(auth, provider)
           .then((result) => {
-              alert("Welcome " + result.user.displayName + "!");
               toggleLoginModal(false);
+              showToast("Welcome " + (result.user.displayName ? result.user.displayName.split(' ')[0] : 'back') + "! 🎉");
           })
           .catch((error) => {
               console.error("Auth Error:", error.message);
-              alert("Login failed! Please try again. " + error.message);
+              showToast("Login failed! Please try again.");
           });
+  }
+
+  window.logoutUser = function() {
+      signOut(auth).then(() => {
+          showToast("Signed out successfully!");
+          showPage('home');
+      }).catch((error) => {
+          console.error(error);
+      });
+  }
+
+  window.handleSidebarProfileClick = function() {
+      const user = auth.currentUser;
+      if (user) {
+          showPage('account');
+          document.getElementById('sidebar').classList.add('translate-x-full');
+      } else {
+          toggleLoginModal(true);
+      }
   }
 </script>
 
@@ -1013,6 +1321,311 @@ function showToast(message) {
     }, 2200);
 }
     
+
+// ========== COMMUNITY FEED SYSTEM ==========
+let currentPostId = null;
+
+// Load feed when samples page opens
+const _origShowPage = window.showPage || function(){};
+window.showPage = function(pageId, pushToHistory) {
+    _origShowPage(pageId, pushToHistory);
+    if (pageId === 'samples') loadCommunityFeed();
+};
+
+async function loadCommunityFeed() {
+    const db = window._db;
+    if (!db) return;
+
+    document.getElementById('feed-loading').classList.remove('hidden');
+    document.getElementById('feed-empty').classList.add('hidden');
+    document.getElementById('community-feed').innerHTML = '';
+
+    try {
+        const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+        onSnapshot(q, (snapshot) => {
+            document.getElementById('feed-loading').classList.add('hidden');
+            const feed = document.getElementById('community-feed');
+            feed.innerHTML = '';
+
+            if (snapshot.empty) {
+                document.getElementById('feed-empty').classList.remove('hidden');
+                return;
+            }
+
+            snapshot.forEach(docSnap => {
+                const post = docSnap.data();
+                const postId = docSnap.id;
+                const likes = post.likes ? post.likes.length : 0;
+                const comments = post.comments ? post.comments.length : 0;
+                const timeAgo = post.createdAt ? getTimeAgo(post.createdAt.toDate()) : 'recently';
+
+                const card = document.createElement('div');
+                card.className = 'break-inside-avoid mb-5 glass rounded-2xl overflow-hidden border border-white/5 hover:border-indigo-500/30 transition-all duration-300 cursor-pointer group';
+                card.innerHTML = `
+                    <div class="relative overflow-hidden" onclick="openPostModal('${postId}')">
+                        <img src="${post.imageUrl}" class="w-full object-cover group-hover:scale-105 transition-transform duration-500" alt="AI Art" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300/111827/6366f1?text=FRAZX'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                            <p class="text-white text-xs font-bold italic line-clamp-2">${post.prompt ? post.prompt.substring(0,100)+'...' : ''}</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center gap-2 mb-3">
+                            <img src="${post.creatorAvatar || 'https://via.placeholder.com/32/6366f1/white?text=U'}" class="w-7 h-7 rounded-full object-cover border border-white/10" alt="">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-white font-black text-xs truncate">${post.creatorName || 'Creator'}</p>
+                                <p class="text-gray-600 text-[10px]">${timeAgo}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <button onclick="event.stopPropagation(); quickLike('${postId}', this)" class="flex items-center gap-1.5 text-gray-400 hover:text-red-400 transition text-xs font-bold">
+                                <i class="fa-regular fa-heart"></i> <span class="like-count">${likes}</span>
+                            </button>
+                            <button onclick="openPostModal('${postId}')" class="flex items-center gap-1.5 text-gray-400 hover:text-indigo-400 transition text-xs font-bold">
+                                <i class="fa-regular fa-comment"></i> ${comments}
+                            </button>
+                        </div>
+                    </div>`;
+                feed.appendChild(card);
+            });
+        });
+    } catch(e) {
+        console.error(e);
+        document.getElementById('feed-loading').classList.add('hidden');
+        document.getElementById('feed-empty').classList.remove('hidden');
+    }
+}
+
+function getTimeAgo(date) {
+    const secs = Math.floor((new Date() - date) / 1000);
+    if (secs < 60) return 'just now';
+    if (secs < 3600) return Math.floor(secs/60) + 'm ago';
+    if (secs < 86400) return Math.floor(secs/3600) + 'h ago';
+    return Math.floor(secs/86400) + 'd ago';
+}
+
+function openUploadModal() {
+    const user = window._auth ? window._auth.currentUser : null;
+    if (!user) {
+        showToast("Please sign in to share your creation!");
+        toggleLoginModal(true);
+        return;
+    }
+    document.getElementById('upload-modal').classList.remove('hidden');
+}
+
+function closeUploadModal() {
+    document.getElementById('upload-modal').classList.add('hidden');
+    document.getElementById('upload-preview-wrap').classList.add('hidden');
+    document.getElementById('upload-placeholder').classList.remove('hidden');
+    document.getElementById('upload-prompt-input').value = '';
+    document.getElementById('image-file-input').value = '';
+    document.getElementById('upload-status').classList.add('hidden');
+}
+
+function previewUploadImage(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showToast("Image must be under 5MB!"); return; }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        document.getElementById('upload-preview-img').src = e.target.result;
+        document.getElementById('upload-preview-wrap').classList.remove('hidden');
+        document.getElementById('upload-placeholder').classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+async function submitCommunityPost() {
+    const user = window._auth ? window._auth.currentUser : null;
+    if (!user) { showToast("Please sign in first!"); return; }
+
+    const file = document.getElementById('image-file-input').files[0];
+    const prompt = document.getElementById('upload-prompt-input').value.trim();
+
+    if (!file) { showToast("Please select an image!"); return; }
+    if (!prompt) { showToast("Please add your AI prompt!"); return; }
+
+    const statusEl = document.getElementById('upload-status');
+    const statusText = document.getElementById('upload-status-text');
+    statusEl.classList.remove('hidden');
+    statusText.innerText = 'Uploading image...';
+
+    try {
+        // Upload image to Cloudinary (free, no backend needed)
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', window._cloudinary.uploadPreset);
+        formData.append('folder', 'frazx_community');
+
+        const cloudRes = await fetch(
+            `https://api.cloudinary.com/v1_1/${window._cloudinary.cloudName}/image/upload`,
+            { method: 'POST', body: formData }
+        );
+        const cloudData = await cloudRes.json();
+
+        if (!cloudData.secure_url) throw new Error('Cloudinary upload failed');
+
+        statusText.innerText = 'Publishing to community...';
+
+        // Save post to Firestore
+        await addDoc(collection(window._db, 'posts'), {
+            imageUrl: cloudData.secure_url,
+            prompt,
+            creatorName: user.displayName || 'Creator',
+            creatorAvatar: user.photoURL || '',
+            creatorId: user.uid,
+            likes: [],
+            comments: [],
+            createdAt: serverTimestamp()
+        });
+
+        closeUploadModal();
+        showToast("🎉 Creation published to community!");
+        showPage('samples');
+
+    } catch(e) {
+        console.error(e);
+        statusEl.classList.add('hidden');
+        showToast("Upload failed! Please try again.");
+    }
+}
+
+async function openPostModal(postId) {
+    currentPostId = postId;
+    const db = window._db;
+    const docSnap = await getDoc(doc(db, 'posts', postId));
+    if (!docSnap.exists()) return;
+
+    const post = docSnap.data();
+    const user = window._auth ? window._auth.currentUser : null;
+    const likes = post.likes || [];
+    const isLiked = user && likes.includes(user.uid);
+
+    document.getElementById('post-modal-img').src = post.imageUrl;
+    document.getElementById('post-modal-avatar').src = post.creatorAvatar || '';
+    document.getElementById('post-modal-creator').innerText = post.creatorName || 'Creator';
+    document.getElementById('post-modal-prompt').innerText = post.prompt || '';
+    document.getElementById('post-modal-likes').innerText = likes.length;
+    document.getElementById('post-modal-time').innerText = post.createdAt ? getTimeAgo(post.createdAt.toDate()) : '';
+
+    const likeBtn = document.getElementById('post-modal-like-btn');
+    likeBtn.querySelector('i').className = isLiked ? 'fa-solid fa-heart text-red-400' : 'fa-regular fa-heart';
+    likeBtn.className = isLiked
+        ? 'flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 border border-red-500/30 rounded-xl text-xs font-bold text-red-400'
+        : 'flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 rounded-xl transition text-xs font-bold text-gray-300 hover:text-red-400';
+
+    // Load comments
+    renderComments(post.comments || []);
+
+    // Comment input visibility
+    if (user) {
+        document.getElementById('comment-input-wrap').classList.remove('hidden');
+        document.getElementById('comment-login-hint').classList.add('hidden');
+    } else {
+        document.getElementById('comment-input-wrap').classList.add('hidden');
+        document.getElementById('comment-login-hint').classList.remove('hidden');
+    }
+
+    document.getElementById('post-modal').classList.remove('hidden');
+}
+
+function renderComments(comments) {
+    const container = document.getElementById('post-modal-comments');
+    if (!comments.length) {
+        container.innerHTML = '<p class="text-gray-600 text-xs italic">No comments yet. Be first!</p>';
+        return;
+    }
+    container.innerHTML = comments.map(c => `
+        <div class="flex gap-3 items-start">
+            <img src="${c.avatar || 'https://via.placeholder.com/24/6366f1/white?text=U'}" class="w-6 h-6 rounded-full object-cover border border-white/10 flex-shrink-0" alt="">
+            <div class="glass rounded-xl px-3 py-2 flex-1">
+                <p class="text-white font-black text-[10px] mb-0.5">${c.name}</p>
+                <p class="text-gray-300 text-xs">${c.text}</p>
+            </div>
+        </div>`).join('');
+}
+
+function closePostModal() {
+    document.getElementById('post-modal').classList.add('hidden');
+    currentPostId = null;
+    document.getElementById('comment-input').value = '';
+}
+
+async function toggleLikePost() {
+    const user = window._auth ? window._auth.currentUser : null;
+    if (!user) { showToast("Sign in to like!"); toggleLoginModal(true); return; }
+    if (!currentPostId) return;
+
+    const postRef = doc(window._db, 'posts', currentPostId);
+    const postSnap = await getDoc(postRef);
+    const likes = postSnap.data().likes || [];
+    const liked = likes.includes(user.uid);
+
+    await updateDoc(postRef, {
+        likes: liked ? arrayRemove(user.uid) : arrayUnion(user.uid)
+    });
+
+    // Refresh modal
+    openPostModal(currentPostId);
+}
+
+async function quickLike(postId, btn) {
+    const user = window._auth ? window._auth.currentUser : null;
+    if (!user) { showToast("Sign in to like!"); return; }
+
+    const postRef = doc(window._db, 'posts', postId);
+    const postSnap = await getDoc(postRef);
+    const likes = postSnap.data().likes || [];
+    const liked = likes.includes(user.uid);
+
+    await updateDoc(postRef, {
+        likes: liked ? arrayRemove(user.uid) : arrayUnion(user.uid)
+    });
+
+    const countEl = btn.querySelector('.like-count');
+    const iconEl = btn.querySelector('i');
+    if (liked) {
+        countEl.innerText = parseInt(countEl.innerText) - 1;
+        iconEl.className = 'fa-regular fa-heart';
+        btn.classList.remove('text-red-400');
+        btn.classList.add('text-gray-400');
+    } else {
+        countEl.innerText = parseInt(countEl.innerText) + 1;
+        iconEl.className = 'fa-solid fa-heart text-red-400';
+        btn.classList.remove('text-gray-400');
+        btn.classList.add('text-red-400');
+    }
+}
+
+async function submitComment() {
+    const user = window._auth ? window._auth.currentUser : null;
+    if (!user) { showToast("Sign in to comment!"); return; }
+
+    const input = document.getElementById('comment-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const postRef = doc(window._db, 'posts', currentPostId);
+    const comment = {
+        name: user.displayName || 'Creator',
+        avatar: user.photoURL || '',
+        text,
+        time: new Date().toISOString()
+    };
+
+    await updateDoc(postRef, { comments: arrayUnion(comment) });
+    input.value = '';
+    showToast("Comment posted! 💬");
+
+    // Refresh comments
+    const postSnap = await getDoc(postRef);
+    renderComments(postSnap.data().comments || []);
+}
+
+function copyPostPrompt() {
+    const prompt = document.getElementById('post-modal-prompt').innerText;
+    navigator.clipboard.writeText(prompt).then(() => showToast("Prompt copied!"));
+}
 </script>
 </body>
 </html>
