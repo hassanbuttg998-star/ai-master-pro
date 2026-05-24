@@ -353,16 +353,6 @@
                     <button onclick="copyPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase text-white transition">Copy To Clipboard</button>
                 </div>
 
-                <!-- AI Generated Image Box -->
-                <div id="aiImageBox" class="hidden glass p-6 rounded-xl border border-purple-500/30 bg-purple-500/5">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-purple-400 mb-4">🎨 AI Generated Image</p>
-                    <div id="aiImageStatus" class="flex items-center justify-center py-8"></div>
-                    <img id="generatedImage" class="hidden w-full rounded-xl object-cover shadow-2xl border border-white/10" alt="AI Generated">
-                    <div class="flex gap-3 mt-4">
-                        <button onclick="copyPrompt()" class="flex-1 px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase text-white transition">Copy Prompt</button>
-                        <button id="downloadBtn" onclick="downloadGeneratedImage()" class="hidden flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-xs font-bold uppercase text-white transition">⬇ Download Image</button>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -804,43 +794,22 @@ function showPage(pageId, pushToHistory = true) {
         btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i>AI Compiling...';
         btn.disabled = true;
 
-        // Hide previous result
         document.getElementById('resultBox').classList.add('hidden');
-        document.getElementById('aiImageBox').classList.add('hidden');
 
         try {
-            // Use Pollinations AI free text API (no CORS, no API key)
-            const systemPrompt = `You are a world-class cinematic AI prompt engineer. Transform the user's basic idea into a hyper-detailed, professional AI image generation prompt. Add cinematic lighting, camera angles, mood, atmosphere, lens specs, color grading, and artistic style. Keep it under 150 words. Return ONLY the enhanced prompt, nothing else.`;
+            const systemPrompt = `You are a world-class cinematic AI prompt engineer. Transform the user's basic idea into a hyper-detailed, ultra-professional AI image/video generation prompt. Include: cinematic lighting type, camera lens & angle, mood & atmosphere, color grading style, render engine, artistic style, and micro-details. Keep it under 180 words. Return ONLY the final prompt, no explanation, no labels.`;
             const userMessage = `Basic idea: "${input}"`;
-            
+
             const encodedSystem = encodeURIComponent(systemPrompt);
             const encodedMsg = encodeURIComponent(userMessage);
-            const textApiUrl = `https://text.pollinations.ai/${encodedMsg}?system=${encodedSystem}&model=openai&seed=${Date.now()}`;
-            
+            const seed = Math.floor(Math.random() * 99999);
+            const textApiUrl = `https://text.pollinations.ai/${encodedMsg}?system=${encodedSystem}&model=openai&seed=${seed}`;
+
             const response = await fetch(textApiUrl);
             const enhancedPrompt = (await response.text()).trim();
 
             document.getElementById('finalPrompt').innerText = enhancedPrompt;
             document.getElementById('resultBox').classList.remove('hidden');
-
-            // Generate image using Pollinations AI (free, no API key)
-            document.getElementById('aiImageBox').classList.remove('hidden');
-            document.getElementById('aiImageStatus').innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2 text-indigo-400"></i><span class="text-gray-400 text-xs">Generating your cinematic image...</span>';
-            document.getElementById('generatedImage').classList.add('hidden');
-
-            const encodedPrompt = encodeURIComponent(enhancedPrompt);
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=576&nologo=true&seed=${Date.now()}`;
-
-            const img = document.getElementById('generatedImage');
-            img.onload = () => {
-                document.getElementById('aiImageStatus').classList.add('hidden');
-                img.classList.remove('hidden');
-                document.getElementById('downloadBtn').classList.remove('hidden');
-            };
-            img.onerror = () => {
-                document.getElementById('aiImageStatus').innerHTML = '<span class="text-red-400 text-xs">Image generation failed. Try again!</span>';
-            };
-            img.src = imageUrl;
 
         } catch (error) {
             showToast("AI Error! Check connection and try again.");
@@ -849,16 +818,6 @@ function showPage(pageId, pushToHistory = true) {
             btn.innerHTML = originalBtnText;
             btn.disabled = false;
         }
-    }
-
-    function downloadGeneratedImage() {
-        const img = document.getElementById('generatedImage');
-        if (!img.src) return;
-        const a = document.createElement('a');
-        a.href = img.src;
-        a.download = 'frazx-generated.jpg';
-        a.target = '_blank';
-        a.click();
     }
 
     function copyPrompt() {
