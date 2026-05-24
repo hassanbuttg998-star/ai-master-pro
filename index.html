@@ -809,22 +809,16 @@ function showPage(pageId, pushToHistory = true) {
         document.getElementById('aiImageBox').classList.add('hidden');
 
         try {
-            // Call Claude API for prompt enhancement
-            const response = await fetch("https://api.anthropic.com/v1/messages", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    model: "claude-sonnet-4-20250514",
-                    max_tokens: 1000,
-                    messages: [{
-                        role: "user",
-                        content: `You are a world-class cinematic AI prompt engineer. Transform this basic idea into a hyper-detailed, professional AI image/video generation prompt. Add cinematic lighting, camera angles, mood, atmosphere, technical specs, and artistic style. Keep it under 200 words. Return ONLY the enhanced prompt, nothing else.\n\nBasic idea: "${input}"`
-                    }]
-                })
-            });
-
-            const data = await response.json();
-            const enhancedPrompt = data.content[0].text.trim();
+            // Use Pollinations AI free text API (no CORS, no API key)
+            const systemPrompt = `You are a world-class cinematic AI prompt engineer. Transform the user's basic idea into a hyper-detailed, professional AI image generation prompt. Add cinematic lighting, camera angles, mood, atmosphere, lens specs, color grading, and artistic style. Keep it under 150 words. Return ONLY the enhanced prompt, nothing else.`;
+            const userMessage = `Basic idea: "${input}"`;
+            
+            const encodedSystem = encodeURIComponent(systemPrompt);
+            const encodedMsg = encodeURIComponent(userMessage);
+            const textApiUrl = `https://text.pollinations.ai/${encodedMsg}?system=${encodedSystem}&model=openai&seed=${Date.now()}`;
+            
+            const response = await fetch(textApiUrl);
+            const enhancedPrompt = (await response.text()).trim();
 
             document.getElementById('finalPrompt').innerText = enhancedPrompt;
             document.getElementById('resultBox').classList.remove('hidden');
