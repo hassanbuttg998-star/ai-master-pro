@@ -1430,66 +1430,9 @@ window.showPage = function(pageId, pushToHistory) {
 };
 
 async function loadCommunityFeed() {
-    const db = window._db;
-    if (!db) return;
-
-    document.getElementById('feed-loading').classList.remove('hidden');
-    document.getElementById('feed-empty').classList.add('hidden');
+    document.getElementById('feed-loading').classList.add('hidden');
+    document.getElementById('feed-empty').classList.remove('hidden');
     document.getElementById('community-feed').innerHTML = '';
-
-    try {
-        const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
-        onSnapshot(q, (snapshot) => {
-            document.getElementById('feed-loading').classList.add('hidden');
-            const feed = document.getElementById('community-feed');
-            feed.innerHTML = '';
-
-            if (snapshot.empty) {
-                document.getElementById('feed-empty').classList.remove('hidden');
-                return;
-            }
-
-            snapshot.forEach(docSnap => {
-                const post = docSnap.data();
-                const postId = docSnap.id;
-                const likes = post.likes ? post.likes.length : 0;
-                const comments = post.comments ? post.comments.length : 0;
-                const timeAgo = post.createdAt ? getTimeAgo(post.createdAt.toDate()) : 'recently';
-
-                const card = document.createElement('div');
-                card.className = 'break-inside-avoid mb-5 glass rounded-2xl overflow-hidden border border-white/5 hover:border-indigo-500/30 transition-all duration-300 cursor-pointer group';
-                card.innerHTML = `
-                    <div class="relative overflow-hidden" onclick="openPostModal('${postId}')">
-                        <img src="${post.imageUrl}" class="w-full object-cover group-hover:scale-105 transition-transform duration-500" alt="AI Art" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300/111827/6366f1?text=FRAZX'">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                            <p class="text-white text-xs font-bold italic line-clamp-2">${post.prompt ? post.prompt.substring(0,100)+'...' : ''}</p>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="flex items-center gap-2 mb-3">
-                            <img src="${post.creatorAvatar || 'https://via.placeholder.com/32/6366f1/white?text=U'}" class="w-7 h-7 rounded-full object-cover border border-white/10" alt="">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-white font-black text-xs truncate">${post.creatorName || 'Creator'}</p>
-                                <p class="text-gray-600 text-[10px]">${timeAgo}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <button onclick="event.stopPropagation(); quickLike('${postId}', this)" class="flex items-center gap-1.5 text-gray-400 hover:text-red-400 transition text-xs font-bold">
-                                <i class="fa-regular fa-heart"></i> <span class="like-count">${likes}</span>
-                            </button>
-                            <button onclick="openPostModal('${postId}')" class="flex items-center gap-1.5 text-gray-400 hover:text-indigo-400 transition text-xs font-bold">
-                                <i class="fa-regular fa-comment"></i> ${comments}
-                            </button>
-                        </div>
-                    </div>`;
-                feed.appendChild(card);
-            });
-        });
-    } catch(e) {
-        console.error(e);
-        document.getElementById('feed-loading').classList.add('hidden');
-        document.getElementById('feed-empty').classList.remove('hidden');
-    }
 }
 
 function getTimeAgo(date) {
