@@ -877,11 +877,33 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, arrayUnion, arrayRemove, orderBy, query, onSnapshot, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    onAuthStateChanged, 
+    signOut,
+    updateProfile
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    doc, 
+    updateDoc, 
+    arrayUnion, 
+    arrayRemove, 
+    orderBy, 
+    query, 
+    onSnapshot, 
+    getDoc, 
+    getDocs,
+    where,
+    serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyBXqQoTB0OLwhdog2HR7U1hg1siq_QBsZw",
+    apiKey: "AIzaSyBXqQoTB0OLwhdog2HR7U1hgIsiq_QBsZw",
     authDomain: "frazxpro-a6c32.firebaseapp.com",
     projectId: "frazxpro-a6c32",
     storageBucket: "frazxpro-a6c32.appspot.com",
@@ -891,78 +913,54 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
   const db = getFirestore(app);
   window._db = db;
   window._auth = auth;
-  // Cloudinary config
-  window._cloudinary = {
-    cloudName: 'dt8nzlmgk',
-    uploadPreset: 'frazx_community'
-  };
+  window._cloudinary = { cloudName: 'dt8nzlmgk', uploadPreset: 'frazx_community' };
 
-  // Auth state observer — updates sidebar + account page
+  // ===== AUTH STATE =====
+  onAuthStateChanged(auth, (user) => {
+    const nameEl = document.getElementById('sidebar-user-name');
+    const labelEl = document.getElementById('sidebar-status-label');
+    const iconEl = document.getElementById('sidebar-avatar-icon');
+    const imgEl = document.getElementById('sidebar-avatar-img');
+    const btnEl = document.getElementById('sidebar-auth-btn');
+    const navText = document.getElementById('navbar-auth-text');
+    const navImg = document.getElementById('navbar-avatar-img');
+    const navIcon = document.getElementById('navbar-avatar-icon');
+    const navBtn = document.getElementById('navbar-auth-btn');
 
-
-  function updateUI(user) {
     if (user) {
-      // --- SIDEBAR UPDATE ---
-      const nameEl = document.getElementById('sidebar-user-name');
-      const labelEl = document.getElementById('sidebar-status-label');
-      const iconEl = document.getElementById('sidebar-avatar-icon');
-      const imgEl = document.getElementById('sidebar-avatar-img');
-      const btnEl = document.getElementById('sidebar-auth-btn');
-
-      if (nameEl) nameEl.innerText = user.displayName ? user.displayName.split(' ')[0] : 'User';
+      const firstName = user.displayName ? user.displayName.split(' ')[0] : 'User';
+      if (nameEl) nameEl.innerText = firstName;
       if (labelEl) labelEl.innerText = 'Logged In';
-      if (user.photoURL && imgEl && iconEl) {
+      if (user.photoURL && imgEl) {
         imgEl.src = user.photoURL;
         imgEl.classList.remove('hidden');
-        iconEl.classList.add('hidden');
+        if (iconEl) iconEl.classList.add('hidden');
       }
       if (btnEl) {
         btnEl.innerText = 'Profile';
         btnEl.onclick = (e) => { e.stopPropagation(); showPage('account'); document.getElementById('sidebar').classList.add('translate-x-full'); };
         btnEl.className = 'text-[10px] bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
       }
+      if (navText) navText.innerText = firstName.toUpperCase();
+      if (user.photoURL && navImg) { navImg.src = user.photoURL; navImg.classList.remove('hidden'); if(navIcon) navIcon.classList.add('hidden'); }
+      if (navBtn) navBtn.onclick = () => showPage('account');
 
-      // --- ACCOUNT PAGE UPDATE ---
+      // Account page
       const accName = document.getElementById('account-name');
       const accEmail = document.getElementById('account-email');
-      const accImgEl = document.getElementById('account-avatar-img');
-      const accIconEl = document.getElementById('account-avatar-icon');
-      const accGuest = document.getElementById('account-guest-card');
-
+      const accImg = document.getElementById('account-avatar-img');
+      const accIcon = document.getElementById('account-avatar-icon');
+      const guestCard = document.getElementById('account-guest-card');
+      const profileCard = document.getElementById('account-profile-card');
       if (accName) accName.innerText = user.displayName || 'FRAZX User';
       if (accEmail) accEmail.innerText = user.email || '';
-      if (user.photoURL && accImgEl && accIconEl) {
-        accImgEl.src = user.photoURL;
-        accImgEl.classList.remove('hidden');
-        accIconEl.classList.add('hidden');
-      }
-      if (accGuest) accGuest.classList.add('hidden');
-
-      // --- NAVBAR UPDATE (logged in) ---
-      const navBtn = document.getElementById('navbar-auth-btn');
-      const navText = document.getElementById('navbar-auth-text');
-      const navIcon = document.getElementById('navbar-avatar-icon');
-      const navImg = document.getElementById('navbar-avatar-img');
-      if (navBtn) { navBtn.onclick = () => showPage('account'); }
-      if (navText) navText.innerText = user.displayName ? user.displayName.split(' ')[0].toUpperCase() : 'ACCOUNT';
-      if (user.photoURL && navImg && navIcon) {
-        navImg.src = user.photoURL;
-        navImg.classList.remove('hidden');
-        navIcon.classList.add('hidden');
-      }
-
+      if (user.photoURL && accImg) { accImg.src = user.photoURL; accImg.classList.remove('hidden'); if(accIcon) accIcon.classList.add('hidden'); }
+      if (guestCard) guestCard.classList.add('hidden');
+      if (profileCard) profileCard.classList.remove('hidden');
     } else {
-      // --- LOGGED OUT STATE ---
-      const nameEl = document.getElementById('sidebar-user-name');
-      const labelEl = document.getElementById('sidebar-status-label');
-      const iconEl = document.getElementById('sidebar-avatar-icon');
-      const imgEl = document.getElementById('sidebar-avatar-img');
-      const btnEl = document.getElementById('sidebar-auth-btn');
-
       if (nameEl) nameEl.innerText = 'Anonymous';
       if (labelEl) labelEl.innerText = 'Guest Mode';
       if (imgEl) imgEl.classList.add('hidden');
@@ -972,122 +970,138 @@
         btnEl.onclick = (e) => { e.stopPropagation(); toggleLoginModal(true); };
         btnEl.className = 'text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
       }
-
-      const accName = document.getElementById('account-name');
-      const accGuest = document.getElementById('account-guest-card');
-      if (accName) accName.innerText = 'Guest User';
-      if (accGuest) accGuest.classList.remove('hidden');
-
-      // --- NAVBAR RESET ---
-      const navBtn = document.getElementById('navbar-auth-btn');
-      const navText = document.getElementById('navbar-auth-text');
-      const navIcon = document.getElementById('navbar-avatar-icon');
-      const navImg = document.getElementById('navbar-avatar-img');
-      if (navBtn) { navBtn.onclick = () => toggleLoginModal(true); }
       if (navText) navText.innerText = 'SIGN IN';
       if (navImg) navImg.classList.add('hidden');
       if (navIcon) navIcon.classList.remove('hidden');
+      if (navBtn) navBtn.onclick = () => toggleLoginModal(true);
+      const guestCard = document.getElementById('account-guest-card');
+      const profileCard = document.getElementById('account-profile-card');
+      if (guestCard) guestCard.classList.remove('hidden');
+      if (profileCard) profileCard.classList.add('hidden');
     }
-  }
+  });
 
-  onAuthStateChanged(auth, updateUI);
-
-  window.loginWithGoogle = function() {
-      provider.setCustomParameters({ prompt: 'select_account' });
-      showToast("Opening Google login...");
-      signInWithPopup(auth, provider)
-          .then((result) => {
-              toggleLoginModal(false);
-              const name = result.user.displayName ? result.user.displayName.split(' ')[0] : 'back';
-              showToast("Welcome " + name + "! 🎉");
-              setTimeout(() => showPage('samples'), 800);
-          })
-          .catch((error) => {
-              console.error("Auth Error:", error.code, error.message);
-              if (error.code === 'auth/popup-blocked') {
-                  showToast("❌ Popup blocked! Allow popups in browser settings.");
-              } else if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
-                  showToast("Login cancelled.");
-              } else if (error.code === 'auth/network-request-failed') {
-                  showToast("❌ Network error! Check your internet.");
-              } else {
-                  showToast("❌ Error: " + error.code);
-              }
-          });
-  }
-
-  window.logoutUser = function() {
-      signOut(auth).then(() => {
-          showToast("Signed out successfully!");
-          showPage('home');
-      }).catch((error) => {
-          console.error(error);
-      });
-  }
-
-  window.loginWithEmail = async function() {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      if (!email || !password) { showToast("Please fill all fields!"); return; }
-      try {
-          const result = await signInWithEmailAndPassword(auth, email, password);
-          toggleLoginModal(false);
-          const name = result.user.displayName ? result.user.displayName.split(' ')[0] : 'back';
-          showToast("Welcome " + name + "! 🎉");
-          setTimeout(() => showPage('samples'), 800);
-      } catch(e) {
-          if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') {
-              showToast("❌ Wrong email or password!");
-          } else if (e.code === 'auth/invalid-email') {
-              showToast("❌ Invalid email address!");
-          } else {
-              showToast("❌ Error: " + e.code);
-          }
-      }
-  }
-
+  // ===== SIGNUP =====
   window.signupWithEmail = async function() {
-      const name = document.getElementById('signup-name').value.trim();
-      const email = document.getElementById('signup-email').value.trim();
-      const password = document.getElementById('signup-password').value.trim();
-      if (!name || !email || !password) { showToast("Please fill all fields!"); return; }
-      if (password.length < 6) { showToast("Password must be at least 6 characters!"); return; }
-      try {
-          const result = await createUserWithEmailAndPassword(auth, email, password);
-          await updateProfile(result.user, { displayName: name });
-          toggleLoginModal(false);
-          showToast("Welcome " + name + "! Account created! 🎉");
-          setTimeout(() => showPage('samples'), 800);
-      } catch(e) {
-          if (e.code === 'auth/email-already-in-use') {
-              showToast("❌ Email already registered! Sign in instead.");
-          } else if (e.code === 'auth/weak-password') {
-              showToast("❌ Password too weak!");
-          } else {
-              showToast("❌ Error: " + e.code);
-          }
-      }
-  }
+    const name = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const pass = document.getElementById('signup-password').value.trim();
+    
+    if (!name) { showToast("Please enter your name!"); return; }
+    if (!email) { showToast("Please enter your email!"); return; }
+    if (!pass || pass.length < 6) { showToast("Password must be at least 6 characters!"); return; }
 
+    const btn = document.getElementById('signup-btn');
+    if (btn) { btn.innerText = 'Creating...'; btn.disabled = true; }
+
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, pass);
+      await updateProfile(result.user, { displayName: name });
+      toggleLoginModal(false);
+      showToast("Welcome " + name + "! Account created! 🎉");
+      setTimeout(() => showPage('samples'), 800);
+    } catch(e) {
+      console.error(e);
+      if (e.code === 'auth/email-already-in-use') showToast("❌ Email already registered!");
+      else if (e.code === 'auth/invalid-email') showToast("❌ Invalid email!");
+      else if (e.code === 'auth/weak-password') showToast("❌ Password too weak!");
+      else showToast("❌ Error: " + e.code);
+    } finally {
+      if (btn) { btn.innerText = 'Create Account'; btn.disabled = false; }
+    }
+  };
+
+  // ===== LOGIN =====
+  window.loginWithEmail = async function() {
+    const email = document.getElementById('email').value.trim();
+    const pass = document.getElementById('password').value.trim();
+    
+    if (!email || !pass) { showToast("Please fill all fields!"); return; }
+
+    const btn = document.getElementById('login-btn');
+    if (btn) { btn.innerText = 'Signing in...'; btn.disabled = true; }
+
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, pass);
+      toggleLoginModal(false);
+      const name = result.user.displayName ? result.user.displayName.split(' ')[0] : 'back';
+      showToast("Welcome " + name + "! 🎉");
+      setTimeout(() => showPage('samples'), 800);
+    } catch(e) {
+      console.error(e);
+      if (e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found') showToast("❌ Wrong email or password!");
+      else if (e.code === 'auth/invalid-email') showToast("❌ Invalid email!");
+      else showToast("❌ Error: " + e.code);
+    } finally {
+      if (btn) { btn.innerText = 'Sign In'; btn.disabled = false; }
+    }
+  };
+
+  // ===== LOGOUT =====
+  window.logoutUser = function() {
+    signOut(auth).then(() => {
+      showToast("Signed out!");
+      showPage('home');
+    });
+  };
+
+  // ===== FORM SWITCH =====
   window.showSignupForm = function() {
-      document.getElementById('login-form-wrap').classList.add('hidden');
-      document.getElementById('signup-form-wrap').classList.remove('hidden');
-  }
-
+    document.getElementById('login-form-wrap').classList.add('hidden');
+    document.getElementById('signup-form-wrap').classList.remove('hidden');
+  };
   window.showLoginForm = function() {
-      document.getElementById('signup-form-wrap').classList.add('hidden');
-      document.getElementById('login-form-wrap').classList.remove('hidden');
-  }
+    document.getElementById('signup-form-wrap').classList.add('hidden');
+    document.getElementById('login-form-wrap').classList.remove('hidden');
+  };
 
+  // ===== PROFILE =====
   window.handleSidebarProfileClick = function() {
-      const user = auth.currentUser;
-      if (user) {
-          showPage('account');
-          document.getElementById('sidebar').classList.add('translate-x-full');
-      } else {
-          toggleLoginModal(true);
-      }
-  }
+    if (window._auth && window._auth.currentUser) {
+      showPage('account');
+      document.getElementById('sidebar').classList.add('translate-x-full');
+    } else {
+      toggleLoginModal(true);
+    }
+  };
+  window.logoutUser = function() {
+    signOut(auth).then(() => { showToast("Signed out!"); showPage('home'); });
+  };
+  window.editDisplayName = function() {
+    const wrap = document.getElementById('edit-name-wrap');
+    const input = document.getElementById('edit-name-input');
+    wrap.classList.toggle('hidden');
+    input.value = document.getElementById('account-name').innerText;
+    if (!wrap.classList.contains('hidden')) input.focus();
+  };
+  window.saveDisplayName = async function() {
+    const name = document.getElementById('edit-name-input').value.trim();
+    if (!name) return;
+    await updateProfile(auth.currentUser, { displayName: name });
+    document.getElementById('account-name').innerText = name;
+    document.getElementById('edit-name-wrap').classList.add('hidden');
+    showToast("Name updated! ✅");
+  };
+  window.uploadAvatarPhoto = async function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    showToast("Uploading photo...");
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', window._cloudinary.uploadPreset);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${window._cloudinary.cloudName}/image/upload`, { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.secure_url) {
+      await updateProfile(auth.currentUser, { photoURL: data.secure_url });
+      ['account-avatar-img','sidebar-avatar-img','navbar-avatar-img'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.src = data.secure_url; el.classList.remove('hidden'); }
+      });
+      showToast("Photo updated! ✅");
+    }
+  };
+
+
 </script>
 
 <script>
