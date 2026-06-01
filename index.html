@@ -875,51 +875,22 @@
     </div>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { 
-    getAuth, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
-    onAuthStateChanged, 
-    signOut,
-    updateProfile
-  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { 
-    getFirestore, 
-    collection, 
-    addDoc, 
-    doc, 
-    updateDoc, 
-    arrayUnion, 
-    arrayRemove, 
-    orderBy, 
-    query, 
-    onSnapshot, 
-    getDoc, 
-    getDocs,
-    where,
-    serverTimestamp 
-  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBXqQoTB0OLwhdog2HR7U1hgIsiq_QBsZw",
-    authDomain: "frazxpro-a6c32.firebaseapp.com",
-    projectId: "frazxpro-a6c32",
-    storageBucket: "frazxpro-a6c32.appspot.com",
-    messagingSenderId: "574351306354",
-    appId: "1:574351306354:web:92f3f01141a1eda0ce5ceb"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  window._db = db;
-  window._auth = auth;
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ===== SUPABASE SETUP =====
+  const SUPABASE_URL = 'https://wfmtoodutuaeousykora.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmbXRvb2R1dHVhZW91c3lrb3JhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjUwODcsImV4cCI6MjA5NTkwMTA4N30.TCav8aVw4i5KSOKcey-zRrReLPWYosIgclzMyDB5V8w';
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  window._supabase = _supabase;
   window._cloudinary = { cloudName: 'dt8nzlmgk', uploadPreset: 'frazx_community' };
 
-  // ===== AUTH STATE =====
-  onAuthStateChanged(auth, (user) => {
+  // ===== AUTH STATE LISTENER =====
+  _supabase.auth.onAuthStateChange((event, session) => {
+    const user = session ? session.user : null;
+    updateUIForUser(user);
+  });
+
+  function updateUIForUser(user) {
     const nameEl = document.getElementById('sidebar-user-name');
     const labelEl = document.getElementById('sidebar-status-label');
     const iconEl = document.getElementById('sidebar-avatar-icon');
@@ -931,35 +902,30 @@
     const navBtn = document.getElementById('navbar-auth-btn');
 
     if (user) {
-      const firstName = user.displayName ? user.displayName.split(' ')[0] : 'User';
-      if (nameEl) nameEl.innerText = firstName;
+      const name = user.user_metadata?.display_name || user.email.split('@')[0];
+      const photo = user.user_metadata?.avatar_url || '';
+      
+      if (nameEl) nameEl.innerText = name.split(' ')[0];
       if (labelEl) labelEl.innerText = 'Logged In';
-      if (user.photoURL && imgEl) {
-        imgEl.src = user.photoURL;
-        imgEl.classList.remove('hidden');
-        if (iconEl) iconEl.classList.add('hidden');
-      }
+      if (photo && imgEl) { imgEl.src = photo; imgEl.classList.remove('hidden'); if(iconEl) iconEl.classList.add('hidden'); }
       if (btnEl) {
         btnEl.innerText = 'Profile';
         btnEl.onclick = (e) => { e.stopPropagation(); showPage('account'); document.getElementById('sidebar').classList.add('translate-x-full'); };
         btnEl.className = 'text-[10px] bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
       }
-      if (navText) navText.innerText = firstName.toUpperCase();
-      if (user.photoURL && navImg) { navImg.src = user.photoURL; navImg.classList.remove('hidden'); if(navIcon) navIcon.classList.add('hidden'); }
+      if (navText) navText.innerText = name.split(' ')[0].toUpperCase();
       if (navBtn) navBtn.onclick = () => showPage('account');
 
       // Account page
       const accName = document.getElementById('account-name');
       const accEmail = document.getElementById('account-email');
-      const accImg = document.getElementById('account-avatar-img');
-      const accIcon = document.getElementById('account-avatar-icon');
       const guestCard = document.getElementById('account-guest-card');
       const profileCard = document.getElementById('account-profile-card');
-      if (accName) accName.innerText = user.displayName || 'FRAZX User';
-      if (accEmail) accEmail.innerText = user.email || '';
-      if (user.photoURL && accImg) { accImg.src = user.photoURL; accImg.classList.remove('hidden'); if(accIcon) accIcon.classList.add('hidden'); }
+      if (accName) accName.innerText = name;
+      if (accEmail) accEmail.innerText = user.email;
       if (guestCard) guestCard.classList.add('hidden');
       if (profileCard) profileCard.classList.remove('hidden');
+
     } else {
       if (nameEl) nameEl.innerText = 'Anonymous';
       if (labelEl) labelEl.innerText = 'Guest Mode';
@@ -974,40 +940,42 @@
       if (navImg) navImg.classList.add('hidden');
       if (navIcon) navIcon.classList.remove('hidden');
       if (navBtn) navBtn.onclick = () => toggleLoginModal(true);
+
       const guestCard = document.getElementById('account-guest-card');
       const profileCard = document.getElementById('account-profile-card');
       if (guestCard) guestCard.classList.remove('hidden');
       if (profileCard) profileCard.classList.add('hidden');
     }
-  });
+  }
 
   // ===== SIGNUP =====
   window.signupWithEmail = async function() {
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim();
     const pass = document.getElementById('signup-password').value.trim();
-    
+
     if (!name) { showToast("Please enter your name!"); return; }
     if (!email) { showToast("Please enter your email!"); return; }
-    if (!pass || pass.length < 6) { showToast("Password must be at least 6 characters!"); return; }
+    if (pass.length < 6) { showToast("Password must be 6+ characters!"); return; }
 
     const btn = document.getElementById('signup-btn');
     if (btn) { btn.innerText = 'Creating...'; btn.disabled = true; }
 
-    try {
-      const result = await createUserWithEmailAndPassword(auth, email, pass);
-      await updateProfile(result.user, { displayName: name });
+    const { data, error } = await _supabase.auth.signUp({
+      email: email,
+      password: pass,
+      options: { data: { display_name: name } }
+    });
+
+    if (btn) { btn.innerText = 'Create Account'; btn.disabled = false; }
+
+    if (error) {
+      if (error.message.includes('already registered')) showToast("❌ Email already registered!");
+      else showToast("❌ " + error.message);
+    } else {
       toggleLoginModal(false);
       showToast("Welcome " + name + "! Account created! 🎉");
       setTimeout(() => showPage('samples'), 800);
-    } catch(e) {
-      console.error(e);
-      if (e.code === 'auth/email-already-in-use') showToast("❌ Email already registered!");
-      else if (e.code === 'auth/invalid-email') showToast("❌ Invalid email!");
-      else if (e.code === 'auth/weak-password') showToast("❌ Password too weak!");
-      else showToast("❌ Error: " + e.code);
-    } finally {
-      if (btn) { btn.innerText = 'Create Account'; btn.disabled = false; }
     }
   };
 
@@ -1015,34 +983,34 @@
   window.loginWithEmail = async function() {
     const email = document.getElementById('email').value.trim();
     const pass = document.getElementById('password').value.trim();
-    
+
     if (!email || !pass) { showToast("Please fill all fields!"); return; }
 
     const btn = document.getElementById('login-btn');
     if (btn) { btn.innerText = 'Signing in...'; btn.disabled = true; }
 
-    try {
-      const result = await signInWithEmailAndPassword(auth, email, pass);
+    const { data, error } = await _supabase.auth.signInWithPassword({
+      email: email,
+      password: pass
+    });
+
+    if (btn) { btn.innerText = 'Sign In'; btn.disabled = false; }
+
+    if (error) {
+      showToast("❌ Wrong email or password!");
+    } else {
       toggleLoginModal(false);
-      const name = result.user.displayName ? result.user.displayName.split(' ')[0] : 'back';
+      const name = data.user.user_metadata?.display_name || 'back';
       showToast("Welcome " + name + "! 🎉");
       setTimeout(() => showPage('samples'), 800);
-    } catch(e) {
-      console.error(e);
-      if (e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found') showToast("❌ Wrong email or password!");
-      else if (e.code === 'auth/invalid-email') showToast("❌ Invalid email!");
-      else showToast("❌ Error: " + e.code);
-    } finally {
-      if (btn) { btn.innerText = 'Sign In'; btn.disabled = false; }
     }
   };
 
   // ===== LOGOUT =====
-  window.logoutUser = function() {
-    signOut(auth).then(() => {
-      showToast("Signed out!");
-      showPage('home');
-    });
+  window.logoutUser = async function() {
+    await _supabase.auth.signOut();
+    showToast("Signed out!");
+    showPage('home');
   };
 
   // ===== FORM SWITCH =====
@@ -1057,16 +1025,16 @@
 
   // ===== PROFILE =====
   window.handleSidebarProfileClick = function() {
-    if (window._auth && window._auth.currentUser) {
-      showPage('account');
-      document.getElementById('sidebar').classList.add('translate-x-full');
-    } else {
-      toggleLoginModal(true);
-    }
+    _supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        showPage('account');
+        document.getElementById('sidebar').classList.add('translate-x-full');
+      } else {
+        toggleLoginModal(true);
+      }
+    });
   };
-  window.logoutUser = function() {
-    signOut(auth).then(() => { showToast("Signed out!"); showPage('home'); });
-  };
+
   window.editDisplayName = function() {
     const wrap = document.getElementById('edit-name-wrap');
     const input = document.getElementById('edit-name-input');
@@ -1074,14 +1042,17 @@
     input.value = document.getElementById('account-name').innerText;
     if (!wrap.classList.contains('hidden')) input.focus();
   };
+
   window.saveDisplayName = async function() {
     const name = document.getElementById('edit-name-input').value.trim();
     if (!name) return;
-    await updateProfile(auth.currentUser, { displayName: name });
+    await _supabase.auth.updateUser({ data: { display_name: name } });
     document.getElementById('account-name').innerText = name;
+    document.getElementById('sidebar-user-name').innerText = name.split(' ')[0];
     document.getElementById('edit-name-wrap').classList.add('hidden');
     showToast("Name updated! ✅");
   };
+
   window.uploadAvatarPhoto = async function(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1092,7 +1063,7 @@
     const res = await fetch(`https://api.cloudinary.com/v1_1/${window._cloudinary.cloudName}/image/upload`, { method: 'POST', body: formData });
     const data = await res.json();
     if (data.secure_url) {
-      await updateProfile(auth.currentUser, { photoURL: data.secure_url });
+      await _supabase.auth.updateUser({ data: { avatar_url: data.secure_url } });
       ['account-avatar-img','sidebar-avatar-img','navbar-avatar-img'].forEach(id => {
         const el = document.getElementById(id);
         if (el) { el.src = data.secure_url; el.classList.remove('hidden'); }
@@ -1101,7 +1072,15 @@
     }
   };
 
+  window.handleStartCreation = function() {
+    _supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) showPage('samples');
+      else toggleLoginModal(true);
+    });
+  };
 
+  // Community functions use Supabase
+  window._db = null; // No Firebase
 </script>
 
 <script>
