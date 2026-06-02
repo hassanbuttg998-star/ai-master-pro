@@ -1606,21 +1606,21 @@ async function submitCommunityPost() {
 
 async function openPostModal(postId) {
     currentPostId = postId;
-    const db = window._db;
-    const docSnap = await getDoc(doc(db, 'posts', postId));
-    if (!docSnap.exists()) return;
+    
+    const { data: post } = await _supabase.from('posts').select('*').eq('id', postId).single();
+    if (!post) return;
 
-    const post = docSnap.data();
-    const user = window._auth ? window._auth.currentUser : null;
+    const { data: { session } } = await _supabase.auth.getSession();
+    const user = session ? session.user : null;
     const likes = post.likes || [];
-    const isLiked = user && likes.includes(user.uid);
+    const isLiked = user && likes.includes(user.id);
 
-    document.getElementById('post-modal-img').src = post.imageUrl;
-    document.getElementById('post-modal-avatar').src = post.creatorAvatar || '';
-    document.getElementById('post-modal-creator').innerText = post.creatorName || 'Creator';
+    document.getElementById('post-modal-img').src = post.image_url || '';
+    document.getElementById('post-modal-avatar').src = post.creator_avatar || '';
+    document.getElementById('post-modal-creator').innerText = post.creator_name || 'Creator';
     document.getElementById('post-modal-prompt').innerText = post.prompt || '';
     document.getElementById('post-modal-likes').innerText = likes.length;
-    document.getElementById('post-modal-time').innerText = post.createdAt ? getTimeAgo(post.createdAt.toDate()) : '';
+    document.getElementById('post-modal-time').innerText = post.created_at ? getTimeAgo(new Date(post.created_at)) : '';
 
     const likeBtn = document.getElementById('post-modal-like-btn');
     likeBtn.querySelector('i').className = isLiked ? 'fa-solid fa-heart text-red-400' : 'fa-regular fa-heart';
@@ -1628,10 +1628,8 @@ async function openPostModal(postId) {
         ? 'flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 border border-red-500/30 rounded-xl text-xs font-bold text-red-400'
         : 'flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 rounded-xl transition text-xs font-bold text-gray-300 hover:text-red-400';
 
-    // Load comments
     renderComments(post.comments || []);
 
-    // Comment input visibility
     if (user) {
         document.getElementById('comment-input-wrap').classList.remove('hidden');
         document.getElementById('comment-login-hint').classList.add('hidden');
@@ -1666,74 +1664,69 @@ function closePostModal() {
 }
 
 async function toggleLikePost() {
-    const user = window._auth ? window._auth.currentUser : null;
-    if (!user) { showToast("Sign in to like!"); toggleLoginModal(true); return; }
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { showToast("Sign in to like!"); toggleLoginModal(true); return; }
     if (!currentPostId) return;
 
-    const postRef = doc(window._db, 'posts', currentPostId);
-    const postSnap = await getDoc(postRef);
-    const likes = postSnap.data().likes || [];
-    const liked = likes.includes(user.uid);
+    const userId = session.user.id;
+    const { data: post } = await _supabase.from('posts').select('likes').eq('id', currentPostId).single();
+    const likes = post?.likes || [];
+    const liked = likes.includes(userId);
+    const newLikes = liked ? likes.filter(id => id !== userId) : [...likes, userId];
 
-    await updateDoc(postRef, {
-        likes: liked ? arrayRemove(user.uid) : arrayUnion(user.uid)
-    });
-
-    // Refresh modal
+    await _supabase.from('posts').update({ likes: newLikes }).eq('id', currentPostId);
+    document.getElementById('post-modal-likes').innerText = newLikes.length;
     openPostModal(currentPostId);
 }
 
 async function quickLike(postId, btn) {
-    const user = window._auth ? window._auth.currentUser : null;
-    if (!user) { showToast("Sign in to like!"); return; }
-
-    const postRef = doc(window._db, 'posts', postId);
-    const postSnap = await getDoc(postRef);
-    const likes = postSnap.data().likes || [];
-    const liked = likes.includes(user.uid);
-
-    await updateDoc(postRef, {
-        likes: liked ? arrayRemove(user.uid) : arrayUnion(user.uid)
-    });
-
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { showToast("Sign in to like!"); toggleLoginModal(true); return; }
+    
+    const userId = session.user.id;
+    const { data: post } = await _supabase.from('posts').select('likes').eq('id', postId).single();
+    const likes = post?.likes || [];
+    const liked = likes.includes(userId);
+    const newLikes = liked ? likes.filter(id => id !== userId) : [...likes, userId];
+    
+    await _supabase.from('posts').update({ likes: newLikes }).eq('id', postId);
+    
     const countEl = btn.querySelector('.like-count');
     const iconEl = btn.querySelector('i');
     if (liked) {
         countEl.innerText = parseInt(countEl.innerText) - 1;
         iconEl.className = 'fa-regular fa-heart';
         btn.classList.remove('text-red-400');
-        btn.classList.add('text-gray-400');
     } else {
         countEl.innerText = parseInt(countEl.innerText) + 1;
         iconEl.className = 'fa-solid fa-heart text-red-400';
-        btn.classList.remove('text-gray-400');
         btn.classList.add('text-red-400');
     }
 }
 
 async function submitComment() {
-    const user = window._auth ? window._auth.currentUser : null;
-    if (!user) { showToast("Sign in to comment!"); return; }
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { showToast("Sign in to comment!"); return; }
 
     const input = document.getElementById('comment-input');
     const text = input.value.trim();
     if (!text) return;
 
-    const postRef = doc(window._db, 'posts', currentPostId);
-    const comment = {
-        name: user.displayName || 'Creator',
-        avatar: user.photoURL || '',
+    const user = session.user;
+    const { data: post } = await _supabase.from('posts').select('comments').eq('id', currentPostId).single();
+    const comments = post?.comments || [];
+    const newComment = {
+        name: user.user_metadata?.display_name || user.email.split('@')[0],
+        avatar: user.user_metadata?.avatar_url || '',
         text,
         time: new Date().toISOString()
     };
+    comments.push(newComment);
 
-    await updateDoc(postRef, { comments: arrayUnion(comment) });
+    await _supabase.from('posts').update({ comments }).eq('id', currentPostId);
     input.value = '';
     showToast("Comment posted! 💬");
-
-    // Refresh comments
-    const postSnap = await getDoc(postRef);
-    renderComments(postSnap.data().comments || []);
+    renderComments(comments);
 }
 
 function copyPostPrompt() {
@@ -1825,9 +1818,36 @@ async function loadMyUploads() {
     const emptyEl = document.getElementById('my-uploads-empty');
     const grid = document.getElementById('my-uploads-grid');
     
-    if (loadingEl) loadingEl.classList.add('hidden');
-    if (emptyEl) emptyEl.classList.remove('hidden');
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (emptyEl) emptyEl.classList.add('hidden');
     if (grid) grid.innerHTML = '';
+
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { if (loadingEl) loadingEl.classList.add('hidden'); return; }
+
+    const { data: posts } = await _supabase
+        .from('posts')
+        .select('*')
+        .eq('creator_id', session.user.id)
+        .order('created_at', { ascending: false });
+
+    if (loadingEl) loadingEl.classList.add('hidden');
+
+    const postCount = document.getElementById('account-post-count');
+    if (postCount) postCount.innerText = posts ? posts.length : 0;
+
+    if (!posts || posts.length === 0) {
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        return;
+    }
+
+    posts.forEach(post => {
+        const div = document.createElement('div');
+        div.className = 'aspect-square rounded-xl overflow-hidden cursor-pointer hover:opacity-80 transition';
+        div.onclick = () => openPostModal(post.id);
+        div.innerHTML = `<img src="${post.image_url}" class="w-full h-full object-cover" alt="">`;
+        grid.appendChild(div);
+    });
 }
 
 // Hook into showPage to load uploads when account opens
