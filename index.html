@@ -566,7 +566,7 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
         <div>
-            <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">Community <span class="text-indigo-500">Feed</span></h2>
+            <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">AI <span class="text-indigo-500">Images</span></h2>
             <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
         </div>
         <button onclick="openUploadModal()" class="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition shadow-[0_4px_20px_rgba(99,102,241,0.3)] whitespace-nowrap">
@@ -575,15 +575,13 @@
     </div>
 
     <!-- Feed Grid -->
-    <div id="community-feed" class="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
-        <!-- Posts load here -->
+    <div id="community-feed" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
     </div>
 
     <!-- Empty State -->
     <div id="feed-empty" class="hidden text-center py-24">
         <i class="fa-solid fa-images text-5xl text-gray-700 mb-4"></i>
         <p class="text-gray-500 font-bold uppercase tracking-widest text-sm">No creations yet</p>
-        <p class="text-gray-600 text-xs mt-2">Be the first to share your AI art!</p>
         <button onclick="openUploadModal()" class="mt-6 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition">
             Upload First Creation
         </button>
@@ -592,9 +590,55 @@
     <!-- Loading State -->
     <div id="feed-loading" class="text-center py-24">
         <i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-500 mb-4"></i>
-        <p class="text-gray-500 text-xs uppercase tracking-widest mt-3">Loading community feed...</p>
+        <p class="text-gray-500 text-xs uppercase tracking-widest mt-3">Loading...</p>
     </div>
 
+</div>
+</section>
+
+<!-- Post Detail Page -->
+<section id="post-detail" class="page-content pt-24 pb-20 px-4 md:px-6" style="display:none;">
+<div class="max-w-5xl mx-auto">
+    <button onclick="showPage('samples')" class="flex items-center gap-2 text-gray-500 hover:text-white text-sm mb-8 transition font-bold">
+        <i class="fa-solid fa-arrow-left"></i> Back to gallery
+    </button>
+    <div class="flex flex-col md:flex-row gap-8">
+        <!-- Image -->
+        <div class="md:w-1/2">
+            <img id="detail-image" src="" class="w-full rounded-2xl object-cover shadow-2xl border border-white/10" alt="">
+        </div>
+        <!-- Info -->
+        <div class="md:w-1/2 flex flex-col gap-5">
+            <div class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-400 w-fit">⚡ Prompt Detail</div>
+            <h1 id="detail-title" class="text-xl md:text-2xl font-black text-white leading-tight uppercase tracking-wide"></h1>
+            <div class="text-sm text-gray-500">
+                Shared by: <span id="detail-creator" class="text-indigo-400 font-bold"></span>
+            </div>
+            <p id="detail-date" class="text-gray-600 text-xs"></p>
+
+            <!-- Prompt Box -->
+            <div class="glass border border-indigo-500/20 rounded-2xl p-5">
+                <p class="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-3">Prompt</p>
+                <p id="detail-prompt" class="text-gray-300 text-sm leading-relaxed"></p>
+                <div class="flex gap-3 mt-5">
+                    <button onclick="copyDetailPrompt()" class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition shadow-[0_4px_15px_rgba(99,102,241,0.3)]">
+                        <i class="fa-regular fa-copy"></i> Copy Prompt
+                    </button>
+                </div>
+            </div>
+
+            <!-- Likes + Share -->
+            <div class="glass border border-white/10 rounded-2xl p-4 flex items-center justify-between">
+                <button id="detail-like-btn" onclick="toggleDetailLike()" class="flex items-center gap-2 text-gray-400 hover:text-red-400 transition font-bold text-sm">
+                    <i class="fa-regular fa-heart text-lg"></i>
+                    <span id="detail-likes-count" class="text-white font-black">0</span>
+                </button>
+                <button onclick="openUploadModal()" class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-indigo-400 transition">
+                    <i class="fa-solid fa-plus"></i> Post Yours
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 </section>
 
@@ -1459,39 +1503,114 @@ async function loadCommunityFeed() {
 
         posts.forEach(post => {
             const likes = post.likes ? post.likes.length : 0;
-            const comments = post.comments ? post.comments.length : 0;
+            const title = post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED';
+            const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
+            const creator = post.creator_name || 'Creator';
+            
             const card = document.createElement('div');
-            card.className = 'break-inside-avoid mb-5 glass rounded-2xl overflow-hidden border border-white/5 hover:border-indigo-500/30 transition-all duration-300 cursor-pointer group';
+            card.className = 'glass rounded-2xl overflow-hidden cursor-pointer group relative border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(99,102,241,0.15)]';
+            card.onclick = () => openPostDetail(post.id);
             card.innerHTML = `
-                <div class="relative overflow-hidden" onclick="openPostModal('${post.id}')">
-                    <img src="${post.image_url}" class="w-full object-cover group-hover:scale-105 transition-transform duration-500" alt="AI Art" loading="lazy">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                        <p class="text-white text-xs font-bold italic line-clamp-2">${post.prompt ? post.prompt.substring(0,100)+'...' : ''}</p>
+                <div class="relative overflow-hidden aspect-[4/5]">
+                    <img src="${post.image_url}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
+                    
+                    <!-- Always visible: title + likes at top -->
+                    <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
+                        <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
+                        <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
+                            <i class="fa-solid fa-heart text-red-400"></i> ${likes}
+                        </span>
                     </div>
-                </div>
-                <div class="p-4">
-                    <div class="flex items-center gap-2 mb-3">
-                        <div class="w-7 h-7 rounded-full bg-indigo-500/20 border border-white/10 overflow-hidden flex items-center justify-center">
-                            ${post.creator_avatar ? `<img src="${post.creator_avatar}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-indigo-400 text-xs"></i>`}
+
+                    <!-- Hover only: prompt + copy + creator -->
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                        <p class="text-gray-200 text-xs leading-relaxed line-clamp-3 mb-3">${promptPreview}</p>
+                        <div class="flex items-center justify-between">
+                            <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
+                                <i class="fa-regular fa-copy"></i> Copy
+                            </button>
+                            <span class="text-gray-400 text-[10px]">by @${creator}</span>
                         </div>
-                        <p class="text-white font-black text-xs truncate">${post.creator_name || 'Creator'}</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <button onclick="event.stopPropagation(); quickLike('${post.id}', this)" class="flex items-center gap-1.5 text-gray-400 hover:text-red-400 transition text-xs font-bold">
-                            <i class="fa-regular fa-heart"></i> <span class="like-count">${likes}</span>
-                        </button>
-                        <button onclick="openPostModal('${post.id}')" class="flex items-center gap-1.5 text-gray-400 hover:text-indigo-400 transition text-xs font-bold">
-                            <i class="fa-regular fa-comment"></i> ${comments}
-                        </button>
                     </div>
                 </div>`;
             feedEl.appendChild(card);
         });
+
+        // Store posts globally for detail view
+        window._feedPosts = posts;
+
     } catch(e) {
         console.error(e);
         if (loadingEl) loadingEl.classList.add('hidden');
         if (emptyEl) emptyEl.classList.remove('hidden');
     }
+}
+
+function copyFeedPrompt(postId) {
+    const post = (window._feedPosts || []).find(p => p.id === postId);
+    if (post && post.prompt) {
+        navigator.clipboard.writeText(post.prompt).then(() => showToast("Prompt copied! ✅"));
+    }
+}
+
+async function openPostDetail(postId) {
+    const post = (window._feedPosts || []).find(p => p.id === postId);
+    if (!post) return;
+
+    document.getElementById('detail-image').src = post.image_url;
+    document.getElementById('detail-title').innerText = post.prompt ? post.prompt.substring(0, 60) : 'AI Creation';
+    document.getElementById('detail-creator').innerText = '@' + (post.creator_name || 'Creator');
+    document.getElementById('detail-prompt').innerText = post.prompt || '';
+    document.getElementById('detail-likes-count').innerText = post.likes ? post.likes.length : 0;
+    document.getElementById('detail-date').innerText = post.created_at ? 'Posted on ' + new Date(post.created_at).toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}) : '';
+    
+    window._currentDetailPostId = postId;
+
+    // Check if liked
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (session) {
+        const liked = (post.likes || []).includes(session.user.id);
+        const likeBtn = document.getElementById('detail-like-btn');
+        likeBtn.querySelector('i').className = liked ? 'fa-solid fa-heart text-red-400 text-lg' : 'fa-regular fa-heart text-lg';
+    }
+
+    // Show detail page
+    document.getElementById('post-detail').style.display = 'block';
+    document.querySelectorAll('.page-content').forEach(el => {
+        if (el.id !== 'post-detail') el.classList.add('hidden');
+    });
+    window.scrollTo(0, 0);
+}
+
+function copyDetailPrompt() {
+    const prompt = document.getElementById('detail-prompt').innerText;
+    navigator.clipboard.writeText(prompt).then(() => showToast("Prompt copied! ✅"));
+}
+
+async function toggleDetailLike() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { showToast("Sign in to like!"); toggleLoginModal(true); return; }
+    
+    const postId = window._currentDetailPostId;
+    const { data: post } = await _supabase.from('posts').select('likes').eq('id', postId).single();
+    const likes = post?.likes || [];
+    const userId = session.user.id;
+    const liked = likes.includes(userId);
+    const newLikes = liked ? likes.filter(id => id !== userId) : [...likes, userId];
+    
+    await _supabase.from('posts').update({ likes: newLikes }).eq('id', postId);
+    
+    document.getElementById('detail-likes-count').innerText = newLikes.length;
+    const likeBtn = document.getElementById('detail-like-btn');
+    likeBtn.querySelector('i').className = !liked ? 'fa-solid fa-heart text-red-400 text-lg' : 'fa-regular fa-heart text-lg';
+    
+    // Update in feed cache
+    if (window._feedPosts) {
+        const idx = window._feedPosts.findIndex(p => p.id === postId);
+        if (idx !== -1) window._feedPosts[idx].likes = newLikes;
+    }
+    
+    showToast(liked ? "Unliked" : "Liked! ❤️");
 }
 
 function getTimeAgo(date) {
@@ -1853,9 +1972,18 @@ async function loadMyUploads() {
 // Hook into showPage to load uploads when account opens
 const _origShowPage2 = window.showPage;
 window.showPage = function(pageId, pushToHistory) {
+    // Hide post-detail when navigating away
+    const detailEl = document.getElementById('post-detail');
+    if (detailEl) detailEl.style.display = 'none';
+    // Show all page-content again
+    document.querySelectorAll('.page-content').forEach(el => el.classList.remove('hidden'));
+    
     _origShowPage2(pageId, pushToHistory);
     if (pageId === 'account') {
         setTimeout(loadMyUploads, 300);
+    }
+    if (pageId === 'samples') {
+        loadCommunityFeed();
     }
 };
 </script>
