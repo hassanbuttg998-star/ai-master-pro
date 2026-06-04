@@ -55,7 +55,7 @@
 </head>
 <body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
 
-<nav class="fixed top-0 w-full z-[100] bg-black/40 border-b border-white/5 backdrop-blur-md px-4 lg:px-12 py-4 transition-all duration-300">
+<nav id="main-navbar" class="fixed top-0 w-full z-[100] bg-black/40 border-b border-white/5 backdrop-blur-md px-4 lg:px-12 py-4 transition-all duration-300">
     <div class="max-w-[1800px] mx-auto flex items-center justify-between">
         
         <div class="flex items-center gap-3 group cursor-pointer" onclick="showPage('home')">
@@ -1581,17 +1581,19 @@ async function openPostDetail(postId) {
         if (likeBtn) likeBtn.querySelector('i').className = liked ? 'fa-solid fa-heart text-red-400 text-lg' : 'fa-regular fa-heart text-lg';
     }
 
-    // Hide ALL sections including current page
-    document.querySelectorAll('section, .page-content').forEach(el => {
-        el.style.display = 'none';
-    });
+    // Hide navbar, sidebar, everything
+    const navbar = document.querySelector('nav') || document.querySelector('header') || document.getElementById('navbar');
+    const allNavbars = document.querySelectorAll('nav, header');
+    allNavbars.forEach(el => el.style.display = 'none');
+    
+    // Hide ALL sections
+    document.querySelectorAll('section').forEach(el => el.style.display = 'none');
 
-    // Show ONLY detail page
+    // Show ONLY detail page — full screen
     const detailEl = document.getElementById('post-detail');
     detailEl.style.display = 'block';
+    detailEl.style.paddingTop = '24px';
     
-    // Scroll to very top instantly
-    window.scrollTo({ top: 0, behavior: 'instant' });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 }
@@ -1986,24 +1988,22 @@ async function loadMyUploads() {
 // Hook into showPage to load uploads when account opens
 const _origShowPage2 = window.showPage;
 window.showPage = function(pageId, pushToHistory) {
-    // Restore ALL sections first
-    document.querySelectorAll('section, .page-content').forEach(el => {
-        el.style.display = '';
-    });
+    // Restore navbar
+    document.getElementById('main-navbar').style.display = '';
+    
+    // Restore ALL sections
+    document.querySelectorAll('section').forEach(el => el.style.display = '');
+    
     // Hide detail page
     const detailEl = document.getElementById('post-detail');
-    if (detailEl) detailEl.style.display = 'none';
+    if (detailEl) { detailEl.style.display = 'none'; detailEl.style.paddingTop = ''; }
     
     _origShowPage2(pageId, pushToHistory);
-    
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
 
-    if (pageId === 'account') {
-        setTimeout(loadMyUploads, 300);
-    }
-    if (pageId === 'samples') {
-        loadCommunityFeed();
-    }
+    if (pageId === 'account') setTimeout(loadMyUploads, 300);
+    if (pageId === 'samples') loadCommunityFeed();
 };
 </script>
 </body>
