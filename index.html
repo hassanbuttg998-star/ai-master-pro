@@ -1581,18 +1581,19 @@ async function openPostDetail(postId) {
         if (likeBtn) likeBtn.querySelector('i').className = liked ? 'fa-solid fa-heart text-red-400 text-lg' : 'fa-regular fa-heart text-lg';
     }
 
-    // Hide all page-content sections
-    document.querySelectorAll('.page-content').forEach(el => {
+    // Hide ALL sections including current page
+    document.querySelectorAll('section, .page-content').forEach(el => {
         el.style.display = 'none';
-        el.classList.remove('active');
     });
 
-    // Show detail page
+    // Show ONLY detail page
     const detailEl = document.getElementById('post-detail');
     detailEl.style.display = 'block';
-    detailEl.style.removeProperty('display');
-    detailEl.style.display = 'block';
-    window.scrollTo(0, 0);
+    
+    // Scroll to very top instantly
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
 }
 
 function copyDetailPrompt() {
@@ -1985,13 +1986,18 @@ async function loadMyUploads() {
 // Hook into showPage to load uploads when account opens
 const _origShowPage2 = window.showPage;
 window.showPage = function(pageId, pushToHistory) {
-    // Restore all page-content display
-    document.querySelectorAll('.page-content').forEach(el => {
+    // Restore ALL sections first
+    document.querySelectorAll('section, .page-content').forEach(el => {
         el.style.display = '';
     });
+    // Hide detail page
+    const detailEl = document.getElementById('post-detail');
+    if (detailEl) detailEl.style.display = 'none';
     
     _origShowPage2(pageId, pushToHistory);
     
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     if (pageId === 'account') {
         setTimeout(loadMyUploads, 300);
     }
