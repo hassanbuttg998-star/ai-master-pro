@@ -599,7 +599,7 @@
 <!-- Post Detail Page -->
 <section id="post-detail" class="page-content pt-24 pb-20 px-4 md:px-6" style="display:none;">
 <div class="max-w-5xl mx-auto">
-    <button onclick="showPage('samples')" class="flex items-center gap-2 text-gray-500 hover:text-white text-sm mb-8 transition font-bold">
+    <button onclick="goBackToGallery()" class="flex items-center gap-2 text-gray-500 hover:text-white text-sm mb-8 transition font-bold">
         <i class="fa-solid fa-arrow-left"></i> Back to gallery
     </button>
     <div class="flex flex-col md:flex-row gap-8">
@@ -1554,15 +1554,22 @@ function copyFeedPrompt(postId) {
 }
 
 async function openPostDetail(postId) {
-    const post = (window._feedPosts || []).find(p => p.id === postId);
+    // Set URL hash
+    window.location.hash = 'post/' + postId;
+}
+
+async function renderPostDetail(postId) {
+    // Fetch post
+    let post = (window._feedPosts || []).find(p => p.id === postId);
     if (!post) {
-        // Try fetching from Supabase if not in cache
         const { data } = await _supabase.from('posts').select('*').eq('id', postId).single();
         if (!data) return;
+        post = data;
         window._feedPosts = window._feedPosts || [];
         window._feedPosts.push(data);
-        return openPostDetail(postId);
     }
+
+    window._currentDetailPostId = postId;
 
     document.getElementById('detail-image').src = post.image_url || '';
     document.getElementById('detail-title').innerText = post.prompt ? post.prompt.substring(0, 60).toUpperCase() : 'AI CREATION';
@@ -1570,8 +1577,6 @@ async function openPostDetail(postId) {
     document.getElementById('detail-prompt').innerText = post.prompt || '';
     document.getElementById('detail-likes-count').innerText = post.likes ? post.likes.length : 0;
     document.getElementById('detail-date').innerText = post.created_at ? 'Posted on ' + new Date(post.created_at).toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}) : '';
-    
-    window._currentDetailPostId = postId;
 
     // Check if liked
     const { data: { session } } = await _supabase.auth.getSession();
@@ -1581,26 +1586,57 @@ async function openPostDetail(postId) {
         if (likeBtn) likeBtn.querySelector('i').className = liked ? 'fa-solid fa-heart text-red-400 text-lg' : 'fa-regular fa-heart text-lg';
     }
 
-    // Hide navbar, sidebar, everything
-    const navbar = document.querySelector('nav') || document.querySelector('header') || document.getElementById('navbar');
-    const allNavbars = document.querySelectorAll('nav, header');
-    allNavbars.forEach(el => el.style.display = 'none');
-    
-    // Hide ALL sections
+    // Hide EVERYTHING
+    document.getElementById('main-navbar').style.display = 'none';
     document.querySelectorAll('section').forEach(el => el.style.display = 'none');
-
-    // Show ONLY detail page — full screen
+    
+    // Show ONLY detail
     const detailEl = document.getElementById('post-detail');
     detailEl.style.display = 'block';
-    detailEl.style.paddingTop = '24px';
+    detailEl.style.paddingTop = '32px';
     
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 }
 
+// Handle hash changes
+window.addEventListener('hashchange', function() {
+    const hash = window.location.hash;
+    if (hash.startsWith('#post/')) {
+        const postId = hash.replace('#post/', '');
+        renderPostDetail(postId);
+    } else {
+        // Restore normal view
+        document.getElementById('main-navbar').style.display = '';
+        document.querySelectorAll('section').forEach(el => el.style.display = '');
+        document.getElementById('post-detail').style.display = 'none';
+        document.getElementById('post-detail').style.paddingTop = '';
+        document.documentElement.scrollTop = 0;
+    }
+});
+
+// Check hash on page load
+window.addEventListener('load', function() {
+    const hash = window.location.hash;
+    if (hash.startsWith('#post/')) {
+        const postId = hash.replace('#post/', '');
+        renderPostDetail(postId);
+    }
+});
+
 function copyDetailPrompt() {
     const prompt = document.getElementById('detail-prompt').innerText;
     navigator.clipboard.writeText(prompt).then(() => showToast("Prompt copied! ✅"));
+}
+
+function goBackToGallery() {
+    window.location.hash = 'samples';
+    document.getElementById('main-navbar').style.display = '';
+    document.querySelectorAll('section').forEach(el => el.style.display = '');
+    document.getElementById('post-detail').style.display = 'none';
+    document.getElementById('post-detail').style.paddingTop = '';
+    document.documentElement.scrollTop = 0;
+    showPage('samples');
 }
 
 async function toggleDetailLike() {
@@ -1988,13 +2024,8 @@ async function loadMyUploads() {
 // Hook into showPage to load uploads when account opens
 const _origShowPage2 = window.showPage;
 window.showPage = function(pageId, pushToHistory) {
-    // Restore navbar
     document.getElementById('main-navbar').style.display = '';
-    
-    // Restore ALL sections
     document.querySelectorAll('section').forEach(el => el.style.display = '');
-    
-    // Hide detail page
     const detailEl = document.getElementById('post-detail');
     if (detailEl) { detailEl.style.display = 'none'; detailEl.style.paddingTop = ''; }
     
