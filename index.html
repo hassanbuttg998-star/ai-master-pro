@@ -1091,35 +1091,36 @@
   };
 
   window.saveDisplayName = async function() {
-    const name = document.getElementById('edit-name-input').value.trim();
+    const nameInput = document.getElementById('edit-name-input');
+    if (!nameInput) { showToast("Input not found!"); return; }
+    const name = nameInput.value.trim();
     if (!name) { showToast("Name cannot be empty!"); return; }
     
+    showToast("Saving: " + name);
+    
     try {
-      // Get current session
-      const { data: { session } } = await _supabase.auth.getSession();
-      if (!session) { showToast("Please sign in again!"); return; }
-
-      // Update user metadata
       const { data, error } = await _supabase.auth.updateUser({ 
         data: { display_name: name }
       });
       
       if (error) { 
-        showToast("Error: " + error.message); 
+        showToast("SB Error: " + error.message); 
         return; 
       }
+      
+      if (!data) {
+        showToast("No data returned!");
+        return;
+      }
 
-      // Update UI immediately
       document.getElementById('account-name').innerText = name;
       const sidebarName = document.getElementById('sidebar-user-name');
       if (sidebarName) sidebarName.innerText = name.split(' ')[0];
-      const navText = document.getElementById('navbar-auth-text');
-      if (navText) navText.innerText = name.split(' ')[0].toUpperCase();
       document.getElementById('edit-name-wrap').classList.add('hidden');
       showToast("Name updated! ✅");
       
     } catch(e) {
-      showToast("Error: " + e.message);
+      showToast("JS Error: " + e.message);
     }
   };
 
@@ -1524,7 +1525,6 @@ let currentPostId = null;
 const _origShowPage = window.showPage || function(){};
 window.showPage = function(pageId, pushToHistory) {
     _origShowPage(pageId, pushToHistory);
-    if (pageId === 'samples') loadCommunityFeed();
 };
 
 async function loadCommunityFeed() {
@@ -1549,11 +1549,19 @@ async function loadCommunityFeed() {
             return;
         }
 
-        posts.forEach(post => {
+        const { data: { session: currentSession } } = await _supabase.auth.getSession();
+        const currentUserId = currentSession ? currentSession.user.id : null;
+
+        // Deduplicate posts by id
+        const seen = new Set();
+        const uniquePosts = posts.filter(p => { if (seen.has(p.id)) return false; seen.add(p.id); return true; });
+
+        uniquePosts.forEach(post => {
             const likes = post.likes ? post.likes.length : 0;
             const title = post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED';
             const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
             const creator = post.creator_name || 'Creator';
+            const isOwner = currentUserId && post.creator_id === currentUserId;
             
             const card = document.createElement('div');
             card.className = 'glass rounded-2xl overflow-hidden cursor-pointer group relative border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(99,102,241,0.15)]';
@@ -1577,7 +1585,10 @@ async function loadCommunityFeed() {
                             <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
                                 <i class="fa-regular fa-copy"></i> Copy
                             </button>
-                            <span class="text-gray-400 text-[10px]">by @${creator}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gray-400 text-[10px]">@${creator}</span>
+                                ${isOwner ? `<button onclick="event.stopPropagation(); deletePost('${post.id}')" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 text-[10px] font-bold px-2 py-1 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>` : ''}
+                            </div>
                         </div>
                     </div>
                 </div>`;
@@ -1585,7 +1596,7 @@ async function loadCommunityFeed() {
         });
 
         // Store posts globally for detail view
-        window._feedPosts = posts;
+        window._feedPosts = uniquePosts;
 
     } catch(e) {
         console.error(e);
@@ -1626,12 +1637,18 @@ async function renderPostDetail(postId) {
     document.getElementById('detail-likes-count').innerText = post.likes ? post.likes.length : 0;
     document.getElementById('detail-date').innerText = post.created_at ? 'Posted on ' + new Date(post.created_at).toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}) : '';
 
-    // Check if liked
+    // Check if liked + show owner buttons
     const { data: { session } } = await _supabase.auth.getSession();
     if (session) {
         const liked = (post.likes || []).includes(session.user.id);
         const likeBtn = document.getElementById('detail-like-btn');
         if (likeBtn) likeBtn.querySelector('i').className = liked ? 'fa-solid fa-heart text-red-400 text-lg' : 'fa-regular fa-heart text-lg';
+        
+        const isOwner = post.creator_id === session.user.id;
+        const editBtn = document.getElementById('detail-edit-btn');
+        const deleteBtn = document.getElementById('detail-delete-btn');
+        if (editBtn) { if(isOwner) editBtn.classList.remove('hidden'); else editBtn.classList.add('hidden'); }
+        if (deleteBtn) { if(isOwner) deleteBtn.classList.remove('hidden'); else deleteBtn.classList.add('hidden'); }
     }
 
     // Hide EVERYTHING
@@ -1675,6 +1692,25 @@ window.addEventListener('load', function() {
 function copyDetailPrompt() {
     const prompt = document.getElementById('detail-prompt').innerText;
     navigator.clipboard.writeText(prompt).then(() => showToast("Prompt copied! ✅"));
+}
+
+async function deletePost(postId) {
+    if (!confirm("Delete this post?")) return;
+    const { error } = await _supabase.from('posts').delete().eq('id', postId);
+    if (error) { showToast("Delete failed!"); return; }
+    showToast("Post deleted! 🗑️");
+    loadCommunityFeed();
+}
+
+async function editPost(postId) {
+    const post = (window._feedPosts || []).find(p => p.id === postId);
+    if (!post) return;
+    const newPrompt = prompt("Edit your prompt:", post.prompt || '');
+    if (!newPrompt || newPrompt === post.prompt) return;
+    const { error } = await _supabase.from('posts').update({ prompt: newPrompt }).eq('id', postId);
+    if (error) { showToast("Edit failed!"); return; }
+    showToast("Post updated! ✅");
+    loadCommunityFeed();
 }
 
 function goBackToGallery() {
