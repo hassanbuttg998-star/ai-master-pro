@@ -766,50 +766,48 @@
     </div>
 </section>
 
-<section id="account" class="page-content pt-28 pb-20 px-4">
-<div class="max-w-2xl mx-auto flex flex-col gap-6">
+<section id="account" class="page-content pt-20 pb-20">
+<div class="max-w-2xl mx-auto">
 
     <!-- Guest State -->
-    <div id="account-guest-card" class="hidden glass rounded-[2rem] border border-white/10 p-10 text-center">
+    <div id="account-guest-card" class="hidden px-4 py-16 text-center">
         <i class="fa-solid fa-user-slash text-4xl text-gray-600 mb-4"></i>
         <h3 class="text-white font-black uppercase tracking-wide mb-2">Not Signed In</h3>
-        <p class="text-gray-400 text-sm mb-6">Sign in to access your profile.</p>
+        <p class="text-gray-500 text-sm mb-6">Sign in to access your profile.</p>
         <button onclick="toggleLoginModal(true)" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition">Sign In Now</button>
     </div>
 
-    <!-- Profile Card -->
-    <div id="account-profile-card" class="glass rounded-[2rem] border border-indigo-500/20 overflow-hidden">
+    <!-- Profile Card - Threads style -->
+    <div id="account-profile-card" class="hidden">
 
-        <!-- Cover -->
-        <div class="h-24 bg-gradient-to-r from-indigo-900/60 via-purple-900/60 to-indigo-900/60 relative">
-            <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
+        <!-- Cover Photo -->
+        <div class="h-28 bg-gradient-to-br from-indigo-900 via-purple-900/80 to-black relative overflow-hidden">
+            <div class="absolute inset-0 opacity-30" style="background: radial-gradient(ellipse at 30% 50%, #6366f1 0%, transparent 60%)"></div>
         </div>
 
-        <!-- Avatar + Edit -->
-        <div class="px-6 pb-6">
-            <div class="flex items-end justify-between -mt-12 mb-4">
+        <!-- Profile Info -->
+        <div class="px-4 pb-0">
+            <!-- Avatar Row -->
+            <div class="flex items-start justify-between -mt-10 mb-3">
                 <div class="relative">
-                    <div class="w-20 h-20 rounded-full border-4 border-[#0d1117] bg-indigo-500/20 overflow-hidden shadow-xl">
-                        <i id="account-avatar-icon" class="fa-solid fa-user-astronaut text-2xl text-indigo-400 flex items-center justify-center h-full w-full"></i>
+                    <div class="w-20 h-20 rounded-full border-4 border-[#050508] bg-indigo-900 overflow-hidden shadow-2xl relative">
+                        <i id="account-avatar-icon" class="fa-solid fa-user-astronaut text-2xl text-indigo-400 absolute inset-0 flex items-center justify-center"></i>
                         <img id="account-avatar-img" src="" class="w-full h-full object-cover hidden absolute inset-0" alt="profile">
                     </div>
-                    <!-- Edit Avatar Button -->
-                    <button onclick="document.getElementById('avatar-file-input').click()" class="absolute -bottom-1 -right-1 w-6 h-6 bg-indigo-600 hover:bg-indigo-500 rounded-full flex items-center justify-center border-2 border-[#0d1117] transition cursor-pointer">
-                        <i class="fa-solid fa-camera text-[9px] text-white"></i>
+                    <button onclick="document.getElementById('avatar-file-input').click()" class="absolute -bottom-0.5 -right-0.5 w-6 h-6 bg-indigo-600 hover:bg-indigo-500 rounded-full flex items-center justify-center border-2 border-[#050508] transition cursor-pointer shadow">
+                        <i class="fa-solid fa-plus text-[9px] text-white"></i>
                     </button>
                     <input type="file" id="avatar-file-input" accept="image/*" class="hidden" onchange="uploadAvatarPhoto(event)">
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="window.logoutUser()" class="px-4 py-2 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-300 hover:text-red-400 font-black text-[10px] tracking-widest uppercase rounded-xl transition">
-                        <i class="fa-solid fa-right-from-bracket mr-1"></i>Sign Out
-                    </button>
-                </div>
+                <button onclick="window.logoutUser()" class="mt-12 px-3 py-1.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/20 text-gray-400 hover:text-red-400 text-xs font-bold rounded-xl transition">
+                    <i class="fa-solid fa-right-from-bracket mr-1"></i>Sign out
+                </button>
             </div>
 
-            <!-- Name (Editable) -->
-            <div class="flex items-center gap-2 mb-1">
-                <h2 id="account-name" class="text-xl font-black text-white tracking-wide"></h2>
-                <button onclick="editDisplayName()" class="text-gray-500 hover:text-indigo-400 transition">
+            <!-- Name + Username -->
+            <div class="mb-1 flex items-center gap-2">
+                <h2 id="account-name" class="text-xl font-black text-white"></h2>
+                <button onclick="editDisplayName()" class="text-gray-600 hover:text-indigo-400 transition">
                     <i class="fa-solid fa-pen text-[10px]"></i>
                 </button>
             </div>
@@ -817,51 +815,55 @@
                 <input id="edit-name-input" type="text" placeholder="Enter display name..." class="flex-1 bg-black/40 border border-indigo-500/30 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500 transition">
                 <button onclick="saveDisplayName()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-black text-xs transition">Save</button>
             </div>
+            <p id="account-email" class="text-gray-500 text-sm mb-3"></p>
 
-            <p id="account-email" class="text-gray-500 text-xs mb-4"></p>
+            <!-- Bio placeholder -->
+            <p class="text-gray-400 text-sm mb-4">AI Creator on FRAZX PRO ⚡</p>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-3 gap-3 mb-5">
-                <div class="text-center glass rounded-2xl p-3 border border-white/5">
-                    <p id="account-post-count" class="text-xl font-black text-white">0</p>
-                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-0.5">Posts</p>
+            <!-- Followers -->
+            <div class="flex items-center gap-2 mb-5">
+                <div class="flex -space-x-2">
+                    <div class="w-5 h-5 rounded-full bg-indigo-600 border border-[#050508]"></div>
+                    <div class="w-5 h-5 rounded-full bg-purple-600 border border-[#050508]"></div>
                 </div>
-                <div class="text-center glass rounded-2xl p-3 border border-white/5">
-                    <p id="account-followers-count" class="text-xl font-black text-purple-400">0</p>
-                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-0.5">Followers</p>
-                </div>
-                <div class="text-center glass rounded-2xl p-3 border border-white/5">
-                    <p class="text-xl font-black text-indigo-400">PRO</p>
-                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-0.5">Plan</p>
-                </div>
+                <p class="text-gray-400 text-sm"><span id="account-followers-count" class="text-white font-bold">0</span> followers</p>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex gap-3">
-                <button onclick="showPage('samples')" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition">
-                    <i class="fa-solid fa-images mr-2"></i>AI Images
+            <!-- Edit Profile + Share -->
+            <div class="flex gap-3 mb-6">
+                <button onclick="editDisplayName()" class="flex-1 py-2.5 bg-white/5 hover:bg-white/10 border border-white/20 text-white font-bold text-sm rounded-xl transition">
+                    Edit profile
                 </button>
-                <button onclick="openUploadModal()" class="flex-1 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-black text-xs tracking-widest uppercase rounded-xl transition">
+                <button onclick="shareProfile()" class="flex-1 py-2.5 bg-white/5 hover:bg-white/10 border border-white/20 text-white font-bold text-sm rounded-xl transition">
+                    Share profile
+                </button>
+            </div>
+
+            <!-- Posts count bar -->
+            <div class="border-b border-white/10 flex mb-1">
+                <div class="px-4 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2">
+                    Posts <span id="account-post-count" class="text-gray-400 font-normal text-xs">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Uploads Grid -->
+        <div class="px-4 pt-4">
+            <div id="my-uploads-grid" class="grid grid-cols-3 gap-1"></div>
+            <div id="my-uploads-empty" class="hidden text-center py-16">
+                <i class="fa-solid fa-images text-4xl text-gray-700 mb-4"></i>
+                <p class="text-gray-500 text-sm font-bold mb-1">No posts yet</p>
+                <p class="text-gray-600 text-xs mb-5">Share your first AI creation!</p>
+                <button onclick="openUploadModal()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs uppercase rounded-xl transition">
                     <i class="fa-solid fa-plus mr-2"></i>Post
                 </button>
             </div>
+            <div id="my-uploads-loading" class="text-center py-12">
+                <i class="fa-solid fa-circle-notch fa-spin text-indigo-400 text-xl"></i>
+            </div>
         </div>
-    </div>
 
-    <!-- My Uploads -->
-    <div class="glass rounded-[2rem] border border-white/10 p-6">
-        <p class="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-5">🖼 My Uploads</p>
-        <div id="my-uploads-grid" class="grid grid-cols-3 gap-2"></div>
-        <div id="my-uploads-empty" class="hidden text-center py-8">
-            <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-700 mb-3"></i>
-            <p class="text-gray-500 text-xs uppercase tracking-widest">No uploads yet</p>
-            <button onclick="openUploadModal()" class="mt-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs uppercase rounded-xl transition">Upload First</button>
-        </div>
-        <div id="my-uploads-loading" class="text-center py-8">
-            <i class="fa-solid fa-circle-notch fa-spin text-indigo-400"></i>
-        </div>
     </div>
-
 </div>
 </section>
 
@@ -1639,6 +1641,11 @@ function goBackToGallery() {
     showPage('samples');
 }
 
+function shareProfile() {
+    const url = window.location.href.split('#')[0];
+    navigator.clipboard.writeText(url).then(() => showToast("Profile link copied! 🔗"));
+}
+
 async function toggleDetailLike() {
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) { showToast("Sign in to like!"); toggleLoginModal(true); return; }
@@ -2014,8 +2021,8 @@ async function loadMyUploads() {
 
     posts.forEach(post => {
         const div = document.createElement('div');
-        div.className = 'aspect-square rounded-xl overflow-hidden cursor-pointer hover:opacity-80 transition';
-        div.onclick = () => openPostModal(post.id);
+        div.className = 'aspect-square overflow-hidden cursor-pointer hover:opacity-75 transition-opacity relative';
+        div.onclick = () => openPostDetail(post.id);
         div.innerHTML = `<img src="${post.image_url}" class="w-full h-full object-cover" alt="">`;
         grid.appendChild(div);
     });
