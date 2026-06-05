@@ -1091,10 +1091,19 @@
 
   window.saveDisplayName = async function() {
     const name = document.getElementById('edit-name-input').value.trim();
-    if (!name) return;
-    await _supabase.auth.updateUser({ data: { display_name: name } });
+    if (!name) { showToast("Name cannot be empty!"); return; }
+    
+    const { error } = await _supabase.auth.updateUser({ 
+      data: { display_name: name, full_name: name } 
+    });
+    
+    if (error) { showToast("Error: " + error.message); return; }
+    
     document.getElementById('account-name').innerText = name;
-    document.getElementById('sidebar-user-name').innerText = name.split(' ')[0];
+    const sidebarName = document.getElementById('sidebar-user-name');
+    if (sidebarName) sidebarName.innerText = name.split(' ')[0];
+    const navText = document.getElementById('navbar-auth-text');
+    if (navText) navText.innerText = name.split(' ')[0].toUpperCase();
     document.getElementById('edit-name-wrap').classList.add('hidden');
     showToast("Name updated! ✅");
   };
@@ -1102,19 +1111,41 @@
   window.uploadAvatarPhoto = async function(event) {
     const file = event.target.files[0];
     if (!file) return;
+    if (file.size > 3 * 1024 * 1024) { showToast("Photo must be under 3MB!"); return; }
+    
     showToast("Uploading photo...");
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', window._cloudinary.uploadPreset);
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${window._cloudinary.cloudName}/image/upload`, { method: 'POST', body: formData });
-    const data = await res.json();
-    if (data.secure_url) {
-      await _supabase.auth.updateUser({ data: { avatar_url: data.secure_url } });
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'frazx_community');
+      
+      const res = await fetch('https://api.cloudinary.com/v1_1/dt8nzlmgk/image/upload', { 
+        method: 'POST', body: formData 
+      });
+      const data = await res.json();
+      
+      if (!data.secure_url) { showToast("Upload failed!"); return; }
+      
+      const { error } = await _supabase.auth.updateUser({ 
+        data: { avatar_url: data.secure_url } 
+      });
+      
+      if (error) { showToast("Save failed: " + error.message); return; }
+      
+      // Update all avatar images
       ['account-avatar-img','sidebar-avatar-img','navbar-avatar-img'].forEach(id => {
         const el = document.getElementById(id);
         if (el) { el.src = data.secure_url; el.classList.remove('hidden'); }
       });
+      ['account-avatar-icon','sidebar-avatar-icon','navbar-avatar-icon'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+      
       showToast("Photo updated! ✅");
+    } catch(e) {
+      showToast("Error: " + e.message);
     }
   };
 
