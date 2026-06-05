@@ -948,8 +948,9 @@
     const navBtn = document.getElementById('navbar-auth-btn');
 
     if (user) {
-      const name = user.user_metadata?.display_name || user.email.split('@')[0];
-      const photo = user.user_metadata?.avatar_url || '';
+      const meta = user.user_metadata || {};
+      const name = meta.display_name || meta.full_name || user.email.split('@')[0];
+      const photo = meta.avatar_url || '';
       
       if (nameEl) nameEl.innerText = name.split(' ')[0];
       if (labelEl) labelEl.innerText = 'Logged In';
@@ -968,9 +969,9 @@
       const guestCard = document.getElementById('account-guest-card');
       const profileCard = document.getElementById('account-profile-card');
       if (accName) accName.innerText = name;
-      if (accEmail) accEmail.innerText = user.email;
+      if (accEmail) accEmail.innerText = user.email || '';
       if (guestCard) guestCard.classList.add('hidden');
-      if (profileCard) profileCard.classList.remove('hidden');
+      if (profileCard) { profileCard.classList.remove('hidden'); profileCard.style.display = ''; }
 
     } else {
       if (nameEl) nameEl.innerText = 'Anonymous';
@@ -1093,19 +1094,33 @@
     const name = document.getElementById('edit-name-input').value.trim();
     if (!name) { showToast("Name cannot be empty!"); return; }
     
-    const { error } = await _supabase.auth.updateUser({ 
-      data: { display_name: name, full_name: name } 
-    });
-    
-    if (error) { showToast("Error: " + error.message); return; }
-    
-    document.getElementById('account-name').innerText = name;
-    const sidebarName = document.getElementById('sidebar-user-name');
-    if (sidebarName) sidebarName.innerText = name.split(' ')[0];
-    const navText = document.getElementById('navbar-auth-text');
-    if (navText) navText.innerText = name.split(' ')[0].toUpperCase();
-    document.getElementById('edit-name-wrap').classList.add('hidden');
-    showToast("Name updated! ✅");
+    try {
+      // Get current session
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (!session) { showToast("Please sign in again!"); return; }
+
+      // Update user metadata
+      const { data, error } = await _supabase.auth.updateUser({ 
+        data: { display_name: name }
+      });
+      
+      if (error) { 
+        showToast("Error: " + error.message); 
+        return; 
+      }
+
+      // Update UI immediately
+      document.getElementById('account-name').innerText = name;
+      const sidebarName = document.getElementById('sidebar-user-name');
+      if (sidebarName) sidebarName.innerText = name.split(' ')[0];
+      const navText = document.getElementById('navbar-auth-text');
+      if (navText) navText.innerText = name.split(' ')[0].toUpperCase();
+      document.getElementById('edit-name-wrap').classList.add('hidden');
+      showToast("Name updated! ✅");
+      
+    } catch(e) {
+      showToast("Error: " + e.message);
+    }
   };
 
   window.uploadAvatarPhoto = async function(event) {
