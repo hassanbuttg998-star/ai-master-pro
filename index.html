@@ -615,6 +615,7 @@
                 Shared by: <span id="detail-creator" class="text-indigo-400 font-bold"></span>
             </div>
             <p id="detail-date" class="text-gray-600 text-xs"></p>
+            <div id="detail-tags" class="flex flex-wrap gap-2 mt-2"></div>
 
             <!-- Prompt Box -->
             <div class="glass border border-indigo-500/20 rounded-2xl p-5">
@@ -1524,8 +1525,9 @@ async function loadCommunityFeed() {
 
         uniquePosts.forEach(post => {
             const likes = post.likes ? post.likes.length : 0;
-            const title = post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED';
+            const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
             const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
+            const tags = post.tags || [];
             const creator = post.creator_name || 'Creator';
             const isOwner = currentUserId && post.creator_id === currentUserId;
             
@@ -1597,7 +1599,16 @@ async function renderPostDetail(postId) {
     window._currentDetailPostId = postId;
 
     document.getElementById('detail-image').src = post.image_url || '';
-    document.getElementById('detail-title').innerText = post.prompt ? post.prompt.substring(0, 60).toUpperCase() : 'AI CREATION';
+    document.getElementById('detail-title').innerText = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 60).toUpperCase() : 'AI CREATION');
+    
+    // Show tags
+    const tagsContainer = document.getElementById('detail-tags');
+    if (tagsContainer) {
+        const tags = post.tags || [];
+        tagsContainer.innerHTML = tags.length > 0 
+            ? tags.map(t => `<span class="px-2.5 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[10px] font-bold">#${t}</span>`).join('') 
+            : '';
+    }
     document.getElementById('detail-creator').innerText = '@' + (post.creator_name || 'Creator');
     document.getElementById('detail-prompt').innerText = post.prompt || '';
     document.getElementById('detail-likes-count').innerText = post.likes ? post.likes.length : 0;
