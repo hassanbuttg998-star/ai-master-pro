@@ -1090,80 +1090,9 @@
     if (!wrap.classList.contains('hidden')) input.focus();
   };
 
-  window.saveDisplayName = async function() {
-    const nameInput = document.getElementById('edit-name-input');
-    if (!nameInput) { showToast("Input not found!"); return; }
-    const name = nameInput.value.trim();
-    if (!name) { showToast("Name cannot be empty!"); return; }
-    
-    showToast("Saving: " + name);
-    
-    try {
-      const { data, error } = await _supabase.auth.updateUser({ 
-        data: { display_name: name }
-      });
-      
-      if (error) { 
-        showToast("SB Error: " + error.message); 
-        return; 
-      }
-      
-      if (!data) {
-        showToast("No data returned!");
-        return;
-      }
+  // saveDisplayName defined above
 
-      document.getElementById('account-name').innerText = name;
-      const sidebarName = document.getElementById('sidebar-user-name');
-      if (sidebarName) sidebarName.innerText = name.split(' ')[0];
-      document.getElementById('edit-name-wrap').classList.add('hidden');
-      showToast("Name updated! ✅");
-      
-    } catch(e) {
-      showToast("JS Error: " + e.message);
-    }
-  };
-
-  window.uploadAvatarPhoto = async function(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (file.size > 3 * 1024 * 1024) { showToast("Photo must be under 3MB!"); return; }
-    
-    showToast("Uploading photo...");
-    
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'frazx_community');
-      
-      const res = await fetch('https://api.cloudinary.com/v1_1/dt8nzlmgk/image/upload', { 
-        method: 'POST', body: formData 
-      });
-      const data = await res.json();
-      
-      if (!data.secure_url) { showToast("Upload failed!"); return; }
-      
-      const { error } = await _supabase.auth.updateUser({ 
-        data: { avatar_url: data.secure_url } 
-      });
-      
-      if (error) { showToast("Save failed: " + error.message); return; }
-      
-      // Update all avatar images
-      ['account-avatar-img','sidebar-avatar-img','navbar-avatar-img'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { el.src = data.secure_url; el.classList.remove('hidden'); }
-      });
-      ['account-avatar-icon','sidebar-avatar-icon','navbar-avatar-icon'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
-      });
-      
-      showToast("Photo updated! ✅");
-    } catch(e) {
-      showToast("Error: " + e.message);
-    }
-  };
+  // uploadAvatarPhoto defined above
 
   window.handleStartCreation = function() {
     _supabase.auth.getSession().then(({ data: { session } }) => {
@@ -2016,59 +1945,61 @@ window.editDisplayName = function() {
 
 window.saveDisplayName = async function() {
     const input = document.getElementById('edit-name-input');
+    if (!input) return;
     const newName = input.value.trim();
     if (!newName) return showToast("Name cannot be empty!");
     
     try {
-        const { updateProfile } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
-        await updateProfile(window._auth.currentUser, { displayName: newName });
+        const { error } = await window._supabase.auth.updateUser({ 
+            data: { display_name: newName } 
+        });
+        if (error) { showToast("Error: " + error.message); return; }
+        
         document.getElementById('account-name').innerText = newName;
-        document.getElementById('sidebar-user-name').innerText = newName.split(' ')[0];
+        const sideEl = document.getElementById('sidebar-user-name');
+        if (sideEl) sideEl.innerText = newName.split(' ')[0];
+        const navEl = document.getElementById('navbar-auth-text');
+        if (navEl) navEl.innerText = newName.split(' ')[0].toUpperCase();
         document.getElementById('edit-name-wrap').classList.add('hidden');
         showToast("Name updated! ✅");
     } catch(e) {
-        console.error(e);
-        showToast("Failed to update name!");
+        showToast("Error: " + e.message);
     }
 };
 
 window.uploadAvatarPhoto = async function(event) {
     const file = event.target.files[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { showToast("Photo must be under 2MB!"); return; }
-
-    showToast("Uploading photo...");
+    if (file.size > 3 * 1024 * 1024) { showToast("Max 3MB!"); return; }
+    showToast("Uploading...");
 
     try {
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('upload_preset', window._cloudinary.uploadPreset);
-        formData.append('folder', 'frazx_avatars');
+        formData.append('upload_preset', 'frazx_community');
 
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${window._cloudinary.cloudName}/image/upload`, {
+        const res = await fetch('https://api.cloudinary.com/v1_1/dt8nzlmgk/image/upload', {
             method: 'POST', body: formData
         });
         const data = await res.json();
-        if (!data.secure_url) throw new Error('Upload failed');
+        if (!data.secure_url) throw new Error('Cloudinary failed');
 
-        const { updateProfile } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
-        await updateProfile(window._auth.currentUser, { photoURL: data.secure_url });
+        const { error } = await window._supabase.auth.updateUser({ 
+            data: { avatar_url: data.secure_url } 
+        });
+        if (error) { showToast("Save error: " + error.message); return; }
 
-        // Update UI
-        const accImg = document.getElementById('account-avatar-img');
-        const accIcon = document.getElementById('account-avatar-icon');
-        const sideImg = document.getElementById('sidebar-avatar-img');
-        const sideIcon = document.getElementById('sidebar-avatar-icon');
-        const navImg = document.getElementById('navbar-avatar-img');
-        const navIcon = document.getElementById('navbar-avatar-icon');
-
-        [accImg, sideImg, navImg].forEach(img => { if(img) { img.src = data.secure_url; img.classList.remove('hidden'); }});
-        [accIcon, sideIcon, navIcon].forEach(icon => { if(icon) icon.classList.add('hidden'); });
-
-        showToast("Profile photo updated! ✅");
+        ['account-avatar-img','sidebar-avatar-img','navbar-avatar-img'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) { el.src = data.secure_url; el.classList.remove('hidden'); }
+        });
+        ['account-avatar-icon','sidebar-avatar-icon','navbar-avatar-icon'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        });
+        showToast("Photo updated! ✅");
     } catch(e) {
-        console.error(e);
-        showToast("Photo upload failed!");
+        showToast("Error: " + e.message);
     }
 };
 
