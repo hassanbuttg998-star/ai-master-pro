@@ -1489,12 +1489,16 @@ function showToast(message) {
 let currentPostId = null;
 
 // Load feed when samples page opens
-const _origShowPage = window.showPage || function(){};
-window.showPage = function(pageId, pushToHistory) {
-    _origShowPage(pageId, pushToHistory);
-};
 
-async function loadCommunityFeed() {
+
+let _feedLoading = false;
+let _feedLoaded = false;
+
+async function loadCommunityFeed(force = false) {
+    if (_feedLoading) return;
+    if (_feedLoaded && !force) return;
+    _feedLoading = true;
+    
     const loadingEl = document.getElementById('feed-loading');
     const emptyEl = document.getElementById('feed-empty');
     const feedEl = document.getElementById('community-feed');
@@ -1555,7 +1559,6 @@ async function loadCommunityFeed() {
                             </button>
                             <div class="flex items-center gap-2">
                                 <span class="text-gray-400 text-[10px]">@${creator}</span>
-                                ${isOwner ? `<button onclick="event.stopPropagation(); deletePost('${post.id}')" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 text-[10px] font-bold px-2 py-1 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>` : ''}
                             </div>
                         </div>
                     </div>
@@ -1565,6 +1568,7 @@ async function loadCommunityFeed() {
 
         // Store posts globally for detail view
         window._feedPosts = uniquePosts;
+        _feedLoaded = true;
 
     } catch(e) {
         console.error(e);
@@ -1703,6 +1707,16 @@ function goBackToGallery() {
 function shareProfile() {
     const url = window.location.href.split('#')[0];
     navigator.clipboard.writeText(url).then(() => showToast("Profile link copied! 🔗"));
+}
+
+async function deletePostFromProfile(postId) {
+    if (!confirm("Delete this post permanently?")) return;
+    const { error } = await _supabase.from('posts').delete().eq('id', postId);
+    if (error) { showToast("Delete failed!"); return; }
+    showToast("Post deleted! 🗑️");
+    _feedLoading = false;
+    _feedLoaded = false;
+    loadMyUploads();
 }
 
 async function toggleDetailLike() {
@@ -1856,7 +1870,10 @@ async function submitCommunityPost() {
 
         closeUploadModal();
         showToast("Creation published! 🎉");
-        loadCommunityFeed();
+        _feedLoading = false;
+        _feedLoaded = false;
+        loadCommunityFeed(true);
+        loadMyUploads();
 
     } catch(e) {
         console.error(e);
@@ -2106,9 +2123,15 @@ async function loadMyUploads() {
 
     posts.forEach(post => {
         const div = document.createElement('div');
-        div.className = 'aspect-square overflow-hidden cursor-pointer hover:opacity-75 transition-opacity relative';
-        div.onclick = () => openPostDetail(post.id);
-        div.innerHTML = `<img src="${post.image_url}" class="w-full h-full object-cover" alt="">`;
+        div.className = 'aspect-square overflow-hidden cursor-pointer hover:opacity-75 transition-opacity relative group';
+        div.innerHTML = `
+            <img src="${post.image_url}" class="w-full h-full object-cover" alt="" onclick="openPostDetail('${post.id}')">
+            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <button onclick="event.stopPropagation(); deletePostFromProfile('${post.id}')" 
+                    class="w-8 h-8 bg-red-500/80 hover:bg-red-500 rounded-full flex items-center justify-center text-white transition">
+                    <i class="fa-solid fa-trash text-xs"></i>
+                </button>
+            </div>`;
         grid.appendChild(div);
     });
 }
@@ -2126,7 +2149,10 @@ window.showPage = function(pageId, pushToHistory) {
     document.body.scrollTop = 0;
 
     if (pageId === 'account') setTimeout(loadMyUploads, 300);
-    if (pageId === 'samples') loadCommunityFeed();
+    if (pageId === 'samples') {
+        _feedLoaded = false;
+        loadCommunityFeed();
+    }
 };
 </script>
 </body>
