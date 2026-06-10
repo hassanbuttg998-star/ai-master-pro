@@ -90,7 +90,7 @@
             Tools
         </button>
         <button onclick="showPage('samples')" class="hover:text-white transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
-            AI Images
+            Showcase
         </button>
         <button onclick="showPage('about-frazx')" class="hover:text-white transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
             About
@@ -1059,8 +1059,8 @@
       else showToast("❌ " + error.message);
     } else {
       toggleLoginModal(false);
-      showToast("Welcome " + name + "! Account created! 🎉");
-      setTimeout(() => showPage('samples'), 800);
+      showToast("Welcome " + name + "! 🎉");
+      setTimeout(() => { _feedLoaded = false; showPage('samples'); }, 800);
     }
   };
 
@@ -1085,15 +1085,17 @@
       showToast("❌ Wrong email or password!");
     } else {
       toggleLoginModal(false);
-      const name = data.user.user_metadata?.display_name || 'back';
-      showToast("Welcome " + name + "! 🎉");
-      setTimeout(() => showPage('samples'), 800);
+      const name = data.user.user_metadata?.display_name || data.user.email.split('@')[0];
+      showToast("Welcome back " + name + "! 🎉");
+      setTimeout(() => { _feedLoaded = false; showPage('samples'); }, 800);
     }
   };
 
   // ===== LOGOUT =====
   window.logoutUser = async function() {
     await _supabase.auth.signOut();
+    _feedLoaded = false;
+    _uploadsLoading = false;
     showToast("Signed out!");
     showPage('home');
   };
@@ -1139,10 +1141,15 @@
     });
   };
 
-  // Check session on page load
+  // Check session on page load - if logged in, show AI Images directly
   _supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) updateUIForUser(session.user);
-    else updateUIForUser(null);
+    if (session) {
+      updateUIForUser(session.user);
+      // Show AI Images as home for logged in users
+      showPage('samples');
+    } else {
+      updateUIForUser(null);
+    }
   });
 
   // Community functions use Supabase
