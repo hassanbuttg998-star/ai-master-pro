@@ -565,10 +565,33 @@
 
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-        <div>
-            <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">AI <span class="text-indigo-500">Images</span></h2>
-            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
+        <div class="flex items-center gap-6 flex-wrap">
+            <!-- Title with dropdown -->
+            <div class="relative group" id="category-dropdown-wrap">
+                <button class="flex items-center gap-2 text-3xl font-black italic uppercase text-white tracking-widest hover:text-indigo-400 transition">
+                    AI <span class="text-indigo-500 ml-2">Images</span>
+                    <i class="fa-solid fa-chevron-down text-lg text-indigo-400 group-hover:rotate-180 transition-transform duration-200 ml-1"></i>
+                </button>
+                <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
+
+                <!-- Dropdown Menu -->
+                <div class="absolute top-full left-0 mt-2 w-52 glass border border-indigo-500/20 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <button onclick="filterFeed('all')" class="w-full flex items-center gap-3 px-4 py-3 text-white hover:bg-indigo-600/20 transition text-sm font-bold text-left border-b border-white/5">
+                        <i class="fa-solid fa-fire text-indigo-400 w-4"></i> Latest
+                    </button>
+                    <button onclick="filterFeed('liked')" class="w-full flex items-center gap-3 px-4 py-3 text-white hover:bg-indigo-600/20 transition text-sm font-bold text-left border-b border-white/5">
+                        <i class="fa-solid fa-heart text-red-400 w-4"></i> Most Liked
+                    </button>
+                    <button onclick="filterFeed('copied')" class="w-full flex items-center gap-3 px-4 py-3 text-white hover:bg-indigo-600/20 transition text-sm font-bold text-left">
+                        <i class="fa-solid fa-copy text-purple-400 w-4"></i> Most Copied
+                    </button>
+                </div>
+            </div>
+
+            <!-- Active filter badge -->
+            <span id="active-filter-badge" class="hidden px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-indigo-400 text-xs font-bold uppercase tracking-widest"></span>
         </div>
+
         <button onclick="openUploadModal()" class="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition shadow-[0_4px_20px_rgba(99,102,241,0.3)] whitespace-nowrap">
             <i class="fa-solid fa-plus"></i> Share Your Creation
         </button>
@@ -1586,6 +1609,10 @@ function copyFeedPrompt(postId) {
     const post = (window._feedPosts || []).find(p => p.id === postId);
     if (post && post.prompt) {
         navigator.clipboard.writeText(post.prompt).then(() => showToast("Prompt copied! ✅"));
+        // Track copy count
+        const copies = (post.copies || 0) + 1;
+        _supabase.from('posts').update({ copies: copies }).eq('id', postId);
+        post.copies = copies;
     }
 }
 
@@ -1678,6 +1705,77 @@ window.addEventListener('load', function() {
 function copyDetailPrompt() {
     const prompt = document.getElementById('detail-prompt').innerText;
     navigator.clipboard.writeText(prompt).then(() => showToast("Prompt copied! ✅"));
+}
+
+let _currentFilter = 'all';
+
+async function filterFeed(filter) {
+    _currentFilter = filter;
+    
+    // Update badge
+    const badge = document.getElementById('active-filter-badge');
+    const labels = { all: '', liked: '❤️ Most Liked', copied: '📋 Most Copied' };
+    if (badge) {
+        if (filter === 'all') {
+            badge.classList.add('hidden');
+        } else {
+            badge.classList.remove('hidden');
+            badge.innerText = labels[filter];
+        }
+    }
+
+    const feedEl = document.getElementById('community-feed');
+    if (!feedEl || !window._feedPosts) return;
+
+    let sorted = [...window._feedPosts];
+
+    if (filter === 'liked') {
+        sorted.sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0));
+    } else if (filter === 'copied') {
+        sorted.sort((a, b) => (b.copies || 0) - (a.copies || 0));
+    } else {
+        sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
+    // Re-render with sorted posts
+    const { data: { session: feedSession } } = await _supabase.auth.getSession();
+    const currentUserId = feedSession ? feedSession.user.id : null;
+
+    feedEl.innerHTML = '';
+    sorted.forEach(post => {
+        const likes = post.likes ? post.likes.length : 0;
+        const copies = post.copies || 0;
+        const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
+        const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
+        const creator = post.creator_name || 'Creator';
+        const isOwner = currentUserId && post.creator_id === currentUserId;
+
+        const card = document.createElement('div');
+        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
+        card.onclick = () => openPostDetail(post.id);
+        card.innerHTML = `
+            <div class="relative overflow-hidden aspect-[4/5]">
+                <img src="${post.image_url}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
+                <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
+                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
+                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
+                        <i class="fa-solid fa-heart text-red-400"></i> ${likes}
+                    </span>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <p class="text-gray-200 text-xs leading-relaxed line-clamp-3 mb-3">${promptPreview}</p>
+                    <div class="flex items-center justify-between">
+                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                        <div class="flex items-center gap-1.5 ml-auto">
+                            <span class="text-gray-400 text-[10px]">@${creator}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        feedEl.appendChild(card);
+    });
 }
 
 async function deletePost(postId) {
@@ -2171,3 +2269,4 @@ window.showPage = function(pageId, pushToHistory) {
 </script>
 </body>
 </html>
+
