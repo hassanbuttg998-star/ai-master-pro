@@ -2093,7 +2093,12 @@ window.uploadAvatarPhoto = async function(event) {
 };
 
 // Load my uploads on account page
+let _uploadsLoading = false;
+
 async function loadMyUploads() {
+    if (_uploadsLoading) return;
+    _uploadsLoading = true;
+
     const loadingEl = document.getElementById('my-uploads-loading');
     const emptyEl = document.getElementById('my-uploads-empty');
     const grid = document.getElementById('my-uploads-grid');
@@ -2134,6 +2139,7 @@ async function loadMyUploads() {
             </div>`;
         grid.appendChild(div);
     });
+    _uploadsLoading = false;
 }
 
 // Hook into showPage to load uploads when account opens
@@ -2148,7 +2154,10 @@ window.showPage = function(pageId, pushToHistory) {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 
-    if (pageId === 'account') setTimeout(loadMyUploads, 300);
+    if (pageId === 'account') {
+        _uploadsLoading = false;
+        setTimeout(loadMyUploads, 300);
+    }
     if (pageId === 'samples') {
         _feedLoaded = false;
         loadCommunityFeed();
