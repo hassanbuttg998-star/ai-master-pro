@@ -100,6 +100,11 @@
         </button>
     </div>
 
+    <!-- Search Icon Button -->
+    <button onclick="toggleSearchBar()" id="navbar-search-btn" class="flex items-center justify-center w-10 h-10 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition-all duration-300 active:scale-95">
+        <i class="fa-solid fa-magnifying-glass text-gray-300 text-base"></i>
+    </button>
+
     <div onclick="toggleTheme()" class="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition-all duration-300 active:scale-95 select-none">
         <i id="theme-icon" class="fa-solid fa-moon text-[#6366f1] text-base"></i>
         <span id="theme-text" class="text-xs font-black tracking-wider text-gray-400">DARK</span>
@@ -122,6 +127,45 @@
 
     </div>
 </nav>
+
+<!-- Search Overlay - slides down below navbar -->
+<div id="search-overlay" class="fixed top-[73px] left-0 right-0 z-[99] bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-2xl transform -translate-y-full opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="max-w-3xl mx-auto px-4 py-4">
+        <div class="flex items-center gap-3 bg-white/5 border border-indigo-500/30 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
+            <i class="fa-solid fa-magnifying-glass text-indigo-400 text-sm flex-shrink-0"></i>
+            <input type="text" id="global-search-input" placeholder="Search images or creators..." 
+                class="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none"
+                oninput="handleGlobalSearch(this.value)">
+            
+            <!-- Filter Dropdown -->
+            <div class="relative flex-shrink-0" id="search-filter-wrap">
+                <button onclick="toggleSearchFilter()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition">
+                    <i id="search-filter-icon" class="fa-solid fa-image text-indigo-400 text-[10px]"></i>
+                    <span id="search-filter-label">Pictures</span>
+                    <i class="fa-solid fa-chevron-down text-[9px] text-gray-500"></i>
+                </button>
+                <!-- Filter options -->
+                <div id="search-filter-dropdown" class="hidden absolute right-0 top-full mt-2 w-36 glass border border-white/10 rounded-xl overflow-hidden shadow-xl z-10">
+                    <button onclick="setSearchFilter('pictures')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold border-b border-white/5">
+                        <i class="fa-solid fa-image text-indigo-400 w-3"></i> Pictures
+                    </button>
+                    <button onclick="setSearchFilter('profiles')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold">
+                        <i class="fa-solid fa-user text-purple-400 w-3"></i> Profiles
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="toggleSearchBar()" class="text-gray-500 hover:text-white transition flex-shrink-0">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Search Results -->
+        <div id="global-search-results" class="mt-3 max-h-80 overflow-y-auto space-y-2 hidden"></div>
+        <p id="global-search-empty" class="hidden text-center text-gray-500 text-xs py-4">No results found</p>
+    </div>
+</div>
+
 <div id="sidebar" class="fixed top-0 right-0 h-screen w-72 bg-[#08080c] border-l border-white/10 p-8 transform translate-x-full shadow-2xl">
     <div class="flex justify-between items-center mb-10">
         <span class="text-white font-black uppercase italic text-sm tracking-widest">Menu</span>
@@ -595,53 +639,6 @@
         <button onclick="openUploadModal()" class="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition shadow-[0_4px_20px_rgba(99,102,241,0.3)] whitespace-nowrap">
             <i class="fa-solid fa-plus"></i> Share Your Creation
         </button>
-    </div>
-
-    <!-- Search Bar -->
-    <div class="relative mb-8">
-        <div class="relative">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
-            <input type="text" id="feed-search-input" placeholder="Search by title or tags..." 
-                class="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-12 py-3.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition"
-                oninput="searchFeed(this.value)">
-            <button onclick="clearSearch()" id="search-clear-btn" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <div id="search-results-info" class="hidden mt-2 text-gray-500 text-xs px-1"></div>
-    </div>
-
-    <!-- Search Bar -->
-    <div class="relative mb-8">
-        <div class="flex items-center gap-3 bg-white/5 border border-white/10 hover:border-indigo-500/30 focus-within:border-indigo-500/50 rounded-2xl px-4 py-3 transition-all duration-300">
-            <i class="fa-solid fa-magnifying-glass text-gray-500 text-sm"></i>
-            <input 
-                type="text" 
-                id="feed-search-input"
-                placeholder="Search by title or tags..." 
-                class="flex-1 bg-transparent text-white text-sm placeholder-gray-600 focus:outline-none"
-                oninput="searchFeed(this.value)"
-            >
-            <button id="search-clear-btn" onclick="clearSearch()" class="hidden text-gray-500 hover:text-white transition">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
-        </div>
-        <!-- Search results count -->
-        <p id="search-results-count" class="hidden text-gray-600 text-xs mt-2 ml-1"></p>
-    </div>
-
-    <!-- Search Bar -->
-    <div class="relative mb-8">
-        <div class="relative">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
-            <input type="text" id="feed-search" placeholder="Search by title or tag..." 
-                class="w-full bg-white/5 border border-white/10 hover:border-indigo-500/30 focus:border-indigo-500 rounded-2xl pl-11 pr-12 py-3.5 text-white text-sm placeholder-gray-600 focus:outline-none transition-all duration-300">
-            <button id="search-clear" onclick="clearSearch()" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition cursor-pointer">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <!-- Search results count -->
-        <p id="search-results-count" class="hidden text-gray-500 text-xs mt-2 ml-1"></p>
     </div>
 
     <!-- Feed Grid -->
@@ -2504,6 +2501,148 @@ async function loadMyUploads() {
     _uploadsLoading = false;
 }
 
+// ===== GLOBAL SEARCH SYSTEM =====
+let _searchOpen = false;
+let _searchFilter = 'pictures';
+
+function toggleSearchBar() {
+    const overlay = document.getElementById('search-overlay');
+    const input = document.getElementById('global-search-input');
+    _searchOpen = !_searchOpen;
+    
+    if (_searchOpen) {
+        overlay.style.transform = 'translateY(0)';
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+        setTimeout(() => input && input.focus(), 200);
+    } else {
+        overlay.style.transform = 'translateY(-100%)';
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+        if (input) input.value = '';
+        document.getElementById('global-search-results').classList.add('hidden');
+        document.getElementById('global-search-empty').classList.add('hidden');
+    }
+}
+
+function toggleSearchFilter() {
+    const dd = document.getElementById('search-filter-dropdown');
+    dd.classList.toggle('hidden');
+}
+
+function setSearchFilter(filter) {
+    _searchFilter = filter;
+    const icon = document.getElementById('search-filter-icon');
+    const label = document.getElementById('search-filter-label');
+    const dd = document.getElementById('search-filter-dropdown');
+    
+    if (filter === 'pictures') {
+        if (icon) { icon.className = 'fa-solid fa-image text-indigo-400 text-[10px]'; }
+        if (label) label.innerText = 'Pictures';
+    } else {
+        if (icon) { icon.className = 'fa-solid fa-user text-purple-400 text-[10px]'; }
+        if (label) label.innerText = 'Profiles';
+    }
+    if (dd) dd.classList.add('hidden');
+    
+    // Re-run search with new filter
+    const input = document.getElementById('global-search-input');
+    if (input && input.value.trim()) handleGlobalSearch(input.value);
+}
+
+async function handleGlobalSearch(query) {
+    const resultsEl = document.getElementById('global-search-results');
+    const emptyEl = document.getElementById('global-search-empty');
+    
+    if (!query.trim()) {
+        resultsEl.classList.add('hidden');
+        emptyEl.classList.add('hidden');
+        return;
+    }
+
+    const q = query.toLowerCase();
+
+    if (_searchFilter === 'pictures') {
+        // Search in feed posts
+        const posts = window._feedPosts || [];
+        const filtered = posts.filter(post => {
+            return (post.title && post.title.toLowerCase().includes(q)) ||
+                   (post.tags && post.tags.some(t => t.toLowerCase().includes(q))) ||
+                   (post.prompt && post.prompt.toLowerCase().includes(q)) ||
+                   (post.creator_name && post.creator_name.toLowerCase().includes(q));
+        });
+
+        if (filtered.length === 0) {
+            resultsEl.classList.add('hidden');
+            emptyEl.classList.remove('hidden');
+            return;
+        }
+
+        emptyEl.classList.add('hidden');
+        resultsEl.classList.remove('hidden');
+        resultsEl.innerHTML = filtered.slice(0, 8).map(post => `
+            <div onclick="toggleSearchBar(); openPostDetail('${post.id}')" 
+                class="flex items-center gap-3 p-3 glass rounded-xl border border-white/5 hover:border-indigo-500/30 cursor-pointer transition group">
+                <img src="${post.image_url}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
+                <div class="flex-1 min-w-0">
+                    <p class="text-white font-bold text-sm truncate">${post.title || 'Untitled'}</p>
+                    <p class="text-gray-500 text-xs truncate">by @${post.creator_name || 'Creator'}</p>
+                    ${post.tags && post.tags.length ? `<div class="flex gap-1 mt-1 flex-wrap">${post.tags.slice(0,3).map(t => `<span class="text-[9px] px-1.5 py-0.5 bg-indigo-500/10 text-indigo-400 rounded-full">#${t}</span>`).join('')}</div>` : ''}
+                </div>
+                <i class="fa-solid fa-arrow-right text-gray-600 group-hover:text-indigo-400 transition text-xs flex-shrink-0"></i>
+            </div>`).join('');
+
+    } else {
+        // Search profiles from posts (unique creators)
+        const posts = window._feedPosts || [];
+        const creatorsMap = {};
+        posts.forEach(p => {
+            if (p.creator_name && p.creator_name.toLowerCase().includes(q)) {
+                if (!creatorsMap[p.creator_id]) {
+                    creatorsMap[p.creator_id] = { 
+                        name: p.creator_name, 
+                        avatar: p.creator_avatar, 
+                        id: p.creator_id,
+                        posts: 0 
+                    };
+                }
+                creatorsMap[p.creator_id].posts++;
+            }
+        });
+
+        const creators = Object.values(creatorsMap);
+        if (creators.length === 0) {
+            resultsEl.classList.add('hidden');
+            emptyEl.classList.remove('hidden');
+            return;
+        }
+
+        emptyEl.classList.add('hidden');
+        resultsEl.classList.remove('hidden');
+        resultsEl.innerHTML = creators.map(c => `
+            <div class="flex items-center gap-3 p-3 glass rounded-xl border border-white/5 hover:border-indigo-500/30 cursor-pointer transition">
+                <div class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                    ${c.avatar ? `<img src="${c.avatar}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-indigo-400 text-sm"></i>`}
+                </div>
+                <div>
+                    <p class="text-white font-bold text-sm">@${c.name}</p>
+                    <p class="text-gray-500 text-xs">${c.posts} post${c.posts > 1 ? 's' : ''}</p>
+                </div>
+            </div>`).join('');
+    }
+}
+
+// Close search on outside click
+document.addEventListener('click', function(e) {
+    if (_searchOpen && !e.target.closest('#search-overlay') && !e.target.closest('#navbar-search-btn')) {
+        toggleSearchBar();
+    }
+    if (!e.target.closest('#search-filter-wrap')) {
+        const dd = document.getElementById('search-filter-dropdown');
+        if (dd) dd.classList.add('hidden');
+    }
+});
+
 // Hook into showPage to load uploads when account opens
 const _origShowPage2 = window.showPage;
 window.showPage = function(pageId, pushToHistory) {
@@ -2529,3 +2668,4 @@ window.showPage = function(pageId, pushToHistory) {
 </script>
 </body>
 </html>
+
