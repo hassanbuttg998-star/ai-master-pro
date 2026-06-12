@@ -708,8 +708,8 @@
                     <i class="fa-regular fa-heart text-lg"></i>
                     <span id="detail-likes-count" class="text-white font-black">0</span>
                 </button>
-                <button onclick="openUploadModal()" class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-indigo-400 transition">
-                    <i class="fa-solid fa-plus"></i> Post Yours
+                <button id="detail-save-btn" onclick="toggleSavePost()" class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-indigo-400 transition">
+                    <i class="fa-regular fa-bookmark"></i>
                 </button>
             </div>
         </div>
@@ -951,27 +951,59 @@
                 </button>
             </div>
 
-            <!-- Posts count bar -->
+            <!-- Profile Tabs -->
             <div class="border-b border-white/10 flex mb-1">
-                <div class="px-4 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2">
+                <button onclick="switchProfileTab('posts')" id="tab-posts" class="px-4 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2 transition">
                     Posts <span id="account-post-count" class="text-gray-400 font-normal text-xs">0</span>
-                </div>
+                </button>
+                <button onclick="switchProfileTab('liked')" id="tab-liked" class="px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition">
+                    Liked
+                </button>
+                <button onclick="switchProfileTab('saved')" id="tab-saved" class="px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition">
+                    Saved
+                </button>
             </div>
         </div>
 
         <!-- My Uploads Grid -->
         <div class="px-4 pt-4">
-            <div id="my-uploads-grid" class="grid grid-cols-3 gap-1"></div>
-            <div id="my-uploads-empty" class="hidden text-center py-16">
-                <i class="fa-solid fa-images text-4xl text-gray-700 mb-4"></i>
-                <p class="text-gray-500 text-sm font-bold mb-1">No posts yet</p>
-                <p class="text-gray-600 text-xs mb-5">Share your first AI creation!</p>
-                <button onclick="openUploadModal()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs uppercase rounded-xl transition">
-                    <i class="fa-solid fa-plus mr-2"></i>Post
-                </button>
+            <!-- Posts Tab -->
+            <div id="profile-tab-posts">
+                <div id="my-uploads-grid" class="grid grid-cols-3 gap-1"></div>
+                <div id="my-uploads-empty" class="hidden text-center py-16">
+                    <i class="fa-solid fa-images text-4xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-500 text-sm font-bold mb-1">No posts yet</p>
+                    <button onclick="openUploadModal()" class="mt-3 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs uppercase rounded-xl transition">
+                        <i class="fa-solid fa-plus mr-2"></i>Post
+                    </button>
+                </div>
+                <div id="my-uploads-loading" class="text-center py-12">
+                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-400 text-xl"></i>
+                </div>
             </div>
-            <div id="my-uploads-loading" class="text-center py-12">
-                <i class="fa-solid fa-circle-notch fa-spin text-indigo-400 text-xl"></i>
+
+            <!-- Liked Tab -->
+            <div id="profile-tab-liked" class="hidden">
+                <div id="liked-grid" class="grid grid-cols-3 gap-1"></div>
+                <div id="liked-empty" class="hidden text-center py-16">
+                    <i class="fa-regular fa-heart text-4xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-500 text-sm font-bold">No liked posts yet</p>
+                </div>
+                <div id="liked-loading" class="text-center py-12">
+                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-400 text-xl"></i>
+                </div>
+            </div>
+
+            <!-- Saved Tab -->
+            <div id="profile-tab-saved" class="hidden">
+                <div id="saved-grid" class="grid grid-cols-3 gap-1"></div>
+                <div id="saved-empty" class="hidden text-center py-16">
+                    <i class="fa-regular fa-bookmark text-4xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-500 text-sm font-bold">No saved posts yet</p>
+                </div>
+                <div id="saved-loading" class="text-center py-12">
+                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-400 text-xl"></i>
+                </div>
             </div>
         </div>
 
@@ -1684,6 +1716,13 @@ async function renderPostDetail(postId) {
     }
 
     window._currentDetailPostId = postId;
+
+    // Reset save button
+    const saveBtn = document.getElementById('detail-save-btn');
+    if (saveBtn) {
+        saveBtn.querySelector('i').className = 'fa-regular fa-bookmark';
+        saveBtn.className = 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-indigo-400 transition';
+    }
 
     document.getElementById('detail-image').src = post.image_url || '';
     document.getElementById('detail-title').innerText = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 60).toUpperCase() : 'AI CREATION');
@@ -2507,6 +2546,120 @@ async function loadMyUploads() {
     });
     _uploadsLoading = false;
 }
+
+// ===== SAVE SYSTEM =====
+async function toggleSavePost() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { showToast("Sign in to save!"); toggleLoginModal(true); return; }
+    
+    const postId = window._currentDetailPostId;
+    if (!postId) return;
+
+    const userId = session.user.id;
+    const { data: post } = await _supabase.from('posts').select('saves').eq('id', postId).single();
+    const saves = post?.saves || [];
+    const saved = saves.includes(userId);
+    const newSaves = saved ? saves.filter(id => id !== userId) : [...saves, userId];
+    
+    await _supabase.from('posts').update({ saves: newSaves }).eq('id', postId);
+    
+    const btn = document.getElementById('detail-save-btn');
+    if (btn) {
+        btn.querySelector('i').className = !saved ? 'fa-solid fa-bookmark text-indigo-400' : 'fa-regular fa-bookmark';
+        btn.className = !saved 
+            ? 'flex items-center gap-2 px-4 py-2 bg-indigo-600/20 border border-indigo-500/30 rounded-xl text-xs font-bold text-indigo-400 transition'
+            : 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-indigo-400 transition';
+    }
+    showToast(saved ? "Removed from saved" : "Saved! 🔖");
+    
+    // Update feed post cache
+    if (window._feedPosts) {
+        const idx = window._feedPosts.findIndex(p => p.id === postId);
+        if (idx !== -1) window._feedPosts[idx].saves = newSaves;
+    }
+}
+
+// Update renderPostDetail to show save state
+const _origRenderPostDetail = window.renderPostDetail;
+
+// ===== PROFILE TABS =====
+let _currentProfileTab = 'posts';
+
+function switchProfileTab(tab) {
+    _currentProfileTab = tab;
+    
+    // Update tab styles
+    ['posts', 'liked', 'saved'].forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        const panel = document.getElementById('profile-tab-' + t);
+        if (btn) {
+            btn.className = t === tab
+                ? 'px-4 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2 transition'
+                : 'px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition';
+        }
+        if (panel) panel.classList.toggle('hidden', t !== tab);
+    });
+
+    if (tab === 'liked') loadLikedPosts();
+    if (tab === 'saved') loadSavedPosts();
+}
+
+async function loadLikedPosts() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+    
+    const loadingEl = document.getElementById('liked-loading');
+    const emptyEl = document.getElementById('liked-empty');
+    const grid = document.getElementById('liked-grid');
+    
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (emptyEl) emptyEl.classList.add('hidden');
+    if (grid) grid.innerHTML = '';
+
+    const { data: posts } = await _supabase.from('posts').select('*');
+    const liked = (posts || []).filter(p => (p.likes || []).includes(session.user.id));
+    
+    if (loadingEl) loadingEl.classList.add('hidden');
+    if (!liked.length) { if (emptyEl) emptyEl.classList.remove('hidden'); return; }
+    
+    liked.forEach(post => {
+        const div = document.createElement('div');
+        div.className = 'aspect-square overflow-hidden cursor-pointer hover:opacity-75 transition-opacity';
+        div.onclick = () => openPostDetail(post.id);
+        div.innerHTML = `<img src="${post.image_url}" class="w-full h-full object-cover" alt="">`;
+        grid.appendChild(div);
+    });
+}
+
+async function loadSavedPosts() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+    
+    const loadingEl = document.getElementById('saved-loading');
+    const emptyEl = document.getElementById('saved-empty');
+    const grid = document.getElementById('saved-grid');
+    
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (emptyEl) emptyEl.classList.add('hidden');
+    if (grid) grid.innerHTML = '';
+
+    const { data: posts } = await _supabase.from('posts').select('*');
+    const saved = (posts || []).filter(p => (p.saves || []).includes(session.user.id));
+    
+    if (loadingEl) loadingEl.classList.add('hidden');
+    if (!saved.length) { if (emptyEl) emptyEl.classList.remove('hidden'); return; }
+    
+    saved.forEach(post => {
+        const div = document.createElement('div');
+        div.className = 'aspect-square overflow-hidden cursor-pointer hover:opacity-75 transition-opacity';
+        div.onclick = () => openPostDetail(post.id);
+        div.innerHTML = `<img src="${post.image_url}" class="w-full h-full object-cover" alt="">`;
+        grid.appendChild(div);
+    });
+}
+
+// Reset tabs when leaving account
+const _origSwitchPage = window.showPage;
 
 // ===== GLOBAL SEARCH SYSTEM =====
 let _searchOpen = false;
