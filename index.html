@@ -156,9 +156,7 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="toggleSearchBar()" class="text-gray-400 hover:text-white transition font-bold text-sm px-2">
-                    Cancel
-                </button>
+
             </div>
         </div>
 
@@ -2514,31 +2512,53 @@ async function loadMyUploads() {
 let _searchOpen = false;
 let _searchFilter = 'pictures';
 
-function toggleSearchBar() {
+function closeSearchBar() {
     const overlay = document.getElementById('search-overlay');
     const input = document.getElementById('global-search-input');
-    _searchOpen = !_searchOpen;
-    
-    if (_searchOpen) {
-        overlay.style.opacity = '1';
-        overlay.style.transform = 'translateY(0)';
-        overlay.style.pointerEvents = 'auto';
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => input && input.focus(), 150);
-    } else {
-        overlay.style.opacity = '0';
-        overlay.style.transform = 'translateY(-10px)';
-        overlay.style.pointerEvents = 'none';
-        document.body.style.overflow = '';
-        if (input) input.value = '';
-        const results = document.getElementById('global-search-results');
-        const empty = document.getElementById('global-search-empty');
-        const def = document.getElementById('search-default-state');
-        if (results) results.classList.add('hidden');
-        if (empty) empty.classList.add('hidden');
-        if (def) def.classList.remove('hidden');
+    _searchOpen = false;
+    overlay.style.opacity = '0';
+    overlay.style.transform = 'translateY(-10px)';
+    overlay.style.pointerEvents = 'none';
+    document.body.style.overflow = '';
+    if (input) input.value = '';
+    const results = document.getElementById('global-search-results');
+    const empty = document.getElementById('global-search-empty');
+    const def = document.getElementById('search-default-state');
+    if (results) results.classList.add('hidden');
+    if (empty) empty.classList.add('hidden');
+    if (def) def.classList.remove('hidden');
+    // Remove history state
+    if (window._searchHistoryPushed) {
+        window._searchHistoryPushed = false;
     }
 }
+
+function toggleSearchBar() {
+    if (_searchOpen) {
+        closeSearchBar();
+        return;
+    }
+    const overlay = document.getElementById('search-overlay');
+    const input = document.getElementById('global-search-input');
+    _searchOpen = true;
+    overlay.style.opacity = '1';
+    overlay.style.transform = 'translateY(0)';
+    overlay.style.pointerEvents = 'auto';
+    document.body.style.overflow = 'hidden';
+    
+    // Push state so back button works
+    history.pushState({ search: true }, '');
+    window._searchHistoryPushed = true;
+    
+    setTimeout(() => input && input.focus(), 150);
+}
+
+// Handle browser back button
+window.addEventListener('popstate', function(e) {
+    if (_searchOpen) {
+        closeSearchBar();
+    }
+});
 
 function toggleSearchFilter() {
     const dd = document.getElementById('search-filter-dropdown');
