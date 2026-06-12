@@ -128,41 +128,50 @@
     </div>
 </nav>
 
-<!-- Search Overlay - slides down below navbar -->
-<div id="search-overlay" class="fixed top-[73px] left-0 right-0 z-[99] bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-2xl transform -translate-y-full opacity-0 transition-all duration-300 pointer-events-none">
-    <div class="max-w-3xl mx-auto px-4 py-4">
-        <div class="flex items-center gap-3 bg-white/5 border border-indigo-500/30 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
-            <i class="fa-solid fa-magnifying-glass text-indigo-400 text-sm flex-shrink-0"></i>
-            <input type="text" id="global-search-input" placeholder="Search images or creators..." 
-                class="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none"
-                oninput="handleGlobalSearch(this.value)">
-            
-            <!-- Filter Dropdown -->
-            <div class="relative flex-shrink-0" id="search-filter-wrap">
-                <button onclick="toggleSearchFilter()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition">
-                    <i id="search-filter-icon" class="fa-solid fa-image text-indigo-400 text-[10px]"></i>
-                    <span id="search-filter-label">Pictures</span>
-                    <i class="fa-solid fa-chevron-down text-[9px] text-gray-500"></i>
-                </button>
-                <!-- Filter options -->
-                <div id="search-filter-dropdown" class="hidden absolute right-0 top-full mt-2 w-36 glass border border-white/10 rounded-xl overflow-hidden shadow-xl z-10">
-                    <button onclick="setSearchFilter('pictures')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold border-b border-white/5">
-                        <i class="fa-solid fa-image text-indigo-400 w-3"></i> Pictures
-                    </button>
-                    <button onclick="setSearchFilter('profiles')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold">
-                        <i class="fa-solid fa-user text-purple-400 w-3"></i> Profiles
-                    </button>
+<!-- Search Modal - Full screen overlay -->
+<div id="search-overlay" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-250" style="transform: translateY(-10px)">
+    <div class="flex flex-col h-full">
+        <!-- Search Header -->
+        <div class="px-4 pt-safe pt-4 pb-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 flex-1 bg-white/5 border border-indigo-500/40 rounded-2xl px-4 py-3">
+                    <i class="fa-solid fa-magnifying-glass text-indigo-400 text-sm flex-shrink-0"></i>
+                    <input type="text" id="global-search-input" placeholder="Search images or creators..." 
+                        class="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none"
+                        oninput="handleGlobalSearch(this.value)">
+                    <!-- Filter Button -->
+                    <div class="relative flex-shrink-0" id="search-filter-wrap">
+                        <button onclick="toggleSearchFilter()" class="flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-600/20 border border-indigo-500/30 rounded-xl text-xs font-bold text-indigo-300 hover:bg-indigo-600/40 transition">
+                            <i id="search-filter-icon" class="fa-solid fa-image text-[10px]"></i>
+                            <span id="search-filter-label">Pictures</span>
+                            <i class="fa-solid fa-chevron-down text-[9px]"></i>
+                        </button>
+                        <div id="search-filter-dropdown" class="hidden absolute right-0 top-full mt-2 w-36 bg-[#111827] border border-white/10 rounded-xl overflow-hidden shadow-xl z-10">
+                            <button onclick="setSearchFilter('pictures')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold border-b border-white/5">
+                                <i class="fa-solid fa-image text-indigo-400"></i> Pictures
+                            </button>
+                            <button onclick="setSearchFilter('profiles')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold">
+                                <i class="fa-solid fa-user text-purple-400"></i> Profiles
+                            </button>
+                        </div>
+                    </div>
                 </div>
+                <button onclick="toggleSearchBar()" class="text-gray-400 hover:text-white transition font-bold text-sm px-2">
+                    Cancel
+                </button>
             </div>
-
-            <button onclick="toggleSearchBar()" class="text-gray-500 hover:text-white transition flex-shrink-0">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
         </div>
 
         <!-- Search Results -->
-        <div id="global-search-results" class="mt-3 max-h-80 overflow-y-auto space-y-2 hidden"></div>
-        <p id="global-search-empty" class="hidden text-center text-gray-500 text-xs py-4">No results found</p>
+        <div class="flex-1 overflow-y-auto px-4 py-4">
+            <div id="global-search-results" class="space-y-2 hidden"></div>
+            <p id="global-search-empty" class="hidden text-center text-gray-500 text-sm py-8">No results found</p>
+            <!-- Default state -->
+            <div id="search-default-state" class="text-center py-12">
+                <i class="fa-solid fa-magnifying-glass text-4xl text-gray-700 mb-4"></i>
+                <p class="text-gray-500 text-sm">Search for AI images or creators</p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -2511,17 +2520,23 @@ function toggleSearchBar() {
     _searchOpen = !_searchOpen;
     
     if (_searchOpen) {
-        overlay.style.transform = 'translateY(0)';
         overlay.style.opacity = '1';
+        overlay.style.transform = 'translateY(0)';
         overlay.style.pointerEvents = 'auto';
-        setTimeout(() => input && input.focus(), 200);
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => input && input.focus(), 150);
     } else {
-        overlay.style.transform = 'translateY(-100%)';
         overlay.style.opacity = '0';
+        overlay.style.transform = 'translateY(-10px)';
         overlay.style.pointerEvents = 'none';
+        document.body.style.overflow = '';
         if (input) input.value = '';
-        document.getElementById('global-search-results').classList.add('hidden');
-        document.getElementById('global-search-empty').classList.add('hidden');
+        const results = document.getElementById('global-search-results');
+        const empty = document.getElementById('global-search-empty');
+        const def = document.getElementById('search-default-state');
+        if (results) results.classList.add('hidden');
+        if (empty) empty.classList.add('hidden');
+        if (def) def.classList.remove('hidden');
     }
 }
 
@@ -2553,12 +2568,15 @@ function setSearchFilter(filter) {
 async function handleGlobalSearch(query) {
     const resultsEl = document.getElementById('global-search-results');
     const emptyEl = document.getElementById('global-search-empty');
+    const defEl = document.getElementById('search-default-state');
     
     if (!query.trim()) {
         resultsEl.classList.add('hidden');
         emptyEl.classList.add('hidden');
+        if (defEl) defEl.classList.remove('hidden');
         return;
     }
+    if (defEl) defEl.classList.add('hidden');
 
     const q = query.toLowerCase();
 
