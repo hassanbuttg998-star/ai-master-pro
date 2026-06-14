@@ -615,57 +615,62 @@
 <div class="max-w-6xl mx-auto">
 
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-        <div class="flex items-center gap-6 flex-wrap">
-            <!-- Title with dropdown -->
-            <div class="relative group" id="category-dropdown-wrap">
-                <button class="flex items-center gap-2 text-3xl font-black italic uppercase text-white tracking-widest hover:text-indigo-400 transition">
-                    AI <span class="text-indigo-500 ml-2">Images</span>
-                    <i class="fa-solid fa-chevron-down text-lg text-indigo-400 group-hover:rotate-180 transition-transform duration-200 ml-1"></i>
-                </button>
-                <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">AI <span class="text-indigo-500">Images</span></h2>
+            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
+        </div>
 
-                <!-- Dropdown Menu -->
-                <div class="absolute top-full left-0 mt-2 w-52 glass border border-indigo-500/20 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                    <button onclick="filterFeed('all')" class="w-full flex items-center gap-3 px-4 py-3 text-white hover:bg-indigo-600/20 transition text-sm font-bold text-left border-b border-white/5">
-                        <i class="fa-solid fa-fire text-indigo-400 w-4"></i> Latest
+        <div class="flex items-center gap-2">
+            <!-- Filter Icon (funnel) -->
+            <div class="relative" id="filter-btn-wrap">
+                <button onclick="toggleFilterPanel()" id="filter-icon-btn" title="Filter by category"
+                    class="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/40 rounded-xl transition-all text-gray-400 hover:text-indigo-400">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                    </svg>
+                </button>
+                <div id="filter-panel" class="hidden absolute right-0 top-12 w-52 bg-[#0d1117] border border-indigo-500/20 rounded-2xl shadow-2xl z-50 py-2">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-indigo-400 px-4 py-2">Category</p>
+                    <button onclick="filterByTag('all')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-white hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="all">All Images</button>
+                    <button onclick="filterByTag('cinematic')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="cinematic">🎬 Cinematic</button>
+                    <button onclick="filterByTag('anime')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="anime">✨ Anime</button>
+                    <button onclick="filterByTag('ghibli')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="ghibli">🌿 Ghibli</button>
+                    <button onclick="filterByTag('portrait')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="portrait">👤 Portrait</button>
+                    <button onclick="filterByTag('cyberpunk')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="cyberpunk">🤖 Cyberpunk</button>
+                    <button onclick="filterByTag('fantasy')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="fantasy">⚔️ Fantasy</button>
+                </div>
+            </div>
+
+            <!-- Sort Icon (sliders) -->
+            <div class="relative" id="sort-btn-wrap">
+                <button onclick="toggleSortPanel()" id="sort-icon-btn" title="Sort posts"
+                    class="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/40 rounded-xl transition-all text-gray-400 hover:text-indigo-400">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="21" y1="6" x2="3" y2="6"/>
+                        <circle cx="16" cy="6" r="2.5" fill="currentColor" stroke="none"/>
+                        <line x1="21" y1="12" x2="3" y2="12"/>
+                        <circle cx="8" cy="12" r="2.5" fill="currentColor" stroke="none"/>
+                        <line x1="21" y1="18" x2="3" y2="18"/>
+                        <circle cx="13" cy="18" r="2.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                </button>
+                <div id="sort-panel" class="hidden absolute right-0 top-12 w-44 bg-[#0d1117] border border-indigo-500/20 rounded-2xl shadow-2xl z-50 py-2">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-indigo-400 px-4 py-2">Sort By</p>
+                    <button onclick="filterFeed('all'); toggleSortPanel()" class="sort-opt w-full text-left px-4 py-2.5 text-white hover:bg-indigo-600/20 text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-clock text-indigo-400 text-xs w-3"></i> Latest
                     </button>
-                    <button onclick="filterFeed('liked')" class="w-full flex items-center gap-3 px-4 py-3 text-white hover:bg-indigo-600/20 transition text-sm font-bold text-left border-b border-white/5">
-                        <i class="fa-solid fa-heart text-red-400 w-4"></i> Most Liked
+                    <button onclick="filterFeed('liked'); toggleSortPanel()" class="sort-opt w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-heart text-red-400 text-xs w-3"></i> Most Liked
                     </button>
-                    <button onclick="filterFeed('copied')" class="w-full flex items-center gap-3 px-4 py-3 text-white hover:bg-indigo-600/20 transition text-sm font-bold text-left">
-                        <i class="fa-solid fa-copy text-purple-400 w-4"></i> Most Copied
+                    <button onclick="filterFeed('copied'); toggleSortPanel()" class="sort-opt w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition flex items-center gap-2 pb-1">
+                        <i class="fa-solid fa-copy text-purple-400 text-xs w-3"></i> Most Copied
                     </button>
                 </div>
             </div>
 
-            <!-- Active filter badge -->
-            <span id="active-filter-badge" class="hidden px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-indigo-400 text-xs font-bold uppercase tracking-widest"></span>
-        </div>
-
-        <!-- Category Filter Pills -->
-        <div class="flex items-center gap-2 flex-wrap">
-            <button onclick="filterByTag('all')" id="cat-all" class="cat-btn px-4 py-2 bg-indigo-600 text-white font-black text-xs rounded-full transition border border-indigo-500">
-                All
-            </button>
-            <button onclick="filterByTag('cinematic')" id="cat-cinematic" class="cat-btn px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 font-black text-xs rounded-full transition border border-white/10">
-                🎬 Cinematic
-            </button>
-            <button onclick="filterByTag('anime')" id="cat-anime" class="cat-btn px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 font-black text-xs rounded-full transition border border-white/10">
-                ✨ Anime
-            </button>
-            <button onclick="filterByTag('ghibli')" id="cat-ghibli" class="cat-btn px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 font-black text-xs rounded-full transition border border-white/10">
-                🌿 Ghibli
-            </button>
-            <button onclick="filterByTag('portrait')" id="cat-portrait" class="cat-btn px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 font-black text-xs rounded-full transition border border-white/10">
-                🧑 Portrait
-            </button>
-            <button onclick="filterByTag('cyberpunk')" id="cat-cyberpunk" class="cat-btn px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 font-black text-xs rounded-full transition border border-white/10">
-                🤖 Cyberpunk
-            </button>
-            <button onclick="filterByTag('fantasy')" id="cat-fantasy" class="cat-btn px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 font-black text-xs rounded-full transition border border-white/10">
-                ⚔️ Fantasy
-            </button>
+            <!-- Active badge -->
+            <span id="active-filter-badge" class="hidden px-2 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-lg text-indigo-400 text-[10px] font-bold"></span>
         </div>
     </div>
 
@@ -1896,17 +1901,25 @@ async function filterByTag(tag) {
 
 async function filterFeed(filter) {
     _currentFilter = filter;
-    
-    // Update badge
-    const badge = document.getElementById('active-filter-badge');
+
+    // Close sort dropdown
+    const sortDd = document.getElementById('sort-dropdown');
+    if (sortDd) sortDd.classList.add('hidden');
+
+    // Update sort badge
+    const badge = document.getElementById('active-sort-badge');
     const labels = { all: '', liked: '❤️ Most Liked', copied: '📋 Most Copied' };
     if (badge) {
-        if (filter === 'all') {
-            badge.classList.add('hidden');
-        } else {
-            badge.classList.remove('hidden');
-            badge.innerText = labels[filter];
-        }
+        if (filter === 'all') { badge.classList.add('hidden'); }
+        else { badge.classList.remove('hidden'); badge.innerText = labels[filter]; }
+    }
+
+    // Update sort btn highlight
+    const sortBtn = document.getElementById('sort-btn');
+    if (sortBtn) {
+        sortBtn.className = filter !== 'all'
+            ? 'w-10 h-10 flex items-center justify-center bg-indigo-600/20 border border-indigo-500/40 rounded-xl transition'
+            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-indigo-500/40 hover:bg-indigo-600/10 rounded-xl transition';
     }
 
     const feedEl = document.getElementById('community-feed');
@@ -2089,10 +2102,53 @@ function goBackToGallery() {
     showPage('samples');
 }
 
+function toggleFilterPanel() {
+    document.getElementById('filter-panel').classList.toggle('hidden');
+    document.getElementById('sort-panel').classList.add('hidden');
+}
+
+function toggleSortPanel() {
+    document.getElementById('sort-panel').classList.toggle('hidden');
+    document.getElementById('filter-panel').classList.add('hidden');
+}
+
+// Close panels on outside click
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#filter-btn-wrap')) document.getElementById('filter-panel')?.classList.add('hidden');
+    if (!e.target.closest('#sort-btn-wrap')) document.getElementById('sort-panel')?.classList.add('hidden');
+});
+
 function shareProfile() {
     const url = window.location.href.split('#')[0];
     navigator.clipboard.writeText(url).then(() => showToast("Profile link copied! 🔗"));
 }
+
+// ===== DROPDOWN TOGGLES =====
+function toggleFilterDropdown() {
+    const dd = document.getElementById('filter-dropdown');
+    const sortDd = document.getElementById('sort-dropdown');
+    if (sortDd) sortDd.classList.add('hidden');
+    dd.classList.toggle('hidden');
+}
+
+function toggleSortDropdown() {
+    const dd = document.getElementById('sort-dropdown');
+    const filterDd = document.getElementById('filter-dropdown');
+    if (filterDd) filterDd.classList.add('hidden');
+    dd.classList.toggle('hidden');
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#filter-wrap')) {
+        const dd = document.getElementById('filter-dropdown');
+        if (dd) dd.classList.add('hidden');
+    }
+    if (!e.target.closest('#sort-wrap')) {
+        const dd = document.getElementById('sort-dropdown');
+        if (dd) dd.classList.add('hidden');
+    }
+});
 
 // ===== CATEGORY FILTER =====
 let _activeCategory = 'all';
@@ -2100,13 +2156,23 @@ let _activeCategory = 'all';
 function filterByTag(tag) {
     _activeCategory = tag;
     
-    // Update button styles
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.className = 'cat-btn px-4 py-2 bg-white/5 border border-white/10 hover:border-indigo-500/30 text-gray-300 text-xs font-black uppercase tracking-wider rounded-xl transition';
-    });
-    const activeBtn = document.getElementById('cat-' + tag);
-    if (activeBtn) {
-        activeBtn.className = 'cat-btn px-4 py-2 bg-indigo-600 text-white text-xs font-black uppercase tracking-wider rounded-xl transition';
+    // Close dropdown
+    const dd = document.getElementById('filter-dropdown');
+    if (dd) dd.classList.add('hidden');
+    
+    // Update active badge
+    const badge = document.getElementById('active-cat-badge');
+    if (badge) {
+        if (tag === 'all') { badge.classList.add('hidden'); }
+        else { badge.classList.remove('hidden'); badge.innerText = '× ' + tag.charAt(0).toUpperCase() + tag.slice(1); }
+    }
+    
+    // Update filter btn highlight
+    const filterBtn = document.getElementById('filter-btn');
+    if (filterBtn) {
+        filterBtn.className = tag !== 'all'
+            ? 'w-10 h-10 flex items-center justify-center bg-indigo-600/20 border border-indigo-500/40 rounded-xl transition'
+            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-indigo-500/40 hover:bg-indigo-600/10 rounded-xl transition';
     }
 
     const feedEl = document.getElementById('community-feed');
