@@ -9,6 +9,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+    /* ===== SKELETON LOADER ===== */
+    .skeleton {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(110deg, rgba(255,255,255,0.04) 8%, rgba(255,255,255,0.09) 18%, rgba(255,255,255,0.04) 33%);
+        background-size: 200% 100%;
+        animation: skeleton-shimmer 1.6s ease-in-out infinite;
+    }
+    @keyframes skeleton-shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    .skeleton-card {
+        border-radius: 1rem;
+        border: 1px solid rgba(255,255,255,0.05);
+        overflow: hidden;
+        background: rgba(255,255,255,0.02);
+    }
+    .skeleton-fade-in {
+        animation: skeleton-fade-in 0.4s ease forwards;
+    }
+    @keyframes skeleton-fade-in {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap');
     :root { --primary: #6366f1; --accent: #a855f7; }
     body.dark {
@@ -567,9 +593,11 @@
                 <p class="text-[10px] font-black uppercase tracking-widest text-purple-400">⚡ AI-Generated Portrait Prompt</p>
                 <span id="portraitStyleBadge" class="text-[9px] px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 font-bold uppercase tracking-wider"></span>
             </div>
-            <div id="portraitLoading" class="hidden flex items-center gap-3 py-4">
-                <i class="fa-solid fa-circle-notch fa-spin text-purple-400"></i>
-                <span class="text-gray-400 text-xs">AI is crafting your ultra prompt...</span>
+            <div id="portraitLoading" class="hidden py-2">
+                <div class="skeleton h-3.5 rounded-md mb-2.5 w-full"></div>
+                <div class="skeleton h-3.5 rounded-md mb-2.5 w-[92%]"></div>
+                <div class="skeleton h-3.5 rounded-md mb-2.5 w-[78%]"></div>
+                <div class="skeleton h-3.5 rounded-md w-[60%]"></div>
             </div>
             <p id="portraitFinalPrompt" class="text-white text-sm leading-relaxed italic select-all"></p>
             <button onclick="copyPortraitPromptNew()" class="mt-5 w-full px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-xl text-xs font-black uppercase tracking-widest text-white transition">
@@ -684,10 +712,26 @@
         </button>
     </div>
 
-    <!-- Loading State -->
-    <div id="feed-loading" class="text-center py-24">
-        <i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-500 mb-4"></i>
-        <p class="text-gray-500 text-xs uppercase tracking-widest mt-3">Loading...</p>
+    <!-- Loading State - Skeleton Grid -->
+    <div id="feed-loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="skeleton-card">
+            <div class="skeleton aspect-[4/5]"></div>
+        </div>
+        <div class="skeleton-card">
+            <div class="skeleton aspect-[4/5]"></div>
+        </div>
+        <div class="skeleton-card">
+            <div class="skeleton aspect-[4/5]"></div>
+        </div>
+        <div class="skeleton-card hidden sm:block">
+            <div class="skeleton aspect-[4/5]"></div>
+        </div>
+        <div class="skeleton-card hidden lg:block">
+            <div class="skeleton aspect-[4/5]"></div>
+        </div>
+        <div class="skeleton-card hidden lg:block">
+            <div class="skeleton aspect-[4/5]"></div>
+        </div>
     </div>
 
 </div>
@@ -1008,8 +1052,12 @@
                         <i class="fa-solid fa-plus mr-2"></i>Post
                     </button>
                 </div>
-                <div id="my-uploads-loading" class="text-center py-12">
-                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-400 text-xl"></i>
+                <div id="my-uploads-loading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-5">
+                    <div class="skeleton-card"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card hidden sm:block"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card hidden md:block"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card hidden lg:block"><div class="skeleton aspect-square"></div></div>
                 </div>
             </div>
 
@@ -1020,8 +1068,12 @@
                     <i class="fa-regular fa-heart text-4xl text-gray-700 mb-4"></i>
                     <p class="text-gray-500 text-sm font-bold">No liked posts yet</p>
                 </div>
-                <div id="liked-loading" class="text-center py-12">
-                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-400 text-xl"></i>
+                <div id="liked-loading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-5">
+                    <div class="skeleton-card"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card hidden sm:block"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card hidden md:block"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card hidden lg:block"><div class="skeleton aspect-square"></div></div>
                 </div>
             </div>
 
@@ -1032,8 +1084,12 @@
                     <i class="fa-regular fa-bookmark text-4xl text-gray-700 mb-4"></i>
                     <p class="text-gray-500 text-sm font-bold">No saved posts yet</p>
                 </div>
-                <div id="saved-loading" class="text-center py-12">
-                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-400 text-xl"></i>
+                <div id="saved-loading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-5">
+                    <div class="skeleton-card"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card hidden sm:block"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card hidden md:block"><div class="skeleton aspect-square"></div></div>
+                    <div class="skeleton-card hidden lg:block"><div class="skeleton aspect-square"></div></div>
                 </div>
             </div>
         </div>
