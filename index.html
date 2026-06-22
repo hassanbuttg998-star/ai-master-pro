@@ -979,6 +979,7 @@
                 <div class="min-w-0 pt-1 md:pt-2">
                     <div class="flex items-center gap-2 flex-wrap">
                         <h2 id="account-name" class="text-lg md:text-2xl font-black text-white truncate"></h2>
+                        <span id="account-badge-slot"></span>
                         <button onclick="editDisplayName()" class="text-gray-600 hover:text-indigo-400 transition flex-shrink-0">
                             <i class="fa-solid fa-pen text-[10px] md:text-xs"></i>
                         </button>
@@ -995,6 +996,11 @@
                         <span class="text-gray-600">·</span>
                         <span><span id="account-following-count" class="text-white font-bold">0</span> following</span>
                     </div>
+
+                    <!-- Follow button (only shown when viewing someone else's profile) -->
+                    <button id="profile-follow-btn" onclick="toggleFollowProfile()" class="hidden mt-3 px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition">
+                        Follow
+                    </button>
 
                     <!-- Bio -->
                     <p class="text-gray-400 text-xs md:text-sm mt-3 max-w-md">AI Creator on FRAZX PRO ⚡ Generating cinematic art with neural tools.</p>
@@ -1022,13 +1028,16 @@
             <button onclick="editDisplayName()" class="flex-1 py-2.5 bg-white/5 hover:bg-white/10 border border-white/20 text-white font-bold text-sm rounded-xl transition">
                 Edit profile
             </button>
-            <button onclick="openUploadModal()" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition shadow-[0_4px_15px_rgba(99,102,241,0.3)] flex items-center justify-center gap-2">
+            <button id="profile-create-btn" onclick="openUploadModal()" class="hidden flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition shadow-[0_4px_15px_rgba(99,102,241,0.3)] items-center justify-center gap-2">
                 <i class="fa-solid fa-plus text-xs"></i> Create
+            </button>
+            <button id="profile-become-contributor-btn" onclick="openBecomeContributor()" class="hidden flex-1 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl transition shadow-[0_4px_15px_rgba(99,102,241,0.3)] items-center justify-center gap-2">
+                <i class="fa-solid fa-star text-xs"></i> Become a Contributor
             </button>
         </div>
 
         <!-- Profile Tabs - centered like Pinterest -->
-        <div class="border-b border-white/10 flex justify-center gap-2 mb-6">
+        <div id="profile-tabs-wrap" class="border-b border-white/10 flex justify-center gap-2 mb-6">
             <button onclick="switchProfileTab('posts')" id="tab-posts" class="px-5 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2 transition">
                 Posts <span id="account-post-count" class="text-gray-400 font-normal text-xs">0</span>
             </button>
@@ -1146,8 +1155,51 @@
                 <input type="email" id="signup-email" placeholder="Email address" class="w-full bg-[#050508]/60 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-indigo-500 transition-colors">
                 <input type="password" id="signup-password" placeholder="Password (min 6 chars)" class="w-full bg-[#050508]/60 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-indigo-500 transition-colors">
             </div>
-            <button onclick="window.signupWithEmail()" class="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition-all duration-300 cursor-pointer">Create Account</button>
+            <button id="signup-btn" onclick="window.signupWithEmail()" class="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition-all duration-300 cursor-pointer">Create Account</button>
             <p class="text-center text-[11px] text-white/40 mt-4">Already have account? <button onclick="window.showLoginForm()" class="text-indigo-400 hover:underline font-bold cursor-pointer">Sign In</button></p>
+        </div>
+
+        <!-- Account Type Choice (shown right after signup) -->
+        <div id="account-type-wrap" class="hidden">
+            <div class="text-center mb-6">
+                <h3 class="text-white font-black text-lg mb-1">One Last Step</h3>
+                <p class="text-white/50 text-xs">Choose how you'll use FRAZX PRO</p>
+            </div>
+            <div class="space-y-3">
+                <button onclick="chooseAccountType('user')" class="w-full text-left bg-[#050508]/60 border border-white/10 hover:border-indigo-500/50 rounded-2xl p-4 transition group">
+                    <p class="text-white font-bold text-sm mb-1 group-hover:text-indigo-400 transition">Just here to use the tools</p>
+                    <p class="text-white/40 text-xs">Generate prompts, save and like images. No posting.</p>
+                </button>
+                <button onclick="chooseAccountType('contributor')" class="w-full text-left bg-[#050508]/60 border border-white/10 hover:border-purple-500/50 rounded-2xl p-4 transition group">
+                    <p class="text-white font-bold text-sm mb-1 group-hover:text-purple-400 transition">Become a Contributor</p>
+                    <p class="text-white/40 text-xs">Upload your AI art, build followers, earn badges.</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Contributor Onboarding Quiz -->
+        <div id="onboarding-quiz-wrap" class="hidden">
+            <div class="text-center mb-6">
+                <p id="quiz-progress" class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-2">Question 1 of 5</p>
+                <h3 id="quiz-question" class="text-white font-black text-base leading-snug"></h3>
+            </div>
+            <div id="quiz-options" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Quiz Rejected State -->
+        <div id="quiz-rejected-wrap" class="hidden text-center py-4">
+            <i class="fa-solid fa-circle-xmark text-4xl text-red-400 mb-4"></i>
+            <h3 class="text-white font-black text-lg mb-2">You are not available</h3>
+            <p class="text-white/50 text-sm mb-6">Contributor accounts require prior AI image generation experience. You can try again in 6 months.</p>
+            <button onclick="finishAsUserAccount()" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs uppercase tracking-widest rounded-xl transition">Continue as User</button>
+        </div>
+
+        <!-- Quiz Success State -->
+        <div id="quiz-success-wrap" class="hidden text-center py-4">
+            <i class="fa-solid fa-circle-check text-4xl text-emerald-400 mb-4"></i>
+            <h3 class="text-white font-black text-lg mb-2">You're In!</h3>
+            <p class="text-white/50 text-sm mb-6">Best of luck creating amazing AI art. Your contributor account is ready.</p>
+            <button onclick="finishOnboarding()" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs uppercase tracking-widest rounded-xl transition">Enter FRAZX PRO</button>
         </div>
     </div>
 </div>
@@ -1270,11 +1322,154 @@
     if (error) {
       if (error.message.includes('already registered')) showToast("❌ Email already registered!");
       else showToast("❌ " + error.message);
-    } else {
-      toggleLoginModal(false);
-      showToast("Welcome " + name + "! 🎉");
-      setTimeout(() => { _feedLoaded = false; showPage('samples'); }, 800);
+      return;
     }
+
+    // Create base profile row
+    if (data.user) {
+      await _supabase.from('profiles').insert({ id: data.user.id, email: data.user.email }).select();
+    }
+
+    // Show account type choice instead of going straight in
+    document.getElementById('signup-form-wrap').classList.add('hidden');
+    document.getElementById('account-type-wrap').classList.remove('hidden');
+  };
+
+  // ===== ACCOUNT TYPE CHOICE =====
+  window.chooseAccountType = async function(type) {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+
+    if (type === 'user') {
+      await _supabase.from('profiles').update({ account_type: 'user', onboarding_completed: true }).eq('id', session.user.id);
+      finishAsUserAccount();
+      return;
+    }
+
+    // Contributor path — check 6 month cooldown first
+    const { data: profile } = await _supabase.from('profiles').select('onboarding_rejected_at').eq('id', session.user.id).single();
+    if (profile && profile.onboarding_rejected_at) {
+      const rejectedDate = new Date(profile.onboarding_rejected_at);
+      const sixMonthsLater = new Date(rejectedDate);
+      sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
+      if (new Date() < sixMonthsLater) {
+        document.getElementById('account-type-wrap').classList.add('hidden');
+        document.getElementById('quiz-rejected-wrap').classList.remove('hidden');
+        return;
+      }
+    }
+
+    document.getElementById('account-type-wrap').classList.add('hidden');
+    startOnboardingQuiz();
+  };
+
+  window.finishAsUserAccount = function() {
+    toggleLoginModal(false);
+    showToast("Welcome! 🎉");
+    setTimeout(() => { _feedLoaded = false; showPage('samples'); }, 600);
+  };
+
+  // ===== ONBOARDING QUIZ =====
+  const ONBOARDING_QUESTIONS = [
+    {
+      q: "Have you created AI images before?",
+      options: ["Yes", "No"],
+      key: "made_before"
+    },
+    {
+      q: "How many images do you upload per day?",
+      options: ["4", "8", "10", "15"],
+      key: "daily_uploads"
+    },
+    {
+      q: "Do you have a social media account?",
+      options: ["No", "Instagram", "TikTok", "Facebook", "X", "All other"],
+      key: "social_media"
+    },
+    {
+      q: "How long have you been creating AI images?",
+      options: ["Less than 1 year", "1 year", "3 years", "5 years"],
+      key: "experience"
+    },
+    {
+      q: "How did you hear about FRAZX PRO?",
+      options: ["Social media", "Friends", "Internet", "Other"],
+      key: "referral"
+    }
+  ];
+  let _quizAnswers = {};
+  let _quizStep = 0;
+
+  function startOnboardingQuiz() {
+    _quizAnswers = {};
+    _quizStep = 0;
+    document.getElementById('onboarding-quiz-wrap').classList.remove('hidden');
+    renderQuizStep();
+  }
+
+  function renderQuizStep() {
+    const q = ONBOARDING_QUESTIONS[_quizStep];
+    document.getElementById('quiz-progress').innerText = `Question ${_quizStep + 1} of ${ONBOARDING_QUESTIONS.length}`;
+    document.getElementById('quiz-question').innerText = q.q;
+    const optsEl = document.getElementById('quiz-options');
+    optsEl.innerHTML = q.options.map(opt => `
+      <button onclick="answerQuizQuestion('${opt.replace(/'/g, "\\'")}')" class="w-full text-left bg-[#050508]/60 border border-white/10 hover:border-indigo-500/50 hover:bg-indigo-600/10 rounded-xl px-4 py-3 text-white text-sm font-bold transition">
+        ${opt}
+      </button>`).join('');
+  }
+
+  window.answerQuizQuestion = async function(answer) {
+    const q = ONBOARDING_QUESTIONS[_quizStep];
+    _quizAnswers[q.key] = answer;
+
+    // Question 1 — instant rejection if "No"
+    if (q.key === 'made_before' && answer === 'No') {
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (session) {
+        await _supabase.from('profiles').update({
+          account_type: 'user',
+          onboarding_completed: true,
+          onboarding_rejected_at: new Date().toISOString()
+        }).eq('id', session.user.id);
+      }
+      document.getElementById('onboarding-quiz-wrap').classList.add('hidden');
+      document.getElementById('quiz-rejected-wrap').classList.remove('hidden');
+      return;
+    }
+
+    _quizStep++;
+    if (_quizStep < ONBOARDING_QUESTIONS.length) {
+      renderQuizStep();
+    } else {
+      await submitOnboardingQuiz();
+    }
+  };
+
+  async function submitOnboardingQuiz() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+
+    // Perfect-answer combo unlocks the instant verified (yellow) badge
+    const isPerfect =
+      _quizAnswers.daily_uploads === '15' &&
+      _quizAnswers.social_media === 'All other' &&
+      _quizAnswers.experience === '5 years' &&
+      _quizAnswers.referral === 'Social media';
+
+    await _supabase.from('profiles').update({
+      account_type: 'contributor',
+      onboarding_completed: true,
+      is_onboarding_verified: isPerfect
+    }).eq('id', session.user.id);
+
+    document.getElementById('onboarding-quiz-wrap').classList.add('hidden');
+    document.getElementById('quiz-success-wrap').classList.remove('hidden');
+  }
+
+  window.finishOnboarding = function() {
+    toggleLoginModal(false);
+    showToast("Welcome to FRAZX PRO! 🎉");
+    setTimeout(() => { _feedLoaded = false; showPage('samples'); }, 600);
   };
 
   // ===== LOGIN =====
@@ -1373,6 +1568,12 @@
         const modal = document.getElementById('login-modal');
         if (!modal) return;
         if (show) {
+            // Always reset to the default Sign In view on open
+            const panels = ['signup-form-wrap', 'account-type-wrap', 'onboarding-quiz-wrap', 'quiz-rejected-wrap', 'quiz-success-wrap'];
+            panels.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+            const loginPanel = document.getElementById('login-form-wrap');
+            if (loginPanel) loginPanel.classList.remove('hidden');
+
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
@@ -1843,6 +2044,16 @@ async function renderPostDetail(postId) {
             : '';
     }
     document.getElementById('detail-creator').innerText = '@' + (post.creator_name || 'Creator');
+    const detailBadgeSlot = document.getElementById('detail-creator-badge');
+    if (detailBadgeSlot) {
+        detailBadgeSlot.innerHTML = '';
+        if (post.creator_id) {
+            _supabase.from('profiles').select('is_onboarding_verified, badge_tier').eq('id', post.creator_id).single()
+                .then(({ data: creatorProfile }) => {
+                    if (creatorProfile) detailBadgeSlot.innerHTML = renderBadgesHTML(creatorProfile, 'text-xs');
+                });
+        }
+    }
     document.getElementById('detail-prompt').innerText = post.prompt || '';
     document.getElementById('detail-likes-count').innerText = post.likes ? post.likes.length : 0;
     document.getElementById('detail-date').innerText = post.created_at ? 'Posted on ' + new Date(post.created_at).toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}) : '';
@@ -2856,6 +3067,8 @@ async function loadMyUploads() {
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) { if (loadingEl) loadingEl.classList.add('hidden'); return; }
 
+    loadAndRenderOwnBadges(session.user.id);
+
     const { data: posts } = await _supabase
         .from('posts')
         .select('*')
@@ -2876,7 +3089,65 @@ async function loadMyUploads() {
     _uploadsLoading = false;
 }
 
-// ===== SAVE SYSTEM =====
+// ===== BADGE SYSTEM =====
+// is_onboarding_verified -> yellow "✓ Verified" badge (perfect quiz answers)
+// badge_tier -> achievement badge based on uploads + total likes: grey / gold / blue / red
+
+async function calculateAndSyncBadgeTier(userId) {
+    const { data: posts } = await _supabase.from('posts').select('likes').eq('creator_id', userId);
+    const { data: profileRow } = await _supabase.from('profiles').select('created_at').eq('id', userId).single();
+    if (!posts) return 'none';
+
+    const uploadCount = posts.length;
+    const totalLikes = posts.reduce((sum, p) => sum + (p.likes ? p.likes.length : 0), 0);
+
+    let accountAgeYears = 0;
+    if (profileRow && profileRow.created_at) {
+        accountAgeYears = (Date.now() - new Date(profileRow.created_at).getTime()) / (1000 * 60 * 60 * 24 * 365);
+    }
+
+    let tier = 'none';
+    if (uploadCount >= 5000 && totalLikes >= 50000 && accountAgeYears >= 2) tier = 'red';
+    else if (uploadCount >= 500 && totalLikes >= 5000) tier = 'blue';
+    else if (uploadCount >= 150 && totalLikes >= 1500) tier = 'gold';
+    else if (uploadCount >= 20 && totalLikes >= 200) tier = 'grey';
+
+    await _supabase.from('profiles').update({ badge_tier: tier }).eq('id', userId);
+    return tier;
+}
+
+function achievementBadgeIcon(tier, size = 'text-xs') {
+    const map = {
+        grey:  `<i class="fa-solid fa-certificate ${size}" style="color:#9ca3af" title="Grey Creator Badge"></i>`,
+        gold:  `<i class="fa-solid fa-certificate ${size}" style="color:#facc15" title="Gold Creator Badge"></i>`,
+        blue:  `<i class="fa-solid fa-certificate ${size}" style="color:#38bdf8" title="Blue Creator Badge"></i>`,
+        red:   `<i class="fa-solid fa-crown ${size}" style="color:#f87171" title="Legendary Creator"></i>`
+    };
+    return map[tier] || '';
+}
+
+function verifiedBadgeIcon(size = 'text-xs') {
+    return `<i class="fa-solid fa-circle-check ${size}" style="color:#eab308" title="Verified Contributor"></i>`;
+}
+
+// Builds combined badge HTML for a profile: verified check + achievement tier icon
+function renderBadgesHTML(profile, size = 'text-xs') {
+    if (!profile) return '';
+    let html = '';
+    if (profile.is_onboarding_verified) html += verifiedBadgeIcon(size) + ' ';
+    if (profile.badge_tier && profile.badge_tier !== 'none') html += achievementBadgeIcon(profile.badge_tier, size);
+    return html;
+}
+
+async function loadAndRenderOwnBadges(userId) {
+    await calculateAndSyncBadgeTier(userId);
+    const { data: profile } = await _supabase.from('profiles').select('is_onboarding_verified, badge_tier').eq('id', userId).single();
+    const slot = document.getElementById('account-badge-slot');
+    if (slot && profile) slot.innerHTML = renderBadgesHTML(profile, 'text-sm');
+    return profile;
+}
+
+
 async function toggleSavePost() {
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) { showToast("Sign in to save!"); toggleLoginModal(true); return; }
