@@ -89,6 +89,27 @@
     body.light-theme-active #sidebar { background: #ffffff !important; border-left-color: rgba(0, 0, 0, 0.08) !important; }
     body.light-theme-active ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2) !important; }
 
+    /* Logo gradient text (was white-on-white / invisible in light mode) */
+    body.light-theme-active .from-white { --tw-gradient-from: #111827 var(--tw-gradient-from-position) !important; }
+    body.light-theme-active .via-gray-200 { --tw-gradient-stops: var(--tw-gradient-from), #4b5563 var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
+    body.light-theme-active .to-gray-400 { --tw-gradient-to: #6b7280 var(--tw-gradient-to-position) !important; }
+
+    /* Dark navy surfaces used for cards/panels/toasts (was causing muddy gray cards) */
+    body.light-theme-active [class*="bg-[#111827]"] { background-color: rgba(255, 255, 255, 0.95) !important; }
+
+    /* Chrome surfaces using plain black opacity (navbar, footer, inputs, buttons, panels) —
+       NOT the bg-black/70 / bg-black/50 / bg-black/0 badges that sit on top of photos,
+       those must stay dark for readability regardless of theme. */
+    body.light-theme-active [class*="bg-black/20"],
+    body.light-theme-active [class*="bg-black/30"],
+    body.light-theme-active [class*="bg-black/40"] { background-color: rgba(0, 0, 0, 0.04) !important; }
+    body.light-theme-active [class*="bg-black/60"] { background-color: rgba(0, 0, 0, 0.06) !important; }
+    body.light-theme-active [class*="bg-black/95"] { background-color: rgba(255, 255, 255, 0.97) !important; }
+
+    /* Hide the moody decorative photo collage on the hero — looks foggy/grey on white,
+       a clean light gradient looks more professional here */
+    body.light-theme-active .home-decor-photos { display: none; }
+
     .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .page-content { display: none; }
     .active-page { display: block !important; animation: fadeIn 0.5s ease; }
@@ -299,7 +320,7 @@
     
     <div class="relative w-full max-w-5xl mx-auto flex flex-col items-center pt-36 pb-24 px-4 min-h-[85vh]">
         
-        <div class="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden opacity-25">
+        <div class="home-decor-photos absolute inset-0 z-0 pointer-events-none select-none overflow-hidden opacity-25">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full h-full">
                 <div class="flex flex-col gap-4 md:gap-6 pt-4">
                     <div class="w-full aspect-[3/4] rounded-[24px] overflow-hidden border border-white/5">
