@@ -37,10 +37,57 @@
 
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap');
     :root { --primary: #6366f1; --accent: #a855f7; }
-    body.dark {
-        background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
-        background-attachment: fixed !important;
+    body { background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) fixed; transition: background 0.4s ease; }
+
+    /* ===================================================================
+       LIGHT THEME — pure CSS cascade (no per-element JS loops needed).
+       Because these are real CSS rules, they automatically apply to any
+       card/post/modal created LATER by JS too (feed cards, profile grids,
+       comments, etc.) — not just elements that existed at toggle-time.
+    =================================================================== */
+    body.light-theme-active {
+        background: #f3f4f7 !important;
+        color: #111827;
     }
+    body.light-theme-active .text-white { color: #111827 !important; }
+    body.light-theme-active .text-gray-200 { color: #374151 !important; }
+    body.light-theme-active .text-gray-300 { color: #4b5563 !important; }
+    body.light-theme-active .text-gray-400 { color: #6b7280 !important; }
+    body.light-theme-active .text-gray-500 { color: #6b7280 !important; }
+    body.light-theme-active .text-gray-600 { color: #9ca3af !important; }
+    body.light-theme-active .text-gray-700 { color: #9ca3af !important; }
+
+    body.light-theme-active .glass {
+        background: rgba(255, 255, 255, 0.85) !important;
+        border-color: rgba(0, 0, 0, 0.08) !important;
+    }
+    body.light-theme-active .bg-white\/5 { background-color: rgba(0, 0, 0, 0.04) !important; }
+    body.light-theme-active .bg-white\/10 { background-color: rgba(0, 0, 0, 0.06) !important; }
+    body.light-theme-active .hover\:bg-white\/10:hover { background-color: rgba(0, 0, 0, 0.08) !important; }
+    body.light-theme-active .border-white\/5,
+    body.light-theme-active .border-white\/10,
+    body.light-theme-active .border-white\/20 { border-color: rgba(0, 0, 0, 0.1) !important; }
+
+    /* Hardcoded hex surfaces (modals, panels, sidebar, body base) */
+    body.light-theme-active .bg-\[\#050508\] { background-color: #f3f4f7 !important; }
+    body.light-theme-active [class*="bg-[#050508]/"] { background-color: rgba(255, 255, 255, 0.92) !important; color: #111827; }
+    body.light-theme-active .bg-\[\#08080c\] { background-color: #ffffff !important; }
+    body.light-theme-active .bg-\[\#0d1117\] { background-color: #ffffff !important; }
+    body.light-theme-active .bg-\[\#0d1527\] { background-color: #eef2ff !important; }
+
+    body.light-theme-active input,
+    body.light-theme-active textarea { color: #111827 !important; }
+    body.light-theme-active .placeholder-white\/30::placeholder { color: #9ca3af !important; }
+
+    body.light-theme-active .skeleton-card,
+    body.light-theme-active .skeleton {
+        background: linear-gradient(110deg, rgba(0,0,0,0.05) 8%, rgba(0,0,0,0.1) 18%, rgba(0,0,0,0.05) 33%) !important;
+        border-color: rgba(0, 0, 0, 0.06) !important;
+    }
+
+    body.light-theme-active #main-navbar { background: rgba(255, 255, 255, 0.85) !important; border-bottom-color: rgba(0, 0, 0, 0.07) !important; }
+    body.light-theme-active #sidebar { background: #ffffff !important; border-left-color: rgba(0, 0, 0, 0.08) !important; }
+    body.light-theme-active ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2) !important; }
 
     .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .page-content { display: none; }
@@ -79,7 +126,8 @@
 }
 </style>
 </head>
-<body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
+<body onclick="closeSidebarOnEmptyClick(event)">
+<script>if (localStorage.getItem('frazx-theme') === 'light') { document.body.classList.add('light-theme-active'); }</script>
 
 <nav id="main-navbar" class="fixed top-0 w-full z-[100] bg-black/40 border-b border-white/5 backdrop-blur-md px-4 lg:px-12 py-4 transition-all duration-300">
     <div class="max-w-[1800px] mx-auto flex items-center justify-between">
@@ -239,8 +287,8 @@
     <div class="flex items-center justify-between">
         <span class="text-xs font-bold text-gray-400 tracking-widest uppercase">Theme</span>
         <button onclick="toggleTheme()" id="theme-btn" class="p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition flex items-center gap-2 text-xs font-bold tracking-wider">
-            <i class="fa-solid fa-moon text-[#6366f1]" id="theme-icon"></i>
-            <span id="theme-text">DARK</span>
+            <i class="fa-solid fa-moon text-[#6366f1]" id="theme-icon-2"></i>
+            <span id="theme-text-2">DARK</span>
         </button>
     </div>
     </div>
@@ -1770,102 +1818,27 @@ function showPage(pageId, pushToHistory = true) {
     });
     }
     
-    function toggleTheme() {
-    const body = document.body;
-    const themeText = document.getElementById('theme-text');
-    const themeIcon = document.getElementById('theme-icon');
-    
-    // Core Elements Secure Variables
-    const mainHeadings = document.querySelectorAll('h1, h2, h3, .text-white');
-    const contentParagraphs = document.querySelectorAll('p');
-    const glassCards = document.querySelectorAll('.bg-white\\/5, .border-white\\/10, [class*="rounded-3xl"]');
-    
-    // --- SIDEBAR TARGETS FIXED ---
-    const sidebar = document.getElementById('sidebar');
-    const sidebarLinks = sidebar ? sidebar.querySelectorAll('span, i, a') : [];
-
-    if (!body.classList.contains('light-theme-active')) {
-        body.classList.add('light-theme-active');
-        
-        // 1. Light Mode Main Base
-        body.style.setProperty('background', '#f4f4f7', 'important');
-        body.style.setProperty('color', '#111827', 'important');
-        
-        // 2. Headings & Main Text Visibility Fix
-        mainHeadings.forEach(el => {
-            if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
-                el.style.setProperty('color', '#111827', 'important');
-            }
+    // Apply theme: toggles one class on <body>; all visuals are handled by CSS
+    // rules above, so this works correctly even for content added later by JS
+    // (feed cards, profile grids, modals, etc.)
+    function applyTheme(isLight) {
+        document.body.classList.toggle('light-theme-active', isLight);
+        document.querySelectorAll('[id^="theme-icon"]').forEach(icon => {
+            icon.className = isLight ? "fa-solid fa-sun text-amber-500" : "fa-solid fa-moon text-[#6366f1]";
         });
-
-        // 3. Paragraphs text color
-        contentParagraphs.forEach(p => {
-            p.style.setProperty('color', '#4b5563', 'important');
+        document.querySelectorAll('[id^="theme-text"]').forEach(txt => {
+            txt.innerText = isLight ? "LIGHT" : "DARK";
         });
-
-        // 4. Main Cards Update (Apple Style)
-        glassCards.forEach(card => {
-            if (card.id !== 'sidebar' && card.tagName !== 'NAV') {
-                card.style.setProperty('background-color', '#ffffff', 'important');
-                card.style.setProperty('border-color', '#e5e7eb', 'important');
-                card.style.setProperty('box-shadow', '0 10px 15px -3px rgba(0, 0, 0, 0.05)', 'important');
-            }
-        });
-
-        // 5. SIDEBAR LIGHT UI (Sleek Professional White Menu)
-        if (sidebar) {
-            sidebar.style.setProperty('background-color', '#ffffff', 'important');
-            sidebar.style.setProperty('border-left', '1px solid #e5e7eb', 'important');
-            sidebar.style.setProperty('box-shadow', '-10px 0 25px -5px rgba(0, 0, 0, 0.05)', 'important');
-        }
-        sidebarLinks.forEach(link => {
-            if (!link.classList.contains('text-[#6366f1]') && !link.classList.contains('text-indigo-500')) {
-                link.style.setProperty('color', '#374151', 'important'); // Clear dark gray text for links
-            }
-        });
-
-        // Toggle Button Appearance
-        if (themeText) {
-            themeText.innerText = "LIGHT";
-            themeText.style.setProperty('color', '#111827', 'important');
-        }
-        if (themeIcon) themeIcon.className = "fa-solid fa-sun text-amber-500";
-
-    } else {
-        // --- DARK MODE: AAP KA ORIGINAL SETUP 100% UNTOUCHED RESTORE ---
-        body.classList.remove('light-theme-active');
-        
-        // Inline styles delete taake aapki HTML/CSS files ka design chale
-        body.style.removeProperty('background');
-        body.style.removeProperty('color');
-        
-        mainHeadings.forEach(el => el.style.removeProperty('color'));
-        contentParagraphs.forEach(p => p.style.removeProperty('color'));
-        
-        glassCards.forEach(card => {
-            card.style.removeProperty('background-color');
-            card.style.removeProperty('border-color');
-            card.style.removeProperty('box-shadow');
-        });
-
-        // Sidebar Reset (Back to your original cyberpunk dark theme)
-        if (sidebar) {
-            sidebar.style.removeProperty('background-color');
-            sidebar.style.removeProperty('border-left');
-            sidebar.style.removeProperty('box-shadow');
-        }
-        sidebarLinks.forEach(link => {
-            link.style.removeProperty('color');
-        });
-
-        // Toggle Button Reset to Dark
-        if (themeText) {
-            themeText.innerText = "DARK";
-            themeText.style.removeProperty('color');
-        }
-        if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
+        localStorage.setItem('frazx-theme', isLight ? 'light' : 'dark');
     }
-}
+
+    function toggleTheme() {
+        applyTheme(!document.body.classList.contains('light-theme-active'));
+    }
+
+    // Sync the toggle button icons/text with whatever theme was applied
+    // by the early inline script (keeps navbar + sidebar buttons in sync)
+    applyTheme(document.body.classList.contains('light-theme-active'));
    
     // Professional Toast Notification System (Fixed Overlap)
 function showToast(message) {
