@@ -9,27 +9,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-
-    /* ===== MASONRY FEED (Pinterest Style) ===== */
-    .masonry-feed {
-        column-count: 2;
-        column-gap: 10px;
-    }
-    @media (min-width: 640px) {
-        .masonry-feed { column-count: 3; column-gap: 12px; }
-    }
-    @media (min-width: 1024px) {
-        .masonry-feed { column-count: 4; column-gap: 14px; }
-    }
-    @media (min-width: 1400px) {
-        .masonry-feed { column-count: 5; column-gap: 14px; }
-    }
-    .masonry-card {
-        break-inside: avoid;
-        display: inline-block;
-        width: 100%;
-        margin-bottom: 12px;
-    }
+    .masonry-feed { column-count: 2; column-gap: 10px; }
+    @media (min-width: 640px) { .masonry-feed { column-count: 3; column-gap: 12px; } }
+    @media (min-width: 1024px) { .masonry-feed { column-count: 4; column-gap: 14px; } }
+    @media (min-width: 1400px) { .masonry-feed { column-count: 5; column-gap: 14px; } }
+    .masonry-card { break-inside: avoid; display: inline-block; width: 100%; margin-bottom: 12px; }
 
     /* ===== SKELETON LOADER ===== */
     .skeleton {
@@ -658,8 +642,8 @@
     </div>
     </section>
     
-<section id="samples" class="page-content pt-28 pb-20 w-full">
-<div class="w-full px-3 md:px-4">
+<section id="samples" class="page-content pt-28 pb-20 px-4 md:px-6">
+<div class="max-w-6xl mx-auto">
 
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
@@ -720,6 +704,7 @@
             <span id="active-filter-badge" class="hidden px-2 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-lg text-indigo-400 text-[10px] font-bold"></span>
         </div>
     </div>
+    </div><!-- end hero wrapper -->
 
     <!-- Feed Grid -->
     <div id="community-feed" class="masonry-feed">
