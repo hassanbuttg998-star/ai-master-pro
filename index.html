@@ -630,7 +630,7 @@
             cooking something massive! just waiting 
         </p>
         
-        <button onclick="window.location.href=window.location.href;" class="w-full py-4 bg-cyan-500 hover:bg-cyan-600 text-black font-black text-sm tracking-widest rounded-2xl transition-all duration-300 uppercase shadow-[0_4px_20px_rgba(6,182,212,0.3)] transform active:scale-95 cursor-pointer">
+        <button onclick="showPage('tools-hub')" class="w-full py-4 bg-cyan-500 hover:bg-cyan-600 text-black font-black text-sm tracking-widest rounded-2xl transition-all duration-300 uppercase shadow-[0_4px_20px_rgba(6,182,212,0.3)] transform active:scale-95 cursor-pointer">
     Back to Dashboard
         </button>
     </div>
@@ -1363,8 +1363,6 @@
     else updateUIForUser(null);
   });
 
-  // Community functions use Supabase
-  window._db = null; // No Firebase
 </script>
 
 <script>
@@ -1544,14 +1542,6 @@ function showPage(pageId, pushToHistory = true) {
         navigator.clipboard.writeText(text).then(() => showToast("Portrait prompt copied!"));
     }
 
-    function generatePortrait(stylePreset, targetBoxId) {
-        // legacy stub — no longer used
-    }
-
-    function copyPortraitPrompt() {
-    navigator.clipboard.writeText(document.getElementById('portraitFinalPrompt').innerText);
-    showToast("Prompt copied to clipboard!");
-}
     function copyLocalPrompt(textElementId, buttonElement) {
     const textToCopy = document.getElementById(textElementId).innerText;
     
@@ -2099,75 +2089,6 @@ function renderCards(posts, currentUserId) {
         feedEl.appendChild(card);
     });
 }
-
-let _searchTimeout = null;
-
-function searchFeed(query) {
-    const clearBtn = document.getElementById('search-clear-btn');
-    const infoEl = document.getElementById('search-results-info');
-
-    if (!query || query.trim() === '') {
-        if (clearBtn) clearBtn.classList.add('hidden');
-        if (infoEl) infoEl.classList.add('hidden');
-        // Show all posts
-        renderCards(window._feedPosts || []);
-        return;
-    }
-
-    if (clearBtn) clearBtn.classList.remove('hidden');
-
-    // Debounce
-    clearTimeout(_searchTimeout);
-    _searchTimeout = setTimeout(() => {
-        const q = query.toLowerCase().trim();
-        const all = window._feedPosts || [];
-
-        const results = all.filter(post => {
-            const titleMatch = post.title && post.title.toLowerCase().includes(q);
-            const tagsMatch = post.tags && post.tags.some(tag => tag.toLowerCase().includes(q));
-            const promptMatch = post.prompt && post.prompt.toLowerCase().includes(q);
-            const creatorMatch = post.creator_name && post.creator_name.toLowerCase().includes(q);
-            return titleMatch || tagsMatch || promptMatch || creatorMatch;
-        });
-
-        if (infoEl) {
-            infoEl.classList.remove('hidden');
-            infoEl.innerText = results.length > 0 
-                ? `${results.length} result${results.length > 1 ? 's' : ''} for "${query}"`
-                : `No results for "${query}"`;
-        }
-
-        renderCards(results);
-    }, 300);
-}
-
-function clearSearch() {
-    const input = document.getElementById('feed-search-input');
-    const clearBtn = document.getElementById('search-clear-btn');
-    const infoEl = document.getElementById('search-results-info');
-    if (input) input.value = '';
-    if (clearBtn) clearBtn.classList.add('hidden');
-    if (infoEl) infoEl.classList.add('hidden');
-    renderCards(window._feedPosts || []);
-}
-
-async function deletePost(postId) {
-    if (!confirm("Delete this post?")) return;
-    const { error } = await _supabase.from('posts').delete().eq('id', postId);
-    if (error) { showToast("Delete failed!"); return; }
-    showToast("Post deleted! 🗑️");
-    loadCommunityFeed();
-}
-
-async function editPost(postId) {
-    const post = (window._feedPosts || []).find(p => p.id === postId);
-    if (!post) return;
-    const newPrompt = prompt("Edit your prompt:", post.prompt || '');
-    if (!newPrompt || newPrompt === post.prompt) return;
-    const { error } = await _supabase.from('posts').update({ prompt: newPrompt }).eq('id', postId);
-    if (error) { showToast("Edit failed!"); return; }
-    showToast("Post updated! ✅");
-    loadCommunityFeed();
 }
 
 function goBackToGallery() {
@@ -2201,34 +2122,6 @@ function shareProfile() {
     navigator.clipboard.writeText(url).then(() => showToast("Profile link copied! 🔗"));
 }
 
-// ===== DROPDOWN TOGGLES =====
-function toggleFilterDropdown() {
-    const dd = document.getElementById('filter-dropdown');
-    const sortDd = document.getElementById('sort-dropdown');
-    if (sortDd) sortDd.classList.add('hidden');
-    dd.classList.toggle('hidden');
-}
-
-function toggleSortDropdown() {
-    const dd = document.getElementById('sort-dropdown');
-    const filterDd = document.getElementById('filter-dropdown');
-    if (filterDd) filterDd.classList.add('hidden');
-    dd.classList.toggle('hidden');
-}
-
-// Close dropdowns on outside click
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('#filter-wrap')) {
-        const dd = document.getElementById('filter-dropdown');
-        if (dd) dd.classList.add('hidden');
-    }
-    if (!e.target.closest('#sort-wrap')) {
-        const dd = document.getElementById('sort-dropdown');
-        if (dd) dd.classList.add('hidden');
-    }
-});
-
-// ===== CATEGORY FILTER =====
 let _activeCategory = 'all';
 
 function filterByTag(tag) {
@@ -2314,121 +2207,6 @@ function renderFeedCard(feedEl, post) {
 }
 
 // ===== SEARCH SYSTEM =====
-function initSearch() {
-    const searchInput = document.getElementById('feed-search');
-    if (!searchInput) return;
-    
-    let searchTimer;
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-            const query = this.value.trim();
-            const clearBtn = document.getElementById('search-clear');
-            if (clearBtn) clearBtn.classList.toggle('hidden', !query);
-            searchPosts(query);
-        }, 300);
-    });
-
-    searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') clearSearch();
-    });
-}
-
-function searchPosts(query) {
-    const feedEl = document.getElementById('community-feed');
-    const countEl = document.getElementById('search-results-count');
-    const emptyEl = document.getElementById('feed-empty');
-    
-    if (!window._feedPosts) return;
-
-    if (!query) {
-        // Show all posts
-        if (countEl) countEl.classList.add('hidden');
-        filterFeed(_currentFilter);
-        return;
-    }
-
-    const q = query.toLowerCase();
-    const filtered = window._feedPosts.filter(post => {
-        const titleMatch = post.title && post.title.toLowerCase().includes(q);
-        const tagsMatch = post.tags && post.tags.some(tag => tag.toLowerCase().includes(q));
-        const promptMatch = post.prompt && post.prompt.toLowerCase().includes(q);
-        const creatorMatch = post.creator_name && post.creator_name.toLowerCase().includes(q);
-        return titleMatch || tagsMatch || promptMatch || creatorMatch;
-    });
-
-    // Show count
-    if (countEl) {
-        countEl.classList.remove('hidden');
-        countEl.innerText = filtered.length === 0 
-            ? 'No results found' 
-            : `${filtered.length} result${filtered.length > 1 ? 's' : ''} for "${query}"`;
-    }
-
-    if (!feedEl) return;
-    feedEl.innerHTML = '';
-
-    if (filtered.length === 0) {
-        if (emptyEl) {
-            emptyEl.classList.remove('hidden');
-            emptyEl.querySelector('p').innerText = `No results for "${query}"`;
-        }
-        return;
-    }
-    if (emptyEl) emptyEl.classList.add('hidden');
-
-    filtered.forEach(post => {
-        const likes = post.likes ? post.likes.length : 0;
-        const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
-        const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
-        const creator = post.creator_name || 'Creator';
-        const tags = post.tags || [];
-
-        const card = document.createElement('div');
-        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
-        card.onclick = () => openPostDetail(post.id);
-
-        // Highlight matching tags
-        const tagHtml = tags.length > 0 ? tags.map(tag => {
-            const isMatch = tag.toLowerCase().includes(query.toLowerCase());
-            return `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isMatch ? 'bg-indigo-500/30 border border-indigo-500/50 text-indigo-300' : 'bg-white/5 text-gray-500'}">#${tag}</span>`;
-        }).join('') : '';
-
-        card.innerHTML = `
-            <div class="relative overflow-hidden aspect-[4/5]">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
-                <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
-                        <i class="fa-solid fa-heart text-red-400"></i> ${likes}
-                    </span>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p class="text-gray-200 text-xs leading-relaxed line-clamp-2 mb-2">${promptPreview}</p>
-                    ${tagHtml ? `<div class="flex flex-wrap gap-1 mb-2">${tagHtml}</div>` : ''}
-                    <div class="flex items-center justify-between">
-                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
-                            <i class="fa-regular fa-copy"></i> Copy
-                        </button>
-                        <span class="text-gray-400 text-[10px]">@${creator}</span>
-                    </div>
-                </div>
-            </div>`;
-        feedEl.appendChild(card);
-    });
-}
-
-function clearSearch() {
-    const searchInput = document.getElementById('feed-search');
-    const clearBtn = document.getElementById('search-clear');
-    const countEl = document.getElementById('search-results-count');
-    if (searchInput) searchInput.value = '';
-    if (clearBtn) clearBtn.classList.add('hidden');
-    if (countEl) countEl.classList.add('hidden');
-    filterFeed(_currentFilter);
-}
-
-async function deletePostFromProfile(postId) {
     if (!confirm("Delete this post permanently?")) return;
     const { error } = await _supabase.from('posts').delete().eq('id', postId);
     if (error) { showToast("Delete failed!"); return; }
@@ -2676,32 +2454,6 @@ async function toggleLikePost() {
     openPostModal(currentPostId);
 }
 
-async function quickLike(postId, btn) {
-    const { data: { session } } = await _supabase.auth.getSession();
-    if (!session) { showToast("Sign in to like!"); toggleLoginModal(true); return; }
-    
-    const userId = session.user.id;
-    const { data: post } = await _supabase.from('posts').select('likes').eq('id', postId).single();
-    const likes = post?.likes || [];
-    const liked = likes.includes(userId);
-    const newLikes = liked ? likes.filter(id => id !== userId) : [...likes, userId];
-    
-    await _supabase.from('posts').update({ likes: newLikes }).eq('id', postId);
-    
-    const countEl = btn.querySelector('.like-count');
-    const iconEl = btn.querySelector('i');
-    if (liked) {
-        countEl.innerText = parseInt(countEl.innerText) - 1;
-        iconEl.className = 'fa-regular fa-heart';
-        btn.classList.remove('text-red-400');
-    } else {
-        countEl.innerText = parseInt(countEl.innerText) + 1;
-        iconEl.className = 'fa-solid fa-heart text-red-400';
-        btn.classList.add('text-red-400');
-    }
-}
-
-async function submitComment() {
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) { showToast("Sign in to comment!"); return; }
 
@@ -2733,13 +2485,6 @@ function copyPostPrompt() {
 
 // ========== PROFILE FUNCTIONS ==========
 
-window.handleStartCreation = function() {
-    const user = window._auth ? window._auth.currentUser : null;
-    if (user) {
-        showPage('samples');
-    } else {
-        toggleLoginModal(true);
-    }
 };
 
 window.editDisplayName = function() {
@@ -2908,9 +2653,6 @@ async function toggleSavePost() {
     }
 }
 
-// Update renderPostDetail to show save state
-const _origRenderPostDetail = window.renderPostDetail;
-
 // ===== PROFILE TABS =====
 let _currentProfileTab = 'posts';
 
@@ -2974,9 +2716,6 @@ async function loadSavedPosts() {
     
     if (grid) grid.innerHTML = saved.map(post => profileCardHTML(post, false)).join('');
 }
-
-// Reset tabs when leaving account
-const _origSwitchPage = window.showPage;
 
 // ===== GLOBAL SEARCH SYSTEM =====
 let _searchOpen = false;
@@ -3170,7 +2909,6 @@ window.showPage = function(pageId, pushToHistory) {
     if (pageId === 'samples') {
         _feedLoaded = false;
         loadCommunityFeed();
-        setTimeout(initSearch, 500);
     }
 };
 </script>
