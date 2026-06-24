@@ -37,6 +37,7 @@
 
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap');
     :root { --primary: #6366f1; --accent: #a855f7; }
+    html, body { overflow-x: hidden; width: 100%; }
     body.dark {
         background: radial-gradient(circle at top right, #1a1a2e 0%, #0f0f1a 50%, #050508 100%) !important;
         background-attachment: fixed !important;
@@ -354,7 +355,8 @@
 
 </main>
 
-<section id="tools-hub" class="page-content pt-32 pb-20 px-6 max-w-7xl mx-auto">
+<section id="tools-hub" class="page-content pt-32 pb-20 px-4 md:px-6 w-full">
+<div class="max-w-7xl mx-auto">
         
         <div class="text-center mb-16">
             <h2 class="text-xs font-black uppercase tracking-[0.4em] text-[#6366f1] mb-3">Neural Dashboard</h2>
@@ -417,10 +419,11 @@
         
         </div>
     </div>
+</div>
 </section>
 
 
-<section id="prompt-engine" class="page-content pt-32 pb-20 px-6 hidden">
+<section id="prompt-engine" class="page-content pt-32 pb-20 px-4 md:px-6 w-full hidden">
     <div class="max-w-3xl mx-auto flex flex-col gap-8">
         
         <div class="glass p-8 md:p-12 rounded-[2.5rem] border-t-2 border-indigo-500/40 shadow-xl">
@@ -493,7 +496,7 @@
     </div>
 </section>
 
-<section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
+<section id="portrait-engine" class="page-content pt-32 pb-20 px-4 md:px-6 w-full">
     <div class="max-w-4xl mx-auto flex flex-col gap-10">
 
         <!-- Header -->
@@ -607,7 +610,7 @@
 
     </div>
 </section>
-    <section id="bg-engine" class="page-content pt-32 pb-20 px-6 hidden min-h-screen flex flex-col items-center justify-center text-center">
+    <section id="bg-engine" class="page-content pt-32 pb-20 px-4 w-full hidden min-h-screen flex flex-col items-center justify-center text-center">
     <div class="glass max-w-md w-full rounded-[2.5rem] border border-cyan-500/30 p-8 md:p-10 shadow-[0_0_50px_rgba(6,182,212,0.15)] flex flex-col items-center mx-auto">
         
         <div class="relative w-20 h-20 mb-6 flex items-center justify-center rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 p-[2px] shadow-[0_0_30px_rgba(6,182,212,0.2)] animate__animated animate__zoomIn mx-auto">
@@ -636,7 +639,7 @@
     </div>
     </section>
     
-<section id="samples" class="page-content pt-28 pb-20 px-4 md:px-6">
+<section id="samples" class="page-content pt-28 pb-20 px-4 md:px-6 w-full">
 <div class="max-w-6xl mx-auto">
 
     <!-- Header -->
@@ -738,7 +741,7 @@
 </section>
 
 <!-- Post Detail Page -->
-<section id="post-detail" class="page-content pt-24 pb-20 px-4 md:px-6" style="display:none;">
+<section id="post-detail" class="page-content pt-24 pb-20 px-4 md:px-6 w-full" style="display:none;">
 <div class="max-w-5xl mx-auto">
     <button onclick="goBackToGallery()" class="flex items-center gap-2 text-gray-500 hover:text-white text-sm mb-8 transition font-bold">
         <i class="fa-solid fa-arrow-left"></i> Back to gallery
@@ -913,7 +916,7 @@
     </div>
 </div>
 
-<section id="about-frazx" class="page-content pt-32 pb-20 px-6">
+<section id="about-frazx" class="page-content pt-32 pb-20 px-4 md:px-6 w-full">
     <div class="max-w-4xl mx-auto">
         <div class="glass p-8 md:p-12 rounded-[2.5rem] border-t-4 border-indigo-600">
             <h2 class="text-4xl md:text-5xl font-black text-white uppercase italic tracking-tighter leading-none mb-6"> INSIDE <span class="text-[#6366f1]">FRAZX</span> PRO</h2>
@@ -931,7 +934,7 @@
     </div>
 </section>
 
-<section id="about-dev" class="page-content pt-32 pb-20 px-6">
+<section id="about-dev" class="page-content pt-32 pb-20 px-4 md:px-6 w-full">
     <div class="max-w-2xl mx-auto glass p-10 rounded-[2.5rem] text-center border-b-4 border-indigo-600 relative overflow-hidden">
         <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-600/10 rounded-full blur-3xl"></div>
         <img src="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/profile.png?raw=true" class="w-32 h-32 rounded-full mx-auto mb-6 border-2 border-indigo-500 p-1 object-cover">
@@ -945,7 +948,7 @@
     </div>
 </section>
 
-<section id="account" class="page-content pt-24 pb-20 px-4 md:px-8">
+<section id="account" class="page-content pt-24 pb-20 px-4 md:px-6 w-full">
 <div class="max-w-7xl mx-auto">
 
     <!-- Guest State -->
