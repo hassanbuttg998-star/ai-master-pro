@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+    /* ===== MASONRY FEED ===== */
+    .masonry-feed { column-count: 2; column-gap: 10px; }
+    @media (min-width: 640px) { .masonry-feed { column-count: 3; column-gap: 12px; } }
+    @media (min-width: 1024px) { .masonry-feed { column-count: 4; column-gap: 14px; } }
+    @media (min-width: 1400px) { .masonry-feed { column-count: 5; column-gap: 14px; } }
+    .masonry-card { break-inside: avoid; display: inline-block; width: 100%; margin-bottom: 12px; }
+
     /* ===== SKELETON LOADER ===== */
     .skeleton {
         position: relative;
@@ -636,8 +643,8 @@
     </div>
     </section>
     
-<section id="samples" class="page-content pt-28 pb-20 px-4 md:px-6">
-<div class="max-w-6xl mx-auto">
+<section id="samples" class="page-content pt-20 pb-20 w-full">
+<div class="w-full px-3 md:px-4">
 
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
@@ -700,7 +707,7 @@
     </div>
 
     <!-- Feed Grid -->
-    <div id="community-feed" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div id="community-feed" class="masonry-feed">
     </div>
 
     <!-- Empty State -->
@@ -713,24 +720,24 @@
     </div>
 
     <!-- Loading State - Skeleton Grid -->
-    <div id="feed-loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div id="feed-loading" class="masonry-feed">
         <div class="skeleton-card">
-            <div class="skeleton aspect-[4/5]"></div>
+            <div class="skeleton rounded-2xl" style="height:260px"></div>
         </div>
         <div class="skeleton-card">
-            <div class="skeleton aspect-[4/5]"></div>
+            <div class="skeleton rounded-2xl" style="height:260px"></div>
         </div>
         <div class="skeleton-card">
-            <div class="skeleton aspect-[4/5]"></div>
+            <div class="skeleton rounded-2xl" style="height:260px"></div>
         </div>
         <div class="skeleton-card hidden sm:block">
-            <div class="skeleton aspect-[4/5]"></div>
+            <div class="skeleton rounded-2xl" style="height:260px"></div>
         </div>
         <div class="skeleton-card hidden lg:block">
-            <div class="skeleton aspect-[4/5]"></div>
+            <div class="skeleton rounded-2xl" style="height:260px"></div>
         </div>
         <div class="skeleton-card hidden lg:block">
-            <div class="skeleton aspect-[4/5]"></div>
+            <div class="skeleton rounded-2xl" style="height:260px"></div>
         </div>
     </div>
 
@@ -1973,11 +1980,11 @@ async function loadCommunityFeed(force = false) {
             const isOwner = currentUserId && post.creator_id === currentUserId;
             
             const card = document.createElement('div');
-            card.className = 'glass rounded-2xl overflow-hidden cursor-pointer group relative border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(99,102,241,0.15)]';
+            card.className = 'masonry-card group cursor-pointer';
             card.onclick = () => openPostDetail(post.id);
             card.innerHTML = `
-                <div class="relative overflow-hidden aspect-[4/5]">
-                    <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
+                <div class="relative rounded-2xl overflow-hidden">
+                    <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                     
                     <!-- Always visible: title + likes at top -->
                     <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
@@ -2227,11 +2234,11 @@ async function filterByTag(tag) {
         const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
         const creator = post.creator_name || 'Creator';
         const card = document.createElement('div');
-        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
+        card.className = 'masonry-card group cursor-pointer';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
-            <div class="relative overflow-hidden aspect-[4/5]">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
+            <div class="relative rounded-2xl overflow-hidden">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2302,11 +2309,11 @@ async function filterFeed(filter) {
         const isOwner = currentUserId && post.creator_id === currentUserId;
 
         const card = document.createElement('div');
-        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
+        card.className = 'masonry-card group cursor-pointer';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
-            <div class="relative overflow-hidden aspect-[4/5]">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
+            <div class="relative rounded-2xl overflow-hidden">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2350,11 +2357,11 @@ function renderCards(posts, currentUserId) {
         const creator = post.creator_name || 'Creator';
 
         const card = document.createElement('div');
-        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
+        card.className = 'masonry-card group cursor-pointer';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
-            <div class="relative overflow-hidden aspect-[4/5]">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
+            <div class="relative rounded-2xl overflow-hidden">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2564,11 +2571,11 @@ function renderFeedCard(feedEl, post) {
     const creator = post.creator_name || 'Creator';
 
     const card = document.createElement('div');
-    card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
+    card.className = 'masonry-card group cursor-pointer';
     card.onclick = () => openPostDetail(post.id);
     card.innerHTML = `
-        <div class="relative overflow-hidden aspect-[4/5]">
-            <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
+        <div class="relative rounded-2xl overflow-hidden">
+            <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
             <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                 <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                 <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2660,7 +2667,7 @@ function searchPosts(query) {
         const tags = post.tags || [];
 
         const card = document.createElement('div');
-        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
+        card.className = 'masonry-card group cursor-pointer';
         card.onclick = () => openPostDetail(post.id);
 
         // Highlight matching tags
@@ -2670,8 +2677,8 @@ function searchPosts(query) {
         }).join('') : '';
 
         card.innerHTML = `
-            <div class="relative overflow-hidden aspect-[4/5]">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
+            <div class="relative rounded-2xl overflow-hidden">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -3130,6 +3137,10 @@ async function loadMyUploads() {
 
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) { if (loadingEl) loadingEl.classList.add('hidden'); return; }
+
+    // Show Create button for all logged-in users
+    const _cb = document.getElementById('profile-create-btn');
+    if (_cb) { _cb.classList.remove('hidden'); _cb.classList.add('flex'); }
 
     loadAndRenderOwnBadges(session.user.id);
 
