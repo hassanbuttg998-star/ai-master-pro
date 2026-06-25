@@ -9,13 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-    /* ===== MASONRY FEED ===== */
-    .masonry-feed { column-count: 2; column-gap: 10px; }
-    @media (min-width: 640px) { .masonry-feed { column-count: 3; column-gap: 12px; } }
-    @media (min-width: 1024px) { .masonry-feed { column-count: 4; column-gap: 14px; } }
-    @media (min-width: 1400px) { .masonry-feed { column-count: 5; column-gap: 14px; } }
-    .masonry-card { break-inside: avoid; display: inline-block; width: 100%; margin-bottom: 12px; }
-
     /* ===== SKELETON LOADER ===== */
     .skeleton {
         position: relative;
@@ -643,17 +636,14 @@
     </div>
     </section>
     
-<section id="samples" class="page-content pt-20 pb-20 w-full">
-<div class="w-full px-3 md:px-4">
+<section id="samples" class="page-content pt-28 pb-20 px-4 md:px-6">
+<div class="max-w-6xl mx-auto">
 
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
         <div>
-            <div class="mb-2">
-                <span class="text-[10px] font-black tracking-[0.3em] text-indigo-400 uppercase bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full">Community Feed</span>
-            </div>
-            <h2 class="text-4xl md:text-6xl font-black italic uppercase text-white tracking-widest leading-none mt-3">AI <span class="text-indigo-400">IMAGES</span></h2>
-            <p class="text-gray-400 text-xs tracking-widest uppercase mt-3">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
+            <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">AI <span class="text-indigo-500">Images</span></h2>
+            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
         </div>
 
         <div class="flex items-center gap-2">
@@ -710,7 +700,7 @@
     </div>
 
     <!-- Feed Grid -->
-    <div id="community-feed" class="masonry-feed">
+    <div id="community-feed" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
     </div>
 
     <!-- Empty State -->
@@ -723,24 +713,24 @@
     </div>
 
     <!-- Loading State - Skeleton Grid -->
-    <div id="feed-loading" class="masonry-feed">
+    <div id="feed-loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <div class="skeleton-card">
-            <div class="skeleton rounded-2xl" style="height:260px"></div>
+            <div class="skeleton aspect-[4/5]"></div>
         </div>
         <div class="skeleton-card">
-            <div class="skeleton rounded-2xl" style="height:260px"></div>
+            <div class="skeleton aspect-[4/5]"></div>
         </div>
         <div class="skeleton-card">
-            <div class="skeleton rounded-2xl" style="height:260px"></div>
+            <div class="skeleton aspect-[4/5]"></div>
         </div>
         <div class="skeleton-card hidden sm:block">
-            <div class="skeleton rounded-2xl" style="height:260px"></div>
+            <div class="skeleton aspect-[4/5]"></div>
         </div>
         <div class="skeleton-card hidden lg:block">
-            <div class="skeleton rounded-2xl" style="height:260px"></div>
+            <div class="skeleton aspect-[4/5]"></div>
         </div>
         <div class="skeleton-card hidden lg:block">
-            <div class="skeleton rounded-2xl" style="height:260px"></div>
+            <div class="skeleton aspect-[4/5]"></div>
         </div>
     </div>
 
@@ -762,8 +752,26 @@
         <div class="md:w-1/2 flex flex-col gap-5">
             <div class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-400 w-fit">⚡ Prompt Detail</div>
             <h1 id="detail-title" class="text-xl md:text-2xl font-black text-white leading-tight uppercase tracking-wide"></h1>
-            <div class="text-sm text-gray-500">
-                Shared by: <span id="detail-creator" class="text-indigo-400 font-bold"></span>
+            <!-- Creator Card -->
+            <div class="flex items-center justify-between gap-3 py-3 px-4 bg-white/3 border border-white/8 rounded-2xl">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="viewCreatorProfile()" id="detail-creator-clickable">
+                    <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-indigo-500/40 flex-shrink-0 bg-white/5">
+                        <img id="detail-creator-avatar" src="" alt="" class="w-full h-full object-cover hidden">
+                        <div id="detail-creator-avatar-fallback" class="w-full h-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-indigo-400 text-sm"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span id="detail-creator" class="text-white font-black text-sm"></span>
+                            <span id="detail-creator-badge"></span>
+                        </div>
+                        <p class="text-gray-500 text-[11px]">View profile</p>
+                    </div>
+                </div>
+                <button id="detail-follow-btn" onclick="toggleFollowCreator()" class="hidden px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition">
+                    Follow
+                </button>
             </div>
             <p id="detail-date" class="text-gray-600 text-xs"></p>
             <div id="detail-tags" class="flex flex-wrap gap-2 mt-2"></div>
@@ -1630,35 +1638,22 @@ function showPage(pageId, pushToHistory = true) {
     // 2. Direct Hardware Back Key Interception (Zero Exit Glitch)
     window.addEventListener('hashchange', function() {
         const activeHash = window.location.hash.substring(1);
-        if (!activeHash) { showPage('home', false); return; }
-        if (activeHash === 'home') {
-            _supabase.auth.getSession().then(({ data: { session } }) => {
-                if (session) {
-                    window.location.hash = 'samples';
-                    showPage('samples', false);
-                } else {
-                    showPage('home', false);
-                }
-            });
-        } else {
+        if (activeHash) {
             showPage(activeHash, false);
+        } else {
+            showPage('home', false);
         }
     });
 
     // 3. Absolute Initialization Matrix
     window.addEventListener('DOMContentLoaded', () => {
         const startingHash = window.location.hash.substring(1);
-        _supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                window.location.hash = 'samples';
-                showPage('samples', false);
-            } else if (startingHash) {
-                showPage(startingHash, false);
-            } else {
-                window.location.hash = 'home';
-                showPage('home', false);
-            }
-        });
+        if (startingHash) {
+            showPage(startingHash, false);
+        } else {
+            window.location.hash = 'home';
+            showPage('home', false);
+        }
     });
     // 4. UI Layer Mechanisms
     function toggleSidebar(e) {
@@ -1978,11 +1973,11 @@ async function loadCommunityFeed(force = false) {
             const isOwner = currentUserId && post.creator_id === currentUserId;
             
             const card = document.createElement('div');
-            card.className = 'masonry-card group cursor-pointer';
+            card.className = 'glass rounded-2xl overflow-hidden cursor-pointer group relative border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(99,102,241,0.15)]';
             card.onclick = () => openPostDetail(post.id);
             card.innerHTML = `
-                <div class="relative rounded-2xl overflow-hidden">
-                    <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+                <div class="relative overflow-hidden aspect-[4/5]">
+                    <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
                     
                     <!-- Always visible: title + likes at top -->
                     <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
@@ -2066,16 +2061,62 @@ async function renderPostDetail(postId) {
             ? tags.map(t => `<span class="px-2.5 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[10px] font-bold">#${t}</span>`).join('') 
             : '';
     }
-    document.getElementById('detail-creator').innerText = '@' + (post.creator_name || 'Creator');
-    const detailBadgeSlot = document.getElementById('detail-creator-badge');
-    if (detailBadgeSlot) {
-        detailBadgeSlot.innerHTML = '';
-        if (post.creator_id) {
-            _supabase.from('profiles').select('is_onboarding_verified, badge_tier').eq('id', post.creator_id).single()
-                .then(({ data: creatorProfile }) => {
-                    if (creatorProfile) detailBadgeSlot.innerHTML = renderBadgesHTML(creatorProfile, 'text-xs');
-                });
+    // Creator card
+    const creatorNameEl = document.getElementById('detail-creator');
+    if (creatorNameEl) creatorNameEl.innerText = '@' + (post.creator_name || 'Creator');
+
+    // Store creator_id for follow/visit actions
+    window._currentDetailCreatorId = post.creator_id || null;
+
+    // Load creator avatar
+    const avatarImg = document.getElementById('detail-creator-avatar');
+    const avatarFallback = document.getElementById('detail-creator-avatar-fallback');
+    if (avatarImg && avatarFallback) {
+        if (post.creator_avatar) {
+            avatarImg.src = cldAvatar(post.creator_avatar);
+            avatarImg.onload = () => { avatarImg.classList.remove('hidden'); avatarFallback.classList.add('hidden'); };
+            avatarImg.onerror = () => { avatarImg.classList.add('hidden'); avatarFallback.classList.remove('hidden'); };
+        } else {
+            avatarImg.classList.add('hidden');
+            avatarFallback.classList.remove('hidden');
         }
+    }
+
+    // Load creator badge + follow state
+    const detailBadgeSlot = document.getElementById('detail-creator-badge');
+    const followBtn = document.getElementById('detail-follow-btn');
+    if (detailBadgeSlot) detailBadgeSlot.innerHTML = '';
+    if (followBtn) followBtn.classList.add('hidden');
+
+    if (post.creator_id) {
+        _supabase.from('profiles').select('is_onboarding_verified, badge_tier').eq('id', post.creator_id).single()
+            .then(({ data: creatorProfile }) => {
+                if (creatorProfile && detailBadgeSlot) detailBadgeSlot.innerHTML = renderBadgesHTML(creatorProfile, 'text-xs');
+            });
+
+        // Show follow button only if not the current user
+        _supabase.auth.getSession().then(async ({ data: { session } }) => {
+            if (!session || session.user.id === post.creator_id) return;
+            if (followBtn) {
+                followBtn.classList.remove('hidden');
+                // Check if already following
+                const { data: existingFollow } = await _supabase
+                    .from('follows')
+                    .select('id')
+                    .eq('follower_id', session.user.id)
+                    .eq('following_id', post.creator_id)
+                    .single();
+                if (existingFollow) {
+                    followBtn.innerText = 'Following';
+                    followBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+                    followBtn.classList.add('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
+                } else {
+                    followBtn.innerText = 'Follow';
+                    followBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-500');
+                    followBtn.classList.remove('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
+                }
+            }
+        });
     }
     document.getElementById('detail-prompt').innerText = post.prompt || '';
     document.getElementById('detail-likes-count').innerText = post.likes ? post.likes.length : 0;
@@ -2186,11 +2227,11 @@ async function filterByTag(tag) {
         const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
         const creator = post.creator_name || 'Creator';
         const card = document.createElement('div');
-        card.className = 'masonry-card group cursor-pointer';
+        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
-            <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+            <div class="relative overflow-hidden aspect-[4/5]">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2261,11 +2302,11 @@ async function filterFeed(filter) {
         const isOwner = currentUserId && post.creator_id === currentUserId;
 
         const card = document.createElement('div');
-        card.className = 'masonry-card group cursor-pointer';
+        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
-            <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+            <div class="relative overflow-hidden aspect-[4/5]">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2309,11 +2350,11 @@ function renderCards(posts, currentUserId) {
         const creator = post.creator_name || 'Creator';
 
         const card = document.createElement('div');
-        card.className = 'masonry-card group cursor-pointer';
+        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
-            <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+            <div class="relative overflow-hidden aspect-[4/5]">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2523,11 +2564,11 @@ function renderFeedCard(feedEl, post) {
     const creator = post.creator_name || 'Creator';
 
     const card = document.createElement('div');
-    card.className = 'masonry-card group cursor-pointer';
+    card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
     card.onclick = () => openPostDetail(post.id);
     card.innerHTML = `
-        <div class="relative rounded-2xl overflow-hidden">
-            <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+        <div class="relative overflow-hidden aspect-[4/5]">
+            <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
             <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                 <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                 <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2619,7 +2660,7 @@ function searchPosts(query) {
         const tags = post.tags || [];
 
         const card = document.createElement('div');
-        card.className = 'masonry-card group cursor-pointer';
+        card.className = 'rounded-2xl overflow-hidden cursor-pointer group relative glass border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl';
         card.onclick = () => openPostDetail(post.id);
 
         // Highlight matching tags
@@ -2629,8 +2670,8 @@ function searchPosts(query) {
         }).join('') : '';
 
         card.innerHTML = `
-            <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+            <div class="relative overflow-hidden aspect-[4/5]">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover transition-transform duration-500" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -3090,10 +3131,6 @@ async function loadMyUploads() {
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) { if (loadingEl) loadingEl.classList.add('hidden'); return; }
 
-    // Show Create button for all logged-in users
-    const _createBtn = document.getElementById('profile-create-btn');
-    if (_createBtn) { _createBtn.classList.remove('hidden'); _createBtn.classList.add('flex'); }
-
     loadAndRenderOwnBadges(session.user.id);
 
     const { data: posts } = await _supabase
@@ -3471,6 +3508,179 @@ window.showPage = function(pageId, pushToHistory) {
         setTimeout(initSearch, 500);
     }
 };
+
+// ===== CREATOR PROFILE VISIT =====
+window.viewCreatorProfile = function() {
+    const creatorId = window._currentDetailCreatorId;
+    if (!creatorId) return;
+    // If it's the current user, go to own account page
+    _supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session && session.user.id === creatorId) {
+            showPage('account');
+        } else {
+            // Open creator profile in global search / user profile view
+            openUserProfileById(creatorId);
+        }
+    });
+};
+
+async function openUserProfileById(userId) {
+    // Fetch user profile data
+    const { data: profile } = await _supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+    const { data: posts } = await _supabase
+        .from('posts')
+        .select('*')
+        .eq('creator_id', userId)
+        .order('created_at', { ascending: false });
+
+    if (!profile && !posts) return;
+
+    // Get name from first post if profile has no display_name
+    const creatorName = (posts && posts.length > 0) ? posts[0].creator_name : 'Creator';
+    const creatorAvatar = (posts && posts.length > 0) ? posts[0].creator_avatar : null;
+
+    // Build modal
+    let modalEl = document.getElementById('user-profile-modal');
+    if (!modalEl) {
+        modalEl = document.createElement('div');
+        modalEl.id = 'user-profile-modal';
+        modalEl.className = 'fixed inset-0 z-[10002] bg-black/80 backdrop-blur-md flex items-start justify-center overflow-y-auto';
+        modalEl.onclick = function(e) { if (e.target === modalEl) closeUserProfileModal(); };
+        document.body.appendChild(modalEl);
+    }
+
+    // Check follow state
+    const { data: { session } } = await _supabase.auth.getSession();
+    let isFollowing = false;
+    let isOwnProfile = session && session.user.id === userId;
+    if (session && !isOwnProfile) {
+        const { data: fw } = await _supabase.from('follows').select('id').eq('follower_id', session.user.id).eq('following_id', userId).single();
+        isFollowing = !!fw;
+    }
+
+    // Follower counts
+    const { count: followerCount } = await _supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', userId);
+    const { count: followingCount } = await _supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', userId);
+
+    const badgeHTML = profile ? renderBadgesHTML(profile, 'text-sm') : '';
+    const avatarHTML = creatorAvatar
+        ? `<img src="${cldAvatar(creatorAvatar)}" class="w-full h-full object-cover" alt="">`
+        : `<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-user text-indigo-400 text-2xl"></i></div>`;
+
+    const followBtnHTML = isOwnProfile ? '' : isFollowing
+        ? `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-white/10 hover:bg-white/20 text-gray-300 font-bold text-sm rounded-xl transition">Following</button>`
+        : `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition">Follow</button>`;
+
+    const postsGrid = (posts && posts.length > 0)
+        ? posts.map(p => `<div class="rounded-xl overflow-hidden cursor-pointer" onclick="closeUserProfileModal(); openPostDetail('${p.id}')"><img src="${cldThumb(p.image_url)}" class="w-full h-auto block" loading="lazy"></div>`).join('')
+        : `<p class="col-span-3 text-center text-gray-500 py-8">No posts yet</p>`;
+
+    modalEl.innerHTML = `
+        <div class="w-full max-w-lg mx-auto my-6 bg-[#0d0d1a] border border-white/10 rounded-3xl overflow-hidden">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
+                <button onclick="closeUserProfileModal()" class="text-gray-400 hover:text-white transition">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <span class="text-white font-black text-sm uppercase tracking-widest">Profile</span>
+                <div class="w-6"></div>
+            </div>
+            <!-- Profile Info -->
+            <div class="px-5 pt-6 pb-4">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-indigo-500/40 bg-white/5 flex-shrink-0">${avatarHTML}</div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h2 class="text-white font-black text-lg">@${creatorName}</h2>
+                            ${badgeHTML}
+                        </div>
+                        <div class="flex items-center gap-4 mt-1 text-gray-400 text-xs">
+                            <span><span class="text-white font-bold">${followerCount || 0}</span> followers</span>
+                            <span><span class="text-white font-bold">${followingCount || 0}</span> following</span>
+                        </div>
+                    </div>
+                    ${followBtnHTML}
+                </div>
+                <p class="text-gray-400 text-sm">${profile?.bio || ''}</p>
+            </div>
+            <!-- Posts Grid -->
+            <div class="px-3 pb-5">
+                <p class="text-[10px] font-black uppercase tracking-widest text-gray-500 px-2 mb-3">Posts · ${posts ? posts.length : 0}</p>
+                <div class="grid grid-cols-3 gap-2">${postsGrid}</div>
+            </div>
+        </div>`;
+
+    modalEl.style.display = 'flex';
+    history.pushState({ userProfile: true }, '');
+}
+
+function closeUserProfileModal() {
+    const modal = document.getElementById('user-profile-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+// ===== FOLLOW / UNFOLLOW FROM POST DETAIL =====
+window.toggleFollowCreator = async function() {
+    const creatorId = window._currentDetailCreatorId;
+    if (!creatorId) return;
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { showToast('Sign in to follow!'); toggleLoginModal(true); return; }
+    if (session.user.id === creatorId) return;
+    await _toggleFollow(session.user.id, creatorId, 'detail-follow-btn');
+};
+
+// ===== FOLLOW / UNFOLLOW FROM USER PROFILE MODAL =====
+window.toggleFollowUserModal = async function(targetUserId) {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { showToast('Sign in to follow!'); toggleLoginModal(true); return; }
+    await _toggleFollow(session.user.id, targetUserId, 'upm-follow-btn');
+};
+
+// ===== SHARED FOLLOW LOGIC =====
+async function _toggleFollow(followerId, followingId, btnId) {
+    const { data: existing } = await _supabase
+        .from('follows')
+        .select('id')
+        .eq('follower_id', followerId)
+        .eq('following_id', followingId)
+        .single();
+
+    const btn = document.getElementById(btnId);
+
+    if (existing) {
+        // Unfollow
+        await _supabase.from('follows').delete().eq('follower_id', followerId).eq('following_id', followingId);
+        if (btn) {
+            btn.innerText = 'Follow';
+            btn.classList.remove('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
+            btn.classList.add('bg-indigo-600', 'hover:bg-indigo-500', 'text-white');
+        }
+        showToast('Unfollowed');
+    } else {
+        // Follow
+        await _supabase.from('follows').insert([{ follower_id: followerId, following_id: followingId }]);
+        if (btn) {
+            btn.innerText = 'Following';
+            btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+            btn.classList.add('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
+        }
+        showToast('Following! 🎉');
+    }
+}
+
+// Close user profile modal on back button
+window.addEventListener('popstate', function(e) {
+    const modal = document.getElementById('user-profile-modal');
+    if (modal && modal.style.display !== 'none') {
+        closeUserProfileModal();
+    }
+});
+
 </script>
 </body>
 </html>
