@@ -52,7 +52,7 @@
     .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .page-content { display: none; }
     .active-page { display: block !important; animation: fadeIn 0.5s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; transform: translateY(0); } }
     #sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1); z-index: 200; }
     .nav-link { cursor: pointer; transition: all 0.3s; }
     .nav-link:hover { color: #6366f1; }
@@ -133,10 +133,7 @@
         </button>
     </div>
 
-    <!-- Search Icon Button -->
-    <button onclick="toggleSearchBar()" id="navbar-search-btn" class="flex items-center justify-center w-10 h-10 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition-all duration-300 active:scale-95">
-        <i class="fa-solid fa-magnifying-glass text-gray-300 text-base"></i>
-    </button>
+
 
     <div onclick="toggleTheme()" class="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition-all duration-300 active:scale-95 select-none">
         <i id="theme-icon" class="fa-solid fa-moon text-[#6366f1] text-base"></i>
@@ -151,9 +148,9 @@
     </div>
 
 </div>
-            <button onclick="toggleSidebar(event)" class="p-2 text-white bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition duration-300 md:hidden ml-0">
+            <button onclick="toggleSidebar(event)" class="p-2 text-white bg-white/8 rounded-xl border border-white/15 hover:bg-indigo-600/30 hover:border-indigo-500/40 transition duration-300 md:hidden ml-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
             </button>
         </div>
@@ -161,50 +158,31 @@
     </div>
 </nav>
 
-<!-- Search Modal - Full screen overlay -->
-<div id="search-overlay" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-250" style="transform: translateY(-10px)">
-    <div class="flex flex-col h-full">
-        <!-- Search Header -->
-        <div class="px-4 pt-4 pb-3 border-b border-white/10">
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-3 flex-1 min-w-0 bg-white/5 border border-indigo-500/40 rounded-2xl px-4 py-3">
-                    <i class="fa-solid fa-magnifying-glass text-indigo-400 text-sm flex-shrink-0"></i>
-                    <input type="text" id="global-search-input" placeholder="Search images or creators..." 
-                        class="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none"
-                        oninput="handleGlobalSearch(this.value)">
-                    <!-- Filter Button -->
-                    <div class="relative flex-shrink-0" id="search-filter-wrap">
-                        <button onclick="toggleSearchFilter()" class="flex items-center gap-1 px-2 py-1.5 bg-indigo-600/20 border border-indigo-500/30 rounded-xl text-[11px] font-bold text-indigo-300 hover:bg-indigo-600/40 transition whitespace-nowrap">
-                            <i id="search-filter-icon" class="fa-solid fa-image text-[9px]"></i>
-                            <span id="search-filter-label">Pics</span>
-                            <i class="fa-solid fa-chevron-down text-[8px]"></i>
-                        </button>
-                        <div id="search-filter-dropdown" class="hidden absolute right-0 top-full mt-2 w-36 bg-[#111827] border border-white/10 rounded-xl overflow-hidden shadow-xl z-10">
-                            <button onclick="setSearchFilter('pictures')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold border-b border-white/5">
-                                <i class="fa-solid fa-image text-indigo-400"></i> Pictures
-                            </button>
-                            <button onclick="setSearchFilter('profiles')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold">
-                                <i class="fa-solid fa-user text-purple-400"></i> Profiles
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+<!-- Search Modal -->
+<div id="search-overlay" class="fixed inset-0 z-[9999] hidden" onclick="closeSearch(event)">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+    <div id="search-sheet" class="absolute top-0 left-0 right-0 bg-[#0d0d1a] border-b border-white/10 shadow-2xl">
+        <!-- Input row -->
+        <div class="flex items-center gap-3 px-4 pt-4 pb-3">
+            <div class="flex-1 flex items-center gap-2 bg-white/5 border border-indigo-500/30 rounded-2xl px-4 py-3">
+                <i class="fa-solid fa-magnifying-glass text-indigo-400 text-sm"></i>
+                <input id="search-input-new" type="text" placeholder="Search by title or tag..."
+                    class="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none"
+                    oninput="runSearch(this.value)">
+                <button onclick="document.getElementById('search-input-new').value=''; runSearch('');" class="text-gray-500 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
             </div>
+            <button onclick="closeSearchModal()" class="text-gray-400 hover:text-white transition text-sm font-bold">Cancel</button>
         </div>
-
-        <!-- Search Results -->
-        <div class="flex-1 overflow-y-auto px-4 py-4">
-            <div id="global-search-results" class="space-y-2 hidden"></div>
-            <p id="global-search-empty" class="hidden text-center text-gray-500 text-sm py-8">No results found</p>
-            <!-- Default state -->
-            <div id="search-default-state" class="text-center py-12">
-                <i class="fa-solid fa-magnifying-glass text-4xl text-gray-700 mb-4"></i>
-                <p class="text-gray-500 text-sm">Search for AI images or creators</p>
-            </div>
+        <!-- Results -->
+        <div id="search-results-new" class="overflow-y-auto max-h-[70vh] px-4 pb-4">
+            <p id="search-hint" class="text-gray-500 text-sm text-center py-6">Type to search images...</p>
         </div>
     </div>
 </div>
+
+
 
 <div id="sidebar" class="fixed top-0 right-0 h-screen w-72 bg-[#08080c] border-l border-white/10 p-8 transform translate-x-full shadow-2xl">
     <div class="flex justify-between items-center mb-10">
@@ -656,10 +634,15 @@
     <div class="flex items-center justify-between mb-8">
         <div>
             <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">AI <span class="text-indigo-500">Images</span></h2>
-            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
+            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">Increase your quality with FRAZ<span class="text-indigo-400">X</span></p>
         </div>
 
         <div class="flex items-center gap-2">
+            <!-- Search Icon (AI Images only) -->
+            <button onclick="toggleSearchBar()" title="Search images"
+                class="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/40 rounded-xl transition-all text-gray-400 hover:text-indigo-400">
+                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </button>
             <!-- Filter Icon (funnel) -->
             <div class="relative" id="filter-btn-wrap">
                 <button onclick="toggleFilterPanel()" id="filter-icon-btn" title="Filter by category"
@@ -765,8 +748,26 @@
         <div class="md:w-1/2 flex flex-col gap-5">
             <div class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-400 w-fit">⚡ Prompt Detail</div>
             <h1 id="detail-title" class="text-xl md:text-2xl font-black text-white leading-tight uppercase tracking-wide"></h1>
-            <div class="text-sm text-gray-500">
-                Shared by: <span id="detail-creator" class="text-indigo-400 font-bold"></span>
+            <!-- Creator Card -->
+            <div class="flex items-center justify-between gap-3 py-3 px-4 bg-white/3 border border-white/8 rounded-2xl">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="viewCreatorProfile()" id="detail-creator-clickable">
+                    <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-indigo-500/40 flex-shrink-0 bg-white/5">
+                        <img id="detail-creator-avatar" src="" alt="" class="w-full h-full object-cover hidden">
+                        <div id="detail-creator-avatar-fallback" class="w-full h-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-indigo-400 text-sm"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span id="detail-creator" class="text-white font-black text-sm"></span>
+                            <span id="detail-creator-badge"></span>
+                        </div>
+                        <p class="text-gray-500 text-[11px]">View profile</p>
+                    </div>
+                </div>
+                <button id="detail-follow-btn" onclick="toggleFollowCreator()" class="hidden px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition">
+                    Follow
+                </button>
             </div>
             <p id="detail-date" class="text-gray-600 text-xs"></p>
             <div id="detail-tags" class="flex flex-wrap gap-2 mt-2"></div>
@@ -863,14 +864,13 @@
             <div id="tags-preview" class="flex flex-wrap gap-2 mt-2"></div>
         </div>
 
-        <!-- Step 5: Category -->
+        <!-- Category -->
         <div class="mb-5">
             <label class="block text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-2">
                 <span class="bg-indigo-600 text-white rounded-full w-4 h-4 inline-flex items-center justify-center text-[8px] mr-1">5</span>
                 Post Category
             </label>
-            <select id="upload-category-input"
-                class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500 transition">
+            <select id="upload-category-input" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500 transition">
                 <option value="ai_images">🎨 AI Images</option>
                 <option value="ads_poster">📢 Ads Poster</option>
                 <option value="ai_stock">📦 AI Stock</option>
@@ -1957,7 +1957,6 @@ async function loadCommunityFeed(force = false) {
         const { data: posts, error } = await _supabase
             .from('posts')
             .select('*')
-            .or('category.eq.ai_images,category.is.null')
             .order('created_at', { ascending: false });
 
         if (loadingEl) loadingEl.classList.add('hidden');
@@ -2071,16 +2070,62 @@ async function renderPostDetail(postId) {
             ? tags.map(t => `<span class="px-2.5 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[10px] font-bold">#${t}</span>`).join('') 
             : '';
     }
-    document.getElementById('detail-creator').innerText = '@' + (post.creator_name || 'Creator');
-    const detailBadgeSlot = document.getElementById('detail-creator-badge');
-    if (detailBadgeSlot) {
-        detailBadgeSlot.innerHTML = '';
-        if (post.creator_id) {
-            _supabase.from('profiles').select('is_onboarding_verified, badge_tier').eq('id', post.creator_id).single()
-                .then(({ data: creatorProfile }) => {
-                    if (creatorProfile) detailBadgeSlot.innerHTML = renderBadgesHTML(creatorProfile, 'text-xs');
-                });
+    // Creator card
+    const creatorNameEl = document.getElementById('detail-creator');
+    if (creatorNameEl) creatorNameEl.innerText = '@' + (post.creator_name || 'Creator');
+
+    // Store creator_id for follow/visit actions
+    window._currentDetailCreatorId = post.creator_id || null;
+
+    // Load creator avatar
+    const avatarImg = document.getElementById('detail-creator-avatar');
+    const avatarFallback = document.getElementById('detail-creator-avatar-fallback');
+    if (avatarImg && avatarFallback) {
+        if (post.creator_avatar) {
+            avatarImg.src = cldAvatar(post.creator_avatar);
+            avatarImg.onload = () => { avatarImg.classList.remove('hidden'); avatarFallback.classList.add('hidden'); };
+            avatarImg.onerror = () => { avatarImg.classList.add('hidden'); avatarFallback.classList.remove('hidden'); };
+        } else {
+            avatarImg.classList.add('hidden');
+            avatarFallback.classList.remove('hidden');
         }
+    }
+
+    // Load creator badge + follow state
+    const detailBadgeSlot = document.getElementById('detail-creator-badge');
+    const followBtn = document.getElementById('detail-follow-btn');
+    if (detailBadgeSlot) detailBadgeSlot.innerHTML = '';
+    if (followBtn) followBtn.classList.add('hidden');
+
+    if (post.creator_id) {
+        _supabase.from('profiles').select('is_onboarding_verified, badge_tier').eq('id', post.creator_id).single()
+            .then(({ data: creatorProfile }) => {
+                if (creatorProfile && detailBadgeSlot) detailBadgeSlot.innerHTML = renderBadgesHTML(creatorProfile, 'text-xs');
+            });
+
+        // Show follow button only if not the current user
+        _supabase.auth.getSession().then(async ({ data: { session } }) => {
+            if (!session || session.user.id === post.creator_id) return;
+            if (followBtn) {
+                followBtn.classList.remove('hidden');
+                // Check if already following
+                const { data: existingFollow } = await _supabase
+                    .from('follows')
+                    .select('id')
+                    .eq('follower_id', session.user.id)
+                    .eq('following_id', post.creator_id)
+                    .single();
+                if (existingFollow) {
+                    followBtn.innerText = 'Following';
+                    followBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+                    followBtn.classList.add('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
+                } else {
+                    followBtn.innerText = 'Follow';
+                    followBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-500');
+                    followBtn.classList.remove('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
+                }
+            }
+        });
     }
     document.getElementById('detail-prompt').innerText = post.prompt || '';
     document.getElementById('detail-likes-count').innerText = post.likes ? post.likes.length : 0;
@@ -3098,6 +3143,7 @@ async function loadMyUploads() {
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) { if (loadingEl) loadingEl.classList.add('hidden'); return; }
 
+    // Show Create button for all logged-in users
     const _cb = document.getElementById('profile-create-btn');
     if (_cb) { _cb.classList.remove('hidden'); _cb.classList.add('flex'); }
 
@@ -3284,176 +3330,104 @@ async function loadSavedPosts() {
 const _origSwitchPage = window.showPage;
 
 // ===== GLOBAL SEARCH SYSTEM =====
-let _searchOpen = false;
-let _searchFilter = 'pictures';
-
-function closeSearchBar() {
+// ===== SEARCH SYSTEM (NEW) =====
+function openSearchModal() {
     const overlay = document.getElementById('search-overlay');
-    const input = document.getElementById('global-search-input');
-    _searchOpen = false;
-    overlay.style.opacity = '0';
-    overlay.style.transform = 'translateY(-10px)';
-    overlay.style.pointerEvents = 'none';
-    document.body.style.overflow = '';
-    if (input) input.value = '';
-    const results = document.getElementById('global-search-results');
-    const empty = document.getElementById('global-search-empty');
-    const def = document.getElementById('search-default-state');
-    if (results) results.classList.add('hidden');
-    if (empty) empty.classList.add('hidden');
-    if (def) def.classList.remove('hidden');
-    // Remove history state
-    if (window._searchHistoryPushed) {
-        window._searchHistoryPushed = false;
-    }
-}
-
-function toggleSearchBar() {
-    if (_searchOpen) {
-        closeSearchBar();
-        return;
-    }
-    const overlay = document.getElementById('search-overlay');
-    const input = document.getElementById('global-search-input');
-    _searchOpen = true;
-    overlay.style.opacity = '1';
-    overlay.style.transform = 'translateY(0)';
-    overlay.style.pointerEvents = 'auto';
+    const input = document.getElementById('search-input-new');
+    if (!overlay) return;
+    overlay.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-    
-    // Push state so back button works
-    history.pushState({ search: true }, '');
-    window._searchHistoryPushed = true;
-    
-    setTimeout(() => input && input.focus(), 150);
+    setTimeout(() => input && input.focus(), 100);
 }
 
-// Handle browser back button
-window.addEventListener('popstate', function(e) {
-    if (_searchOpen) {
-        closeSearchBar();
-    }
-});
-
-function toggleSearchFilter() {
-    const dd = document.getElementById('search-filter-dropdown');
-    dd.classList.toggle('hidden');
+function closeSearchModal() {
+    const overlay = document.getElementById('search-overlay');
+    if (!overlay) return;
+    overlay.classList.add('hidden');
+    document.body.style.overflow = '';
+    const input = document.getElementById('search-input-new');
+    if (input) { input.value = ''; }
+    const results = document.getElementById('search-results-new');
+    if (results) results.innerHTML = '<p id="search-hint" class="text-gray-500 text-sm text-center py-6">Type to search images...</p>';
 }
 
-function setSearchFilter(filter) {
-    _searchFilter = filter;
-    const icon = document.getElementById('search-filter-icon');
-    const label = document.getElementById('search-filter-label');
-    const dd = document.getElementById('search-filter-dropdown');
-    
-    if (filter === 'pictures') {
-        if (icon) { icon.className = 'fa-solid fa-image text-indigo-400 text-[9px]'; }
-        if (label) label.innerText = 'Pics';
-    } else {
-        if (icon) { icon.className = 'fa-solid fa-user text-purple-400 text-[9px]'; }
-        if (label) label.innerText = 'Users';
-    }
-    if (dd) dd.classList.add('hidden');
-    
-    // Re-run search with new filter
-    const input = document.getElementById('global-search-input');
-    if (input && input.value.trim()) handleGlobalSearch(input.value);
+function closeSearch(e) {
+    // Close if clicking the backdrop
+    if (e.target.id === 'search-overlay') closeSearchModal();
 }
 
-async function handleGlobalSearch(query) {
-    const resultsEl = document.getElementById('global-search-results');
-    const emptyEl = document.getElementById('global-search-empty');
-    const defEl = document.getElementById('search-default-state');
-    
+// Keep toggleSearchBar as alias so existing button works
+function toggleSearchBar() { openSearchModal(); }
+function closeSearchBar() { closeSearchModal(); }
+
+let _searchTimer = null;
+function runSearch(query) {
+    clearTimeout(_searchTimer);
+    const resultsEl = document.getElementById('search-results-new');
+    if (!resultsEl) return;
+
     if (!query.trim()) {
-        resultsEl.classList.add('hidden');
-        emptyEl.classList.add('hidden');
-        if (defEl) defEl.classList.remove('hidden');
+        resultsEl.innerHTML = '<p class="text-gray-500 text-sm text-center py-6">Type to search images...</p>';
         return;
     }
-    if (defEl) defEl.classList.add('hidden');
 
-    const q = query.toLowerCase();
+    resultsEl.innerHTML = '<p class="text-gray-400 text-sm text-center py-6">Searching...</p>';
 
-    if (_searchFilter === 'pictures') {
-        // Search in feed posts
-        const posts = window._feedPosts || [];
-        const filtered = posts.filter(post => {
-            return (post.title && post.title.toLowerCase().includes(q)) ||
-                   (post.tags && post.tags.some(t => t.toLowerCase().includes(q))) ||
-                   (post.prompt && post.prompt.toLowerCase().includes(q)) ||
-                   (post.creator_name && post.creator_name.toLowerCase().includes(q));
-        });
+    _searchTimer = setTimeout(async () => {
+        try {
+            const q = query.toLowerCase().trim();
+            // Search from Supabase directly - no dependency on _feedPosts
+            const { data: posts } = await _supabase
+                .from('posts')
+                .select('id, title, tags, image_url, creator_name, creator_id')
+                .order('created_at', { ascending: false })
+                .limit(100);
 
-        if (filtered.length === 0) {
-            resultsEl.classList.add('hidden');
-            emptyEl.classList.remove('hidden');
-            return;
-        }
-
-        emptyEl.classList.add('hidden');
-        resultsEl.classList.remove('hidden');
-        resultsEl.innerHTML = filtered.slice(0, 8).map(post => `
-            <div onclick="toggleSearchBar(); openPostDetail('${post.id}')" 
-                class="flex items-center gap-3 p-3 glass rounded-xl border border-white/5 hover:border-indigo-500/30 cursor-pointer transition group">
-                <img src="${cldAvatar(post.image_url)}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
-                <div class="flex-1 min-w-0">
-                    <p class="text-white font-bold text-sm truncate">${post.title || 'Untitled'}</p>
-                    <p class="text-gray-500 text-xs truncate">by @${post.creator_name || 'Creator'}</p>
-                    ${post.tags && post.tags.length ? `<div class="flex gap-1 mt-1 flex-wrap">${post.tags.slice(0,3).map(t => `<span class="text-[9px] px-1.5 py-0.5 bg-indigo-500/10 text-indigo-400 rounded-full">#${t}</span>`).join('')}</div>` : ''}
-                </div>
-                <i class="fa-solid fa-arrow-right text-gray-600 group-hover:text-indigo-400 transition text-xs flex-shrink-0"></i>
-            </div>`).join('');
-
-    } else {
-        // Search profiles from posts (unique creators)
-        const posts = window._feedPosts || [];
-        const creatorsMap = {};
-        posts.forEach(p => {
-            if (p.creator_name && p.creator_name.toLowerCase().includes(q)) {
-                if (!creatorsMap[p.creator_id]) {
-                    creatorsMap[p.creator_id] = { 
-                        name: p.creator_name, 
-                        avatar: p.creator_avatar, 
-                        id: p.creator_id,
-                        posts: 0 
-                    };
-                }
-                creatorsMap[p.creator_id].posts++;
+            if (!posts || posts.length === 0) {
+                resultsEl.innerHTML = '<p class="text-gray-500 text-sm text-center py-6">No posts found</p>';
+                return;
             }
-        });
 
-        const creators = Object.values(creatorsMap);
-        if (creators.length === 0) {
-            resultsEl.classList.add('hidden');
-            emptyEl.classList.remove('hidden');
-            return;
+            const filtered = posts.filter(post =>
+                (post.title && post.title.toLowerCase().includes(q)) ||
+                (post.tags && post.tags.some(t => t.toLowerCase().includes(q))) ||
+                (post.creator_name && post.creator_name.toLowerCase().includes(q))
+            );
+
+            if (filtered.length === 0) {
+                resultsEl.innerHTML = `<p class="text-gray-500 text-sm text-center py-6">No results for "<span class="text-white">${query}</span>"</p>`;
+                return;
+            }
+
+            resultsEl.innerHTML = `
+                <p class="text-gray-500 text-xs uppercase tracking-widest mb-3">${filtered.length} result${filtered.length !== 1 ? 's' : ''}</p>
+                <div class="masonry-feed">
+                    ${filtered.map(post => {
+                        const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
+                        const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[9px] font-bold">#${t}</span>`).join('');
+                        return `<div class="masonry-card group cursor-pointer" onclick="closeSearchModal(); openPostDetail('${post.id}')">
+                            <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-indigo-500/30 transition">
+                                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" loading="lazy" alt="${title}">
+                                <div class="absolute top-0 left-0 right-0 p-2 flex items-center justify-between">
+                                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[70%]">${title}</span>
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-2 translate-y-full group-hover:translate-y-0 transition-transform rounded-b-2xl">
+                                    <div class="flex flex-wrap gap-1 mb-1">${tags}</div>
+                                    <p class="text-gray-400 text-[10px]">@${post.creator_name || 'Creator'}</p>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('')}
+                </div>`;
+        } catch(err) {
+            resultsEl.innerHTML = '<p class="text-red-400 text-sm text-center py-6">Search failed. Try again.</p>';
         }
-
-        emptyEl.classList.add('hidden');
-        resultsEl.classList.remove('hidden');
-        resultsEl.innerHTML = creators.map(c => `
-            <div class="flex items-center gap-3 p-3 glass rounded-xl border border-white/5 hover:border-indigo-500/30 cursor-pointer transition">
-                <div class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 overflow-hidden flex-shrink-0 flex items-center justify-center">
-                    ${c.avatar ? `<img src="${cldAvatar(c.avatar)}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-indigo-400 text-sm"></i>`}
-                </div>
-                <div>
-                    <p class="text-white font-bold text-sm">@${c.name}</p>
-                    <p class="text-gray-500 text-xs">${c.posts} post${c.posts > 1 ? 's' : ''}</p>
-                </div>
-            </div>`).join('');
-    }
+    }, 300);
 }
 
-// Close search on outside click
-document.addEventListener('click', function(e) {
-    if (_searchOpen && !e.target.closest('#search-overlay') && !e.target.closest('#navbar-search-btn')) {
-        toggleSearchBar();
-    }
-    if (!e.target.closest('#search-filter-wrap')) {
-        const dd = document.getElementById('search-filter-dropdown');
-        if (dd) dd.classList.add('hidden');
-    }
+// Close search on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeSearchModal();
 });
 
 // Hook into showPage to load uploads when account opens
@@ -3485,6 +3459,179 @@ window.showPage = function(pageId, pushToHistory) {
         loadStockFeed();
     }
 };
+
+// ===== CREATOR PROFILE VISIT =====
+window.viewCreatorProfile = function() {
+    const creatorId = window._currentDetailCreatorId;
+    if (!creatorId) return;
+    // If it's the current user, go to own account page
+    _supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session && session.user.id === creatorId) {
+            showPage('account');
+        } else {
+            // Open creator profile in global search / user profile view
+            openUserProfileById(creatorId);
+        }
+    });
+};
+
+async function openUserProfileById(userId) {
+    // Fetch user profile data
+    const { data: profile } = await _supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+    const { data: posts } = await _supabase
+        .from('posts')
+        .select('*')
+        .eq('creator_id', userId)
+        .order('created_at', { ascending: false });
+
+    if (!profile && !posts) return;
+
+    // Get name from first post if profile has no display_name
+    const creatorName = (posts && posts.length > 0) ? posts[0].creator_name : 'Creator';
+    const creatorAvatar = (posts && posts.length > 0) ? posts[0].creator_avatar : null;
+
+    // Build modal
+    let modalEl = document.getElementById('user-profile-modal');
+    if (!modalEl) {
+        modalEl = document.createElement('div');
+        modalEl.id = 'user-profile-modal';
+        modalEl.className = 'fixed inset-0 z-[10002] bg-black/80 backdrop-blur-md flex items-start justify-center overflow-y-auto';
+        modalEl.onclick = function(e) { if (e.target === modalEl) closeUserProfileModal(); };
+        document.body.appendChild(modalEl);
+    }
+
+    // Check follow state
+    const { data: { session } } = await _supabase.auth.getSession();
+    let isFollowing = false;
+    let isOwnProfile = session && session.user.id === userId;
+    if (session && !isOwnProfile) {
+        const { data: fw } = await _supabase.from('follows').select('id').eq('follower_id', session.user.id).eq('following_id', userId).single();
+        isFollowing = !!fw;
+    }
+
+    // Follower counts
+    const { count: followerCount } = await _supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', userId);
+    const { count: followingCount } = await _supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', userId);
+
+    const badgeHTML = profile ? renderBadgesHTML(profile, 'text-sm') : '';
+    const avatarHTML = creatorAvatar
+        ? `<img src="${cldAvatar(creatorAvatar)}" class="w-full h-full object-cover" alt="">`
+        : `<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-user text-indigo-400 text-2xl"></i></div>`;
+
+    const followBtnHTML = isOwnProfile ? '' : isFollowing
+        ? `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-white/10 hover:bg-white/20 text-gray-300 font-bold text-sm rounded-xl transition">Following</button>`
+        : `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition">Follow</button>`;
+
+    const postsGrid = (posts && posts.length > 0)
+        ? posts.map(p => `<div class="rounded-xl overflow-hidden cursor-pointer" onclick="closeUserProfileModal(); openPostDetail('${p.id}')"><img src="${cldThumb(p.image_url)}" class="w-full h-auto block" loading="lazy"></div>`).join('')
+        : `<p class="col-span-3 text-center text-gray-500 py-8">No posts yet</p>`;
+
+    modalEl.innerHTML = `
+        <div class="w-full max-w-lg mx-auto my-6 bg-[#0d0d1a] border border-white/10 rounded-3xl overflow-hidden">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
+                <button onclick="closeUserProfileModal()" class="text-gray-400 hover:text-white transition">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <span class="text-white font-black text-sm uppercase tracking-widest">Profile</span>
+                <div class="w-6"></div>
+            </div>
+            <!-- Profile Info -->
+            <div class="px-5 pt-6 pb-4">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-indigo-500/40 bg-white/5 flex-shrink-0">${avatarHTML}</div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h2 class="text-white font-black text-lg">@${creatorName}</h2>
+                            ${badgeHTML}
+                        </div>
+                        <div class="flex items-center gap-4 mt-1 text-gray-400 text-xs">
+                            <span><span class="text-white font-bold">${followerCount || 0}</span> followers</span>
+                            <span><span class="text-white font-bold">${followingCount || 0}</span> following</span>
+                        </div>
+                    </div>
+                    ${followBtnHTML}
+                </div>
+                <p class="text-gray-400 text-sm">${profile?.bio || ''}</p>
+            </div>
+            <!-- Posts Grid -->
+            <div class="px-3 pb-5">
+                <p class="text-[10px] font-black uppercase tracking-widest text-gray-500 px-2 mb-3">Posts · ${posts ? posts.length : 0}</p>
+                <div class="grid grid-cols-3 gap-2">${postsGrid}</div>
+            </div>
+        </div>`;
+
+    modalEl.style.display = 'flex';
+    history.pushState({ userProfile: true }, '');
+}
+
+function closeUserProfileModal() {
+    const modal = document.getElementById('user-profile-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+// ===== FOLLOW / UNFOLLOW FROM POST DETAIL =====
+window.toggleFollowCreator = async function() {
+    const creatorId = window._currentDetailCreatorId;
+    if (!creatorId) return;
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { showToast('Sign in to follow!'); toggleLoginModal(true); return; }
+    if (session.user.id === creatorId) return;
+    await _toggleFollow(session.user.id, creatorId, 'detail-follow-btn');
+};
+
+// ===== FOLLOW / UNFOLLOW FROM USER PROFILE MODAL =====
+window.toggleFollowUserModal = async function(targetUserId) {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { showToast('Sign in to follow!'); toggleLoginModal(true); return; }
+    await _toggleFollow(session.user.id, targetUserId, 'upm-follow-btn');
+};
+
+// ===== SHARED FOLLOW LOGIC =====
+async function _toggleFollow(followerId, followingId, btnId) {
+    const { data: existing } = await _supabase
+        .from('follows')
+        .select('id')
+        .eq('follower_id', followerId)
+        .eq('following_id', followingId)
+        .single();
+
+    const btn = document.getElementById(btnId);
+
+    if (existing) {
+        // Unfollow
+        await _supabase.from('follows').delete().eq('follower_id', followerId).eq('following_id', followingId);
+        if (btn) {
+            btn.innerText = 'Follow';
+            btn.classList.remove('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
+            btn.classList.add('bg-indigo-600', 'hover:bg-indigo-500', 'text-white');
+        }
+        showToast('Unfollowed');
+    } else {
+        // Follow
+        await _supabase.from('follows').insert([{ follower_id: followerId, following_id: followingId }]);
+        if (btn) {
+            btn.innerText = 'Following';
+            btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+            btn.classList.add('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
+        }
+        showToast('Following! 🎉');
+    }
+}
+
+// Close user profile modal on back button
+window.addEventListener('popstate', function(e) {
+    const modal = document.getElementById('user-profile-modal');
+    if (modal && modal.style.display !== 'none') {
+        closeUserProfileModal();
+    }
+});
+
 </script>
 
 <!-- ===== ADS POSTER PAGE ===== -->
@@ -3493,7 +3640,7 @@ window.showPage = function(pageId, pushToHistory) {
     <div class="flex items-center justify-between mb-8">
         <div>
             <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">ADS <span class="text-orange-400">POSTER</span></h2>
-            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">Business & product AI images</p>
+            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">Business &amp; product AI images</p>
         </div>
         <button onclick="openUploadModal('ads_poster')" class="w-10 h-10 flex items-center justify-center bg-orange-600/20 hover:bg-orange-600/40 border border-orange-500/30 rounded-xl transition text-orange-400">
             <i class="fa-solid fa-plus text-sm"></i>
@@ -3566,20 +3713,18 @@ async function loadAdsFeed(force = false) {
             const creator = post.creator_name || 'Creator';
             card.className = 'masonry-card group cursor-pointer';
             card.onclick = () => openPostDetail(post.id);
-            card.innerHTML = `<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all duration-300">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" loading="lazy">
-                <div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ${likes}</span>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">
-                    <p class="text-gray-200 text-xs line-clamp-3 mb-2">${promptPreview}</p>
-                    <div class="flex items-center justify-between">
-                        <button onclick="event.stopPropagation();copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-orange-600/80 hover:bg-orange-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>
-                        <span class="text-gray-400 text-[10px]">@${creator}</span>
-                    </div>
-                </div>
-            </div>`;
+            card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all duration-300">'
+                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
+                + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
+                + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
+                + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
+                + '</div>'
+                + '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">'
+                + '<p class="text-gray-200 text-xs line-clamp-3 mb-2">' + promptPreview + '</p>'
+                + '<div class="flex items-center justify-between">'
+                + '<button onclick="event.stopPropagation();copyFeedPrompt('' + post.id + '')" class="flex items-center gap-1.5 bg-orange-600/80 hover:bg-orange-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>'
+                + '<span class="text-gray-400 text-[10px]">@' + creator + '</span>'
+                + '</div></div></div>';
             feedEl.appendChild(card);
         });
         _adsFeedLoaded = true;
@@ -3611,20 +3756,18 @@ async function loadStockFeed(force = false) {
             const creator = post.creator_name || 'Creator';
             card.className = 'masonry-card group cursor-pointer';
             card.onclick = () => openPostDetail(post.id);
-            card.innerHTML = `<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all duration-300">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" loading="lazy">
-                <div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ${likes}</span>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">
-                    <p class="text-gray-200 text-xs line-clamp-3 mb-2">${promptPreview}</p>
-                    <div class="flex items-center justify-between">
-                        <button onclick="event.stopPropagation();copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-purple-600/80 hover:bg-purple-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>
-                        <span class="text-gray-400 text-[10px]">@${creator}</span>
-                    </div>
-                </div>
-            </div>`;
+            card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all duration-300">'
+                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
+                + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
+                + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
+                + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
+                + '</div>'
+                + '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">'
+                + '<p class="text-gray-200 text-xs line-clamp-3 mb-2">' + promptPreview + '</p>'
+                + '<div class="flex items-center justify-between">'
+                + '<button onclick="event.stopPropagation();copyFeedPrompt('' + post.id + '')" class="flex items-center gap-1.5 bg-purple-600/80 hover:bg-purple-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>'
+                + '<span class="text-gray-400 text-[10px]">@' + creator + '</span>'
+                + '</div></div></div>';
             feedEl.appendChild(card);
         });
         _stockFeedLoaded = true;
