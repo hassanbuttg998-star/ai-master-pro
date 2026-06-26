@@ -148,7 +148,7 @@
     </div>
 
 </div>
-            <button onclick="toggleSidebar(event)" class="p-2 text-white bg-gradient-to-br from-indigo-600/80 to-purple-600/80 rounded-xl border border-indigo-500/40 hover:from-indigo-500 hover:to-purple-500 transition duration-300 md:hidden ml-0 shadow-[0_0_12px_rgba(99,102,241,0.4)]">
+            <button onclick="toggleSidebar(event)" class="p-2 text-white bg-white/8 rounded-xl border border-white/15 hover:bg-indigo-600/30 hover:border-indigo-500/40 transition duration-300 md:hidden ml-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -158,50 +158,31 @@
     </div>
 </nav>
 
-<!-- Search Modal - Full screen overlay -->
-<div id="search-overlay" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-250" style="transform: translateY(-10px)">
-    <div class="flex flex-col h-full">
-        <!-- Search Header -->
-        <div class="px-4 pt-4 pb-3 border-b border-white/10">
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-3 flex-1 min-w-0 bg-white/5 border border-indigo-500/40 rounded-2xl px-4 py-3">
-                    <i class="fa-solid fa-magnifying-glass text-indigo-400 text-sm flex-shrink-0"></i>
-                    <input type="text" id="global-search-input" placeholder="Search images or creators..." 
-                        class="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none"
-                        oninput="handleGlobalSearch(this.value)">
-                    <!-- Filter Button -->
-                    <div class="relative flex-shrink-0" id="search-filter-wrap">
-                        <button onclick="toggleSearchFilter()" class="flex items-center gap-1 px-2 py-1.5 bg-indigo-600/20 border border-indigo-500/30 rounded-xl text-[11px] font-bold text-indigo-300 hover:bg-indigo-600/40 transition whitespace-nowrap">
-                            <i id="search-filter-icon" class="fa-solid fa-image text-[9px]"></i>
-                            <span id="search-filter-label">Pics</span>
-                            <i class="fa-solid fa-chevron-down text-[8px]"></i>
-                        </button>
-                        <div id="search-filter-dropdown" class="hidden absolute right-0 top-full mt-2 w-36 bg-[#111827] border border-white/10 rounded-xl overflow-hidden shadow-xl z-10">
-                            <button onclick="setSearchFilter('pictures')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold border-b border-white/5">
-                                <i class="fa-solid fa-image text-indigo-400"></i> Pictures
-                            </button>
-                            <button onclick="setSearchFilter('profiles')" class="w-full flex items-center gap-2 px-4 py-2.5 text-white hover:bg-indigo-600/20 transition text-xs font-bold">
-                                <i class="fa-solid fa-user text-purple-400"></i> Profiles
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+<!-- Search Modal -->
+<div id="search-overlay" class="fixed inset-0 z-[9999] hidden" onclick="closeSearch(event)">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+    <div id="search-sheet" class="absolute top-0 left-0 right-0 bg-[#0d0d1a] border-b border-white/10 shadow-2xl">
+        <!-- Input row -->
+        <div class="flex items-center gap-3 px-4 pt-4 pb-3">
+            <div class="flex-1 flex items-center gap-2 bg-white/5 border border-indigo-500/30 rounded-2xl px-4 py-3">
+                <i class="fa-solid fa-magnifying-glass text-indigo-400 text-sm"></i>
+                <input id="search-input-new" type="text" placeholder="Search by title or tag..."
+                    class="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none"
+                    oninput="runSearch(this.value)">
+                <button onclick="document.getElementById('search-input-new').value=''; runSearch('');" class="text-gray-500 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
             </div>
+            <button onclick="closeSearchModal()" class="text-gray-400 hover:text-white transition text-sm font-bold">Cancel</button>
         </div>
-
-        <!-- Search Results -->
-        <div class="flex-1 overflow-y-auto px-4 py-4">
-            <div id="global-search-results" class="space-y-2 hidden"></div>
-            <p id="global-search-empty" class="hidden text-center text-gray-500 text-sm py-8">No results found</p>
-            <!-- Default state -->
-            <div id="search-default-state" class="text-center py-12">
-                <i class="fa-solid fa-magnifying-glass text-4xl text-gray-700 mb-4"></i>
-                <p class="text-gray-500 text-sm">Search for AI images or creators</p>
-            </div>
+        <!-- Results -->
+        <div id="search-results-new" class="overflow-y-auto max-h-[70vh] px-4 pb-4">
+            <p id="search-hint" class="text-gray-500 text-sm text-center py-6">Type to search images...</p>
         </div>
     </div>
 </div>
+
+
 
 <div id="sidebar" class="fixed top-0 right-0 h-screen w-72 bg-[#08080c] border-l border-white/10 p-8 transform translate-x-full shadow-2xl">
     <div class="flex justify-between items-center mb-10">
@@ -3327,176 +3308,104 @@ async function loadSavedPosts() {
 const _origSwitchPage = window.showPage;
 
 // ===== GLOBAL SEARCH SYSTEM =====
-let _searchOpen = false;
-let _searchFilter = 'pictures';
-
-function closeSearchBar() {
+// ===== SEARCH SYSTEM (NEW) =====
+function openSearchModal() {
     const overlay = document.getElementById('search-overlay');
-    const input = document.getElementById('global-search-input');
-    _searchOpen = false;
-    overlay.style.opacity = '0';
-    overlay.style.transform = 'translateY(-10px)';
-    overlay.style.pointerEvents = 'none';
-    document.body.style.overflow = '';
-    if (input) input.value = '';
-    const results = document.getElementById('global-search-results');
-    const empty = document.getElementById('global-search-empty');
-    const def = document.getElementById('search-default-state');
-    if (results) results.classList.add('hidden');
-    if (empty) empty.classList.add('hidden');
-    if (def) def.classList.remove('hidden');
-    // Remove history state
-    if (window._searchHistoryPushed) {
-        window._searchHistoryPushed = false;
-    }
-}
-
-function toggleSearchBar() {
-    if (_searchOpen) {
-        closeSearchBar();
-        return;
-    }
-    const overlay = document.getElementById('search-overlay');
-    const input = document.getElementById('global-search-input');
-    _searchOpen = true;
-    overlay.style.opacity = '1';
-    overlay.style.transform = 'translateY(0)';
-    overlay.style.pointerEvents = 'auto';
+    const input = document.getElementById('search-input-new');
+    if (!overlay) return;
+    overlay.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-    
-    // Push state so back button works
-    history.pushState({ search: true }, '');
-    window._searchHistoryPushed = true;
-    
-    setTimeout(() => input && input.focus(), 150);
+    setTimeout(() => input && input.focus(), 100);
 }
 
-// Handle browser back button
-window.addEventListener('popstate', function(e) {
-    if (_searchOpen) {
-        closeSearchBar();
-    }
-});
-
-function toggleSearchFilter() {
-    const dd = document.getElementById('search-filter-dropdown');
-    dd.classList.toggle('hidden');
+function closeSearchModal() {
+    const overlay = document.getElementById('search-overlay');
+    if (!overlay) return;
+    overlay.classList.add('hidden');
+    document.body.style.overflow = '';
+    const input = document.getElementById('search-input-new');
+    if (input) { input.value = ''; }
+    const results = document.getElementById('search-results-new');
+    if (results) results.innerHTML = '<p id="search-hint" class="text-gray-500 text-sm text-center py-6">Type to search images...</p>';
 }
 
-function setSearchFilter(filter) {
-    _searchFilter = filter;
-    const icon = document.getElementById('search-filter-icon');
-    const label = document.getElementById('search-filter-label');
-    const dd = document.getElementById('search-filter-dropdown');
-    
-    if (filter === 'pictures') {
-        if (icon) { icon.className = 'fa-solid fa-image text-indigo-400 text-[9px]'; }
-        if (label) label.innerText = 'Pics';
-    } else {
-        if (icon) { icon.className = 'fa-solid fa-user text-purple-400 text-[9px]'; }
-        if (label) label.innerText = 'Users';
-    }
-    if (dd) dd.classList.add('hidden');
-    
-    // Re-run search with new filter
-    const input = document.getElementById('global-search-input');
-    if (input && input.value.trim()) handleGlobalSearch(input.value);
+function closeSearch(e) {
+    // Close if clicking the backdrop
+    if (e.target.id === 'search-overlay') closeSearchModal();
 }
 
-async function handleGlobalSearch(query) {
-    const resultsEl = document.getElementById('global-search-results');
-    const emptyEl = document.getElementById('global-search-empty');
-    const defEl = document.getElementById('search-default-state');
-    
+// Keep toggleSearchBar as alias so existing button works
+function toggleSearchBar() { openSearchModal(); }
+function closeSearchBar() { closeSearchModal(); }
+
+let _searchTimer = null;
+function runSearch(query) {
+    clearTimeout(_searchTimer);
+    const resultsEl = document.getElementById('search-results-new');
+    if (!resultsEl) return;
+
     if (!query.trim()) {
-        resultsEl.classList.add('hidden');
-        emptyEl.classList.add('hidden');
-        if (defEl) defEl.classList.remove('hidden');
+        resultsEl.innerHTML = '<p class="text-gray-500 text-sm text-center py-6">Type to search images...</p>';
         return;
     }
-    if (defEl) defEl.classList.add('hidden');
 
-    const q = query.toLowerCase();
+    resultsEl.innerHTML = '<p class="text-gray-400 text-sm text-center py-6">Searching...</p>';
 
-    if (_searchFilter === 'pictures') {
-        // Search in feed posts
-        const posts = window._feedPosts || [];
-        const filtered = posts.filter(post => {
-            return (post.title && post.title.toLowerCase().includes(q)) ||
-                   (post.tags && post.tags.some(t => t.toLowerCase().includes(q))) ||
-                   (post.prompt && post.prompt.toLowerCase().includes(q)) ||
-                   (post.creator_name && post.creator_name.toLowerCase().includes(q));
-        });
+    _searchTimer = setTimeout(async () => {
+        try {
+            const q = query.toLowerCase().trim();
+            // Search from Supabase directly - no dependency on _feedPosts
+            const { data: posts } = await _supabase
+                .from('posts')
+                .select('id, title, tags, image_url, creator_name, creator_id')
+                .order('created_at', { ascending: false })
+                .limit(100);
 
-        if (filtered.length === 0) {
-            resultsEl.classList.add('hidden');
-            emptyEl.classList.remove('hidden');
-            return;
-        }
-
-        emptyEl.classList.add('hidden');
-        resultsEl.classList.remove('hidden');
-        resultsEl.innerHTML = filtered.slice(0, 8).map(post => `
-            <div onclick="toggleSearchBar(); openPostDetail('${post.id}')" 
-                class="flex items-center gap-3 p-3 glass rounded-xl border border-white/5 hover:border-indigo-500/30 cursor-pointer transition group">
-                <img src="${cldAvatar(post.image_url)}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
-                <div class="flex-1 min-w-0">
-                    <p class="text-white font-bold text-sm truncate">${post.title || 'Untitled'}</p>
-                    <p class="text-gray-500 text-xs truncate">by @${post.creator_name || 'Creator'}</p>
-                    ${post.tags && post.tags.length ? `<div class="flex gap-1 mt-1 flex-wrap">${post.tags.slice(0,3).map(t => `<span class="text-[9px] px-1.5 py-0.5 bg-indigo-500/10 text-indigo-400 rounded-full">#${t}</span>`).join('')}</div>` : ''}
-                </div>
-                <i class="fa-solid fa-arrow-right text-gray-600 group-hover:text-indigo-400 transition text-xs flex-shrink-0"></i>
-            </div>`).join('');
-
-    } else {
-        // Search profiles from posts (unique creators)
-        const posts = window._feedPosts || [];
-        const creatorsMap = {};
-        posts.forEach(p => {
-            if (p.creator_name && p.creator_name.toLowerCase().includes(q)) {
-                if (!creatorsMap[p.creator_id]) {
-                    creatorsMap[p.creator_id] = { 
-                        name: p.creator_name, 
-                        avatar: p.creator_avatar, 
-                        id: p.creator_id,
-                        posts: 0 
-                    };
-                }
-                creatorsMap[p.creator_id].posts++;
+            if (!posts || posts.length === 0) {
+                resultsEl.innerHTML = '<p class="text-gray-500 text-sm text-center py-6">No posts found</p>';
+                return;
             }
-        });
 
-        const creators = Object.values(creatorsMap);
-        if (creators.length === 0) {
-            resultsEl.classList.add('hidden');
-            emptyEl.classList.remove('hidden');
-            return;
+            const filtered = posts.filter(post =>
+                (post.title && post.title.toLowerCase().includes(q)) ||
+                (post.tags && post.tags.some(t => t.toLowerCase().includes(q))) ||
+                (post.creator_name && post.creator_name.toLowerCase().includes(q))
+            );
+
+            if (filtered.length === 0) {
+                resultsEl.innerHTML = `<p class="text-gray-500 text-sm text-center py-6">No results for "<span class="text-white">${query}</span>"</p>`;
+                return;
+            }
+
+            resultsEl.innerHTML = `
+                <p class="text-gray-500 text-xs uppercase tracking-widest mb-3">${filtered.length} result${filtered.length !== 1 ? 's' : ''}</p>
+                <div class="masonry-feed">
+                    ${filtered.map(post => {
+                        const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
+                        const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[9px] font-bold">#${t}</span>`).join('');
+                        return `<div class="masonry-card group cursor-pointer" onclick="closeSearchModal(); openPostDetail('${post.id}')">
+                            <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-indigo-500/30 transition">
+                                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" loading="lazy" alt="${title}">
+                                <div class="absolute top-0 left-0 right-0 p-2 flex items-center justify-between">
+                                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[70%]">${title}</span>
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-2 translate-y-full group-hover:translate-y-0 transition-transform rounded-b-2xl">
+                                    <div class="flex flex-wrap gap-1 mb-1">${tags}</div>
+                                    <p class="text-gray-400 text-[10px]">@${post.creator_name || 'Creator'}</p>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('')}
+                </div>`;
+        } catch(err) {
+            resultsEl.innerHTML = '<p class="text-red-400 text-sm text-center py-6">Search failed. Try again.</p>';
         }
-
-        emptyEl.classList.add('hidden');
-        resultsEl.classList.remove('hidden');
-        resultsEl.innerHTML = creators.map(c => `
-            <div class="flex items-center gap-3 p-3 glass rounded-xl border border-white/5 hover:border-indigo-500/30 cursor-pointer transition">
-                <div class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 overflow-hidden flex-shrink-0 flex items-center justify-center">
-                    ${c.avatar ? `<img src="${cldAvatar(c.avatar)}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-indigo-400 text-sm"></i>`}
-                </div>
-                <div>
-                    <p class="text-white font-bold text-sm">@${c.name}</p>
-                    <p class="text-gray-500 text-xs">${c.posts} post${c.posts > 1 ? 's' : ''}</p>
-                </div>
-            </div>`).join('');
-    }
+    }, 300);
 }
 
-// Close search on outside click
-document.addEventListener('click', function(e) {
-    if (_searchOpen && !e.target.closest('#search-overlay') && !e.target.closest('#navbar-search-btn')) {
-        toggleSearchBar();
-    }
-    if (!e.target.closest('#search-filter-wrap')) {
-        const dd = document.getElementById('search-filter-dropdown');
-        if (dd) dd.classList.add('hidden');
-    }
+// Close search on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeSearchModal();
 });
 
 // Hook into showPage to load uploads when account opens
