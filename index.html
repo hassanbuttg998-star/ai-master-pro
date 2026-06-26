@@ -52,7 +52,7 @@
     .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .page-content { display: none; }
     .active-page { display: block !important; animation: fadeIn 0.5s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; transform: translateY(0); } }
     #sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1); z-index: 200; }
     .nav-link { cursor: pointer; transition: all 0.3s; }
     .nav-link:hover { color: #6366f1; }
@@ -148,9 +148,9 @@
     </div>
 
 </div>
-            <button onclick="toggleSidebar(event)" class="p-2 text-white bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition duration-300 md:hidden ml-0">
+            <button onclick="toggleSidebar(event)" class="p-2 text-white bg-gradient-to-br from-indigo-600/80 to-purple-600/80 rounded-xl border border-indigo-500/40 hover:from-indigo-500 hover:to-purple-500 transition duration-300 md:hidden ml-0 shadow-[0_0_12px_rgba(99,102,241,0.4)]">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
             </button>
         </div>
@@ -647,7 +647,7 @@
     <div class="flex items-center justify-between mb-8">
         <div>
             <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">AI <span class="text-indigo-500">Images</span></h2>
-            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">AI creations by FRAZ<span class="text-indigo-400">X</span> creators worldwide</p>
+            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">Increase your quality with FRAZ<span class="text-indigo-400">X</span></p>
         </div>
 
         <div class="flex items-center gap-2">
