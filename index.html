@@ -1057,15 +1057,21 @@
             </button>
         </div>
 
-        <!-- Profile Tabs - centered like Pinterest -->
-        <div id="profile-tabs-wrap" class="border-b border-white/10 flex justify-center gap-2 mb-6">
-            <button onclick="switchProfileTab('posts')" id="tab-posts" class="px-5 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2 transition">
+        <!-- Profile Tabs -->
+        <div id="profile-tabs-wrap" class="border-b border-white/10 flex justify-center gap-1 mb-6 overflow-x-auto">
+            <button onclick="switchProfileTab('posts')" id="tab-posts" class="px-4 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2 transition whitespace-nowrap">
                 Posts <span id="account-post-count" class="text-gray-400 font-normal text-xs">0</span>
             </button>
-            <button onclick="switchProfileTab('liked')" id="tab-liked" class="px-5 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition">
+            <button onclick="switchProfileTab('ads')" id="tab-ads" class="px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition whitespace-nowrap">
+                Ads Post
+            </button>
+            <button onclick="switchProfileTab('aistock')" id="tab-aistock" class="px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition whitespace-nowrap">
+                AI Stock
+            </button>
+            <button onclick="switchProfileTab('liked')" id="tab-liked" class="px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition whitespace-nowrap">
                 Liked
             </button>
-            <button onclick="switchProfileTab('saved')" id="tab-saved" class="px-5 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition">
+            <button onclick="switchProfileTab('saved')" id="tab-saved" class="px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition whitespace-nowrap">
                 Saved
             </button>
         </div>
@@ -1091,7 +1097,29 @@
                 </div>
             </div>
 
-            <!-- Liked Tab -->
+            <!-- Ads Post Tab -->
+            <div id="profile-tab-ads" class="hidden">
+                <div id="my-ads-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-5"></div>
+                <div id="my-ads-empty" class="hidden text-center py-16">
+                    <i class="fa-solid fa-rectangle-ad text-4xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-500 text-sm">No Ads posts yet</p>
+                    <button onclick="openUploadModal('ads_poster')" class="mt-4 px-6 py-2.5 bg-orange-600 hover:bg-orange-500 text-white font-black text-xs uppercase rounded-xl transition">Upload First</button>
+                </div>
+                <div id="my-ads-loading" class="text-center py-8 text-gray-500 text-sm hidden">Loading...</div>
+            </div>
+
+          <!-- AI Stock Tab -->
+            <div id="profile-tab-aistock" class="hidden">
+                <div id="my-stock-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-5"></div>
+                <div id="my-stock-empty" class="hidden text-center py-16">
+                    <i class="fa-solid fa-layer-group text-4xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-500 text-sm">No AI Stock posts yet</p>
+                    <button onclick="openUploadModal('ai_stock')" class="mt-4 px-6 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs uppercase rounded-xl transition">Upload First</button>
+                </div>
+                <div id="my-stock-loading" class="text-center py-8 text-gray-500 text-sm hidden">Loading...</div>
+            </div>
+
+          <!-- Liked Tab -->
             <div id="profile-tab-liked" class="hidden">
                 <div id="liked-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-5"></div>
                 <div id="liked-empty" class="hidden text-center py-16">
@@ -3346,19 +3374,21 @@ function switchProfileTab(tab) {
     _currentProfileTab = tab;
     
     // Update tab styles
-    ['posts', 'liked', 'saved'].forEach(t => {
+    ['posts', 'ads', 'aistock', 'liked', 'saved'].forEach(t => {
         const btn = document.getElementById('tab-' + t);
         const panel = document.getElementById('profile-tab-' + t);
         if (btn) {
             btn.className = t === tab
-                ? 'px-5 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2 transition'
-                : 'px-5 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition';
+                ? 'px-4 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2 transition whitespace-nowrap'
+                : 'px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-black text-sm flex items-center gap-2 transition whitespace-nowrap';
         }
         if (panel) panel.classList.toggle('hidden', t !== tab);
     });
 
     if (tab === 'liked') loadLikedPosts();
     if (tab === 'saved') loadSavedPosts();
+    if (tab === 'ads') loadMyAdsPosts();
+    if (tab === 'aistock') loadMyStockPosts();
 }
 
 async function loadLikedPosts() {
@@ -3797,6 +3827,55 @@ async function loadStockFeed(force = false) {
         _stockFeedLoaded = true;
     } catch(e) { if (loadingEl) loadingEl.classList.add('hidden'); if (emptyEl) emptyEl.classList.remove('hidden'); }
     _stockFeedLoading = false;
+}
+
+
+// ===== PROFILE: ADS POST TAB =====
+async function loadMyAdsPosts() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+    const grid = document.getElementById('my-ads-grid');
+    const emptyEl = document.getElementById('my-ads-empty');
+    const loadingEl = document.getElementById('my-ads-loading');
+    if (grid) grid.innerHTML = '';
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (emptyEl) emptyEl.classList.add('hidden');
+    const { data: posts } = await _supabase
+        .from('posts')
+        .select('*')
+        .eq('creator_id', session.user.id)
+        .eq('category', 'ads_poster')
+        .order('created_at', { ascending: false });
+    if (loadingEl) loadingEl.classList.add('hidden');
+    if (!posts || posts.length === 0) {
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        return;
+    }
+    if (grid) grid.innerHTML = posts.map(post => profileCardHTML(post, true)).join('');
+}
+
+// ===== PROFILE: AI STOCK TAB =====
+async function loadMyStockPosts() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+    const grid = document.getElementById('my-stock-grid');
+    const emptyEl = document.getElementById('my-stock-empty');
+    const loadingEl = document.getElementById('my-stock-loading');
+    if (grid) grid.innerHTML = '';
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (emptyEl) emptyEl.classList.add('hidden');
+    const { data: posts } = await _supabase
+        .from('posts')
+        .select('*')
+        .eq('creator_id', session.user.id)
+        .eq('category', 'ai_stock')
+        .order('created_at', { ascending: false });
+    if (loadingEl) loadingEl.classList.add('hidden');
+    if (!posts || posts.length === 0) {
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        return;
+    }
+    if (grid) grid.innerHTML = posts.map(post => profileCardHTML(post, true)).join('');
 }
 
 </script>
