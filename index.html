@@ -2918,6 +2918,10 @@ async function submitCommunityPost() {
         const creatorName = user.user_metadata?.display_name || user.email.split('@')[0];
         const creatorAvatar = user.user_metadata?.avatar_url || '';
 
+        // Read category BEFORE closing modal
+        const categoryEl = document.getElementById('upload-category-input');
+        const selectedCategory = categoryEl ? categoryEl.value : 'ai_images';
+
         const { error: dbError } = await _supabase
             .from('posts')
             .insert([{
@@ -2928,7 +2932,7 @@ async function submitCommunityPost() {
                 creator_name: creatorName,
                 creator_avatar: creatorAvatar,
                 creator_id: user.id,
-                category: (document.getElementById('upload-category-input')?.value || 'ai_images')
+                category: selectedCategory
             }]);
 
         if (dbError) {
@@ -2939,9 +2943,18 @@ async function submitCommunityPost() {
 
         closeUploadModal();
         showToast("Creation published! 🎉");
-        _feedLoading = false;
-        _feedLoaded = false;
-        loadCommunityFeed(true);
+        // Reload the correct feed based on category
+        if (selectedCategory === 'ads_poster') {
+            _adsFeedLoaded = false;
+            loadAdsFeed(true);
+        } else if (selectedCategory === 'ai_stock') {
+            _stockFeedLoaded = false;
+            loadStockFeed(true);
+        } else {
+            _feedLoading = false;
+            _feedLoaded = false;
+            loadCommunityFeed(true);
+        }
         loadMyUploads();
 
     } catch(e) {
