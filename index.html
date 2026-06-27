@@ -3708,9 +3708,8 @@ window.addEventListener('popstate', function(e) {
     }
 });
 
-</script>
 
-<script>
+
 // ===== ADS POSTER FEED =====
 let _adsFeedLoaded = false, _adsFeedLoading = false;
 async function loadAdsFeed(force = false) {
@@ -3796,7 +3795,10 @@ async function loadStockFeed(force = false) {
     } catch(e) { if (loadingEl) loadingEl.classList.add('hidden'); if (emptyEl) emptyEl.classList.remove('hidden'); }
     _stockFeedLoading = false;
 }
+
 </script>
+
+
 
 </body>
 </html>
