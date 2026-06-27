@@ -3507,6 +3507,10 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Hook into showPage to load uploads when account opens
+// Feed state variables
+let _adsFeedLoaded = false, _adsFeedLoading = false;
+let _stockFeedLoaded = false, _stockFeedLoading = false;
+
 const _origShowPage2 = window.showPage;
 window.showPage = function(pageId, pushToHistory) {
     document.getElementById('main-navbar').style.display = '';
@@ -3711,7 +3715,6 @@ window.addEventListener('popstate', function(e) {
 
 
 // ===== ADS POSTER FEED =====
-let _adsFeedLoaded = false, _adsFeedLoading = false;
 async function loadAdsFeed(force = false) {
     if (_adsFeedLoading) return;
     if (_adsFeedLoaded && !force) return;
@@ -3754,7 +3757,6 @@ async function loadAdsFeed(force = false) {
 }
 
 // ===== AI STOCK FEED =====
-let _stockFeedLoaded = false, _stockFeedLoading = false;
 async function loadStockFeed(force = false) {
     if (_stockFeedLoading) return;
     if (_stockFeedLoaded && !force) return;
