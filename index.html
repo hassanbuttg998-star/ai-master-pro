@@ -2020,6 +2020,7 @@ async function loadCommunityFeed(force = false) {
         const { data: posts, error } = await _supabase
             .from('posts')
             .select('*')
+            .or('category.eq.ai_images,category.is.null')
             .order('created_at', { ascending: false });
 
         if (loadingEl) loadingEl.classList.add('hidden');
