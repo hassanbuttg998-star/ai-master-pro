@@ -970,8 +970,8 @@
     </div>
 </section>
 
-<section id="account" class="page-content pt-24 pb-20 px-4 md:px-8">
-<div class="max-w-7xl mx-auto">
+<section id="account" class="page-content pt-24 pb-20 w-full">
+<div class="w-full px-4 md:px-8">
 
     <!-- Guest State -->
     <div id="account-guest-card" class="hidden px-4 py-24 text-center max-w-md mx-auto">
@@ -1013,7 +1013,7 @@
                         <input id="edit-name-input" type="text" placeholder="Enter display name..." class="flex-1 bg-black/40 border border-indigo-500/30 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500 transition">
                         <button onclick="saveDisplayName()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-black text-xs transition">Save</button>
                     </div>
-                    <p id="account-email" class="text-gray-500 text-xs md:text-sm truncate"></p>
+                    <p id="account-email" class="hidden"></p>
 
                     <!-- Stats -->
                     <div class="flex items-center gap-1.5 text-gray-400 text-xs md:text-sm mt-2 flex-wrap">
@@ -1027,13 +1027,9 @@
                         Follow
                     </button>
 
-                    <!-- Bio -->
-                    <p class="text-gray-400 text-xs md:text-sm mt-3 max-w-md">AI Creator on FRAZX PRO ⚡ Generating cinematic art with neural tools.</p>
+                    <!-- Bio hidden for clean profile -->
 
-                    <!-- Website -->
-                    <a href="https://ai-master-pro.vercel.app" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 text-xs md:text-sm font-bold mt-2 transition">
-                        <i class="fa-solid fa-globe text-[10px]"></i> ai-master-pro.vercel.app
-                    </a>
+                    <!-- Website hidden -->
                 </div>
             </div>
 
