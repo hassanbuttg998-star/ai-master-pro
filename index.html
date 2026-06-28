@@ -1058,7 +1058,7 @@
         </div>
 
         <!-- Profile Tabs -->
-        <div id="profile-tabs-wrap" class="border-b border-white/10 flex justify-center gap-1 mb-6 overflow-x-auto">
+        <div id="profile-tabs-wrap" class="border-b border-white/10 flex mb-6 overflow-x-auto scrollbar-hide">
             <button onclick="switchProfileTab('posts')" id="tab-posts" class="px-4 py-3 border-b-2 border-white text-white font-black text-sm flex items-center gap-2 transition whitespace-nowrap">
                 Posts <span id="account-post-count" class="text-gray-400 font-normal text-xs">0</span>
             </button>
@@ -3258,6 +3258,7 @@ async function loadMyUploads() {
         .from('posts')
         .select('*')
         .eq('creator_id', session.user.id)
+        .or('category.eq.ai_images,category.is.null')
         .order('created_at', { ascending: false });
 
     if (loadingEl) loadingEl.classList.add('hidden');
