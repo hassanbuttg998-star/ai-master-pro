@@ -1194,14 +1194,22 @@
 <!-- ===== AI STOCK PAGE ===== -->
 <section id="ai-stock" class="page-content pt-28 pb-20 w-full" style="display:none;">
 <div class="w-full px-3 md:px-4">
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">AI <span class="text-purple-400">STOCK</span></h2>
-            <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">Premium AI generated assets</p>
+    <div class="mb-6">
+        <h2 class="text-3xl font-black italic uppercase text-white tracking-widest mb-1">AI <span class="text-purple-400">STOCK</span></h2>
+        <p class="text-gray-500 text-xs tracking-widest uppercase mb-4">Premium AI generated assets</p>
+        <!-- Categories -->
+        <div class="flex flex-wrap gap-2">
+            <button onclick="filterStockCat('all')" id="stock-cat-all" class="stock-cat-btn px-3 py-1.5 bg-purple-600 text-white text-xs font-bold rounded-full transition border border-purple-500">All</button>
+            <button onclick="filterStockCat('nature')" id="stock-cat-nature" class="stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10">🌿 Nature</button>
+            <button onclick="filterStockCat('mountains')" id="stock-cat-mountains" class="stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10">🏔️ Mountains</button>
+            <button onclick="filterStockCat('animal')" id="stock-cat-animal" class="stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10">🐾 Animal</button>
+            <button onclick="filterStockCat('birds')" id="stock-cat-birds" class="stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10">🦅 Birds</button>
+            <button onclick="filterStockCat('colourful')" id="stock-cat-colourful" class="stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10">🎨 Colourful</button>
+            <button onclick="filterStockCat('futuristic city')" id="stock-cat-futuristic city" class="stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10">🌆 Futuristic City</button>
+            <button onclick="filterStockCat('futuristic car')" id="stock-cat-futuristic car" class="stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10">🚗 Futuristic Car</button>
+            <button onclick="filterStockCat('objects')" id="stock-cat-objects" class="stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10">📦 Objects</button>
+            <button onclick="filterStockCat('sky')" id="stock-cat-sky" class="stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10">☁️ Sky</button>
         </div>
-        <button onclick="openUploadModal('ai_stock')" class="w-10 h-10 flex items-center justify-center bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/30 rounded-xl transition text-purple-400">
-            <i class="fa-solid fa-plus text-sm"></i>
-        </button>
     </div>
     <div id="stock-feed" class="masonry-feed"></div>
     <div id="stock-loading" class="masonry-feed">
@@ -3825,6 +3833,7 @@ async function loadStockFeed(force = false) {
                 + '</div></div></div>';
             feedEl.appendChild(card);
         });
+        window._stockPosts = posts;
         _stockFeedLoaded = true;
     } catch(e) { if (loadingEl) loadingEl.classList.add('hidden'); if (emptyEl) emptyEl.classList.remove('hidden'); }
     _stockFeedLoading = false;
@@ -3877,6 +3886,58 @@ async function loadMyStockPosts() {
         return;
     }
     if (grid) grid.innerHTML = posts.map(post => profileCardHTML(post, true)).join('');
+}
+
+
+// ===== AI STOCK CATEGORY FILTER =====
+function filterStockCat(cat) {
+    // Update button styles
+    document.querySelectorAll('.stock-cat-btn').forEach(btn => {
+        btn.className = 'stock-cat-btn px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-bold rounded-full transition border border-white/10';
+    });
+    const activeBtn = document.getElementById('stock-cat-' + cat);
+    if (activeBtn) activeBtn.className = 'stock-cat-btn px-3 py-1.5 bg-purple-600 text-white text-xs font-bold rounded-full transition border border-purple-500';
+
+    const feedEl = document.getElementById('stock-feed');
+    if (!feedEl || !window._stockPosts) return;
+
+    const posts = cat === 'all'
+        ? window._stockPosts
+        : window._stockPosts.filter(p =>
+            (p.tags && p.tags.some(t => t.toLowerCase().includes(cat.toLowerCase()))) ||
+            (p.title && p.title.toLowerCase().includes(cat.toLowerCase()))
+          );
+
+    feedEl.innerHTML = '';
+    const emptyEl = document.getElementById('stock-empty');
+    if (posts.length === 0) {
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        return;
+    }
+    if (emptyEl) emptyEl.classList.add('hidden');
+
+    posts.forEach(post => {
+        const card = document.createElement('div');
+        const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
+        const likes = post.likes ? post.likes.length : 0;
+        const promptPreview = post.prompt ? post.prompt.substring(0,120)+'...' : '';
+        const creator = post.creator_name || 'Creator';
+        card.className = 'masonry-card group cursor-pointer';
+        card.onclick = () => openPostDetail(post.id);
+        card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all duration-300">'
+            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
+            + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
+            + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
+            + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
+            + '</div>'
+            + '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">'
+            + '<p class="text-gray-200 text-xs line-clamp-3 mb-2">' + promptPreview + '</p>'
+            + '<div class="flex items-center justify-between">'
+            + '<button onclick="event.stopPropagation();copyFeedPrompt(\'' + post.id + '\')" class="flex items-center gap-1.5 bg-purple-600/80 hover:bg-purple-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>'
+            + '<span class="text-gray-400 text-[10px]">@' + creator + '</span>'
+            + '</div></div></div>';
+        feedEl.appendChild(card);
+    });
 }
 
 </script>
