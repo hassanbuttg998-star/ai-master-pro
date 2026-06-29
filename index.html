@@ -1165,9 +1165,25 @@
             <h2 class="text-3xl font-black italic uppercase text-white tracking-widest">ADS <span class="text-orange-400">POSTER</span></h2>
             <p class="text-gray-500 text-xs tracking-widest uppercase mt-1">Business &amp; product AI images</p>
         </div>
-        <button onclick="openUploadModal('ads_poster')" class="w-10 h-10 flex items-center justify-center bg-orange-600/20 hover:bg-orange-600/40 border border-orange-500/30 rounded-xl transition text-orange-400">
-            <i class="fa-solid fa-plus text-sm"></i>
-        </button>
+        <div class="relative">
+            <button onclick="toggleAdsFilterPanel()" id="ads-filter-btn" title="Filter by category"
+                class="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-orange-600/20 border border-white/10 hover:border-orange-500/40 rounded-xl transition-all text-gray-400 hover:text-orange-400">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+            </button>
+            <div id="ads-filter-panel" class="hidden absolute right-0 top-12 w-52 bg-[#0d1117] border border-orange-500/20 rounded-2xl shadow-2xl z-50 py-2">
+                <p class="text-[10px] font-black uppercase tracking-widest text-orange-400 px-4 py-2">Category</p>
+                <button onclick="filterAdsCat('all')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-white hover:bg-orange-600/20 text-sm font-bold transition" data-tag="all">All Ads</button>
+                <button onclick="filterAdsCat('clothing')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="clothing">👗 Clothing</button>
+                <button onclick="filterAdsCat('shoes')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="shoes">👟 Shoes</button>
+                <button onclick="filterAdsCat('brands')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="brands">🏷️ Brands</button>
+                <button onclick="filterAdsCat('billboard')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="billboard">📋 Billboard</button>
+                <button onclick="filterAdsCat('watch')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="watch">⌚ Watch</button>
+                <button onclick="filterAdsCat('perfume')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="perfume">🌸 Perfume</button>
+                <button onclick="filterAdsCat('social media')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="social media">📱 Social Media</button>
+            </div>
+        </div>
     </div>
     <div id="ads-feed" class="masonry-feed"></div>
     <div id="ads-loading" class="masonry-feed">
@@ -3965,6 +3981,76 @@ function filterStockCat(cat) {
         feedEl.appendChild(card);
     });
 }
+
+
+// ===== ADS POSTER FILTER =====
+function toggleAdsFilterPanel() {
+    document.getElementById('ads-filter-panel').classList.toggle('hidden');
+    const stockPanel = document.getElementById('stock-filter-panel');
+    if (stockPanel) stockPanel.classList.add('hidden');
+}
+
+function filterAdsCat(cat) {
+    document.getElementById('ads-filter-panel').classList.add('hidden');
+    document.querySelectorAll('#ads-filter-panel .ads-cat-btn').forEach(btn => {
+        btn.className = 'ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition';
+    });
+    const activeBtn = document.querySelector('#ads-filter-panel [data-tag="' + cat + '"]');
+    if (activeBtn) activeBtn.className = 'ads-cat-btn w-full text-left px-4 py-2.5 text-orange-300 bg-orange-600/20 text-sm font-bold transition';
+
+    const feedEl = document.getElementById('ads-feed');
+    if (!feedEl || !window._adsPosts) return;
+
+    const posts = cat === 'all'
+        ? window._adsPosts
+        : window._adsPosts.filter(p =>
+            (p.tags && p.tags.some(t => t.toLowerCase().includes(cat.toLowerCase()))) ||
+            (p.title && p.title.toLowerCase().includes(cat.toLowerCase()))
+          );
+
+    feedEl.innerHTML = '';
+    const emptyEl = document.getElementById('ads-empty');
+    if (posts.length === 0) {
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        return;
+    }
+    if (emptyEl) emptyEl.classList.add('hidden');
+
+    posts.forEach(post => {
+        const card = document.createElement('div');
+        const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
+        const likes = post.likes ? post.likes.length : 0;
+        const promptPreview = post.prompt ? post.prompt.substring(0,120)+'...' : '';
+        const creator = post.creator_name || 'Creator';
+        card.className = 'masonry-card group cursor-pointer';
+        card.onclick = () => openPostDetail(post.id);
+        card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all duration-300">'
+            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
+            + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
+            + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
+            + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
+            + '</div>'
+            + '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">'
+            + '<p class="text-gray-200 text-xs line-clamp-3 mb-2">' + promptPreview + '</p>'
+            + '<div class="flex items-center justify-between">'
+            + '<button onclick="event.stopPropagation();copyFeedPrompt(\'' + post.id + '\')" class="flex items-center gap-1.5 bg-orange-600/80 hover:bg-orange-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>'
+            + '<span class="text-gray-400 text-[10px]">@' + creator + '</span>'
+            + '</div></div></div>';
+        feedEl.appendChild(card);
+    });
+}
+
+// Close both panels on outside click
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#ads-filter-btn') && !e.target.closest('#ads-filter-panel')) {
+        const p = document.getElementById('ads-filter-panel');
+        if (p) p.classList.add('hidden');
+    }
+    if (!e.target.closest('#stock-filter-btn') && !e.target.closest('#stock-filter-panel')) {
+        const p = document.getElementById('stock-filter-panel');
+        if (p) p.classList.add('hidden');
+    }
+});
 
 </script>
 
