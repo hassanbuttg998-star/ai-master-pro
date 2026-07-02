@@ -3866,6 +3866,7 @@ async function loadAdsFeed(force = false) {
                 + '</div></div></div>';
             feedEl.appendChild(card);
         });
+        window._adsPosts = posts;
         _adsFeedLoaded = true;
     } catch(e) { if (loadingEl) loadingEl.classList.add('hidden'); if (emptyEl) emptyEl.classList.remove('hidden'); }
     _adsFeedLoading = false;
