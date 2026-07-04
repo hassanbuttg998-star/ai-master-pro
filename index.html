@@ -149,7 +149,17 @@ nav span.bg-\[#6366f1\] {
 }
 
 /* ===== NAV LINKS UPGRADE ===== */
-nav button { font-family: 'Space Grotesk', sans-serif !important; font-weight: 700 !important; font-size: 11.5px !important; letter-spacing: 0.12em !important; background: none !important; box-shadow: none !important; border: none !important; }
+nav .hidden.md\:flex button {
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 11.5px !important;
+    letter-spacing: 0.12em !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+    padding: 0 !important;
+}
 
 /* ===== SIGN IN BUTTON UPGRADE ===== */
 #navbar-auth-btn {
@@ -212,19 +222,12 @@ button[onclick="handleStartCreation()"]:hover {
     transform: translateY(-2px) !important;
 }
 
-button[onclick="showPage('about-frazx')"] {
-    background: rgba(255,255,255,0.05) !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
-    backdrop-filter: blur(10px) !important;
-    font-family: 'Space Grotesk', sans-serif !important;
-    font-size: 11px !important;
-    letter-spacing: 0.18em !important;
-    transition: all 0.3s ease !important;
-}
-button[onclick="showPage('about-frazx')"]:hover {
-    background: rgba(255,255,255,0.1) !important;
-    border-color: rgba(167,139,250,0.4) !important;
-    box-shadow: 0 0 20px rgba(124,58,237,0.2) !important;
+/* Navbar About - no box */
+nav button[onclick="showPage('about-frazx')"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 /* ===== TOOLS HUB CARDS UPGRADE ===== */
