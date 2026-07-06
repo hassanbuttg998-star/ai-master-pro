@@ -122,6 +122,12 @@
     color: #818cf8 !important;
     filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
 }
+
+        /* Prompt See More/Less - PC only */
+        @media (min-width: 768px) {
+            .prompt-collapsed { max-height: 96px; overflow: hidden; }
+            .prompt-expanded { max-height: none; overflow: visible; }
+        }
         /* 🔐 PREMIUM LOGIN MODAL GLOW EFFECTS */
 #login-modal {
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -818,7 +824,12 @@
             <!-- Prompt Box -->
             <div class="glass border border-indigo-500/20 rounded-2xl p-5">
                 <p class="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-3">Prompt</p>
-                <p id="detail-prompt" class="text-gray-300 text-sm leading-relaxed"></p>
+                <div id="detail-prompt-wrapper" class="relative">
+                    <p id="detail-prompt" class="text-gray-300 text-sm leading-relaxed md:overflow-hidden prompt-collapsed"></p>
+                    <button id="prompt-toggle-btn" onclick="togglePromptExpand()" class="hidden md:inline-flex mt-2 text-indigo-400 hover:text-indigo-300 text-xs font-black uppercase tracking-widest items-center gap-1 transition">
+                        <span id="prompt-toggle-label">See More ▾</span>
+                    </button>
+                </div>
                 <div class="flex gap-3 mt-5">
                     <button onclick="copyDetailPrompt()" class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs tracking-widest uppercase rounded-xl transition shadow-[0_4px_15px_rgba(99,102,241,0.3)]">
                         <i class="fa-regular fa-copy"></i> Copy Prompt
@@ -2299,6 +2310,7 @@ async function renderPostDetail(postId) {
         });
     }
     document.getElementById('detail-prompt').innerText = post.prompt || '';
+    setTimeout(initPromptToggle, 50);
     document.getElementById('detail-likes-count').innerText = post.likes ? post.likes.length : 0;
     document.getElementById('detail-date').innerText = post.created_at ? 'Posted on ' + new Date(post.created_at).toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}) : '';
 
@@ -3870,6 +3882,7 @@ async function loadAdsFeed(force = false) {
                 + '</div></div></div>';
             feedEl.appendChild(card);
         });
+        window._adsPosts = posts;
         _adsFeedLoaded = true;
     } catch(e) { if (loadingEl) loadingEl.classList.add('hidden'); if (emptyEl) emptyEl.classList.remove('hidden'); }
     _adsFeedLoading = false;
