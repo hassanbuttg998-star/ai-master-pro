@@ -4110,6 +4110,38 @@ document.addEventListener('click', function(e) {
     }
 });
 
+// ===== PROMPT SEE MORE / SEE LESS (PC ONLY) =====
+function togglePromptExpand() {
+    var p = document.getElementById('detail-prompt');
+    var btn = document.getElementById('prompt-toggle-label');
+    if (!p || !btn) return;
+    var isCollapsed = p.classList.contains('prompt-collapsed');
+    if (isCollapsed) {
+        p.classList.remove('prompt-collapsed');
+        p.classList.add('prompt-expanded');
+        btn.textContent = 'See Less ▴';
+    } else {
+        p.classList.remove('prompt-expanded');
+        p.classList.add('prompt-collapsed');
+        btn.textContent = 'See More ▾';
+    }
+}
+
+function initPromptToggle() {
+    var p = document.getElementById('detail-prompt');
+    var btn = document.getElementById('prompt-toggle-btn');
+    if (!p || !btn) return;
+    p.classList.add('prompt-collapsed');
+    p.classList.remove('prompt-expanded');
+    var label = document.getElementById('prompt-toggle-label');
+    if (label) label.textContent = 'See More ▾';
+    if (window.innerWidth >= 768 && p.scrollHeight > 100) {
+        btn.style.display = 'inline-flex';
+    } else {
+        btn.style.display = 'none';
+    }
+}
+
 </script>
 
 
