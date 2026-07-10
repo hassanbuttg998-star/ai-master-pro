@@ -127,21 +127,25 @@
         html { scroll-behavior: smooth; }
         * { -webkit-tap-highlight-color: transparent; }
         .page-content { -webkit-overflow-scrolling: touch; }
-        .masonry-card, .group { will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
 
-        /* ===== IMAGE BLUR-UP EFFECT ===== */
-        img.ai-img { filter: blur(10px); transition: filter 0.5s ease, opacity 0.5s ease; opacity: 0.5; }
-        img.ai-img.loaded { filter: blur(0px); opacity: 1; }
+        /* GPU acceleration */
+        .masonry-card { will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
 
-        /* Shimmer placeholder */
-        .img-wrap { position: relative; overflow: hidden; background: rgba(255,255,255,0.03); }
-        .img-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
-        .img-wrap.img-loaded::after { display: none; }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        /* Image fade-in on load */
+        img { opacity: 0; transition: opacity 0.4s ease; }
+        img.loaded { opacity: 1; }
+
+        /* Shimmer for image containers */
+        .masonry-card .overflow-hidden {
+            background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
 
         /* Page switch fade */
         .page-content.active-page { animation: pageFadeIn 0.2s ease forwards; }
-        @keyframes pageFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pageFadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
 
         /* Prompt See More/Less - PC only */
         @media (min-width: 768px) {
@@ -1479,40 +1483,12 @@
     return url.replace('/upload/', '/upload/' + transform + '/');
   }
   // Grid/feed thumbnails - small, auto format + quality, fast to load
-  function cldThumb(url) { return cldUrl(url, 'f_auto,q_auto:70,w_400,c_fill'); }
+  function cldThumb(url) { return cldUrl(url, 'f_auto,q_auto,w_500,c_fill'); }
   // Tiny avatar / mini-thumbnail images
   function cldAvatar(url) { return cldUrl(url, 'f_auto,q_auto,w_120,h_120,c_fill'); }
   // Large detail/lightbox image - still optimized but higher resolution
   function cldFull(url) { return cldUrl(url, 'f_auto,q_auto,w_1400'); }
   window.cldThumb = cldThumb; window.cldAvatar = cldAvatar; window.cldFull = cldFull;
-
-  // ===== GLOBAL IMAGE BLUR-UP OBSERVER =====
-  function initImageObserver() {
-    if (!('IntersectionObserver' in window)) return;
-    const observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          var img = entry.target;
-          img.classList.add('ai-img');
-          if (img.complete) {
-            img.classList.add('loaded');
-          } else {
-            img.addEventListener('load', function() { img.classList.add('loaded'); }, { once: true });
-          }
-          observer.unobserve(img);
-        }
-      });
-    }, { rootMargin: '100px' });
-
-    document.querySelectorAll('img[loading="lazy"]:not(.ai-img)').forEach(function(img) {
-      observer.observe(img);
-    });
-  }
-
-  // Re-run observer whenever new content is added
-  var _origObserveImages = window.initImageObserver;
-  document.addEventListener('DOMContentLoaded', initImageObserver);
-  window.addEventListener('load', initImageObserver);
 
   // ===== AUTH STATE LISTENER =====
   _supabase.auth.onAuthStateChange((event, session) => {
@@ -1898,7 +1874,7 @@ function showPage(pageId, pushToHistory = true) {
         const sidebar = document.getElementById('sidebar');
         if(sidebar) sidebar.classList.add('translate-x-full');
         
-        window.scrollTo({ top: 0, behavior: 'instant' }); setTimeout(initImageObserver, 100);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // 2. Direct Hardware Back Key Interception (Zero Exit Glitch)
@@ -2244,7 +2220,7 @@ async function loadCommunityFeed(force = false) {
             card.onclick = () => openPostDetail(post.id);
             card.innerHTML = `
                 <div class="relative rounded-2xl overflow-hidden">
-                    <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
+                    <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                     
                     <!-- Always visible: title + likes at top -->
                     <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
@@ -2499,7 +2475,7 @@ async function filterByTag(tag) {
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
             <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2574,7 +2550,7 @@ async function filterFeed(filter) {
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
             <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2622,7 +2598,7 @@ function renderCards(posts, currentUserId) {
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
             <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2836,7 +2812,7 @@ function renderFeedCard(feedEl, post) {
     card.onclick = () => openPostDetail(post.id);
     card.innerHTML = `
         <div class="relative rounded-2xl overflow-hidden">
-            <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
+            <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
             <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                 <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                 <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2939,7 +2915,7 @@ function searchPosts(query) {
 
         card.innerHTML = `
             <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -3682,7 +3658,7 @@ function runSearch(query) {
                         const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[9px] font-bold">#${t}</span>`).join('');
                         return `<div class="masonry-card group cursor-pointer" onclick="closeSearchModal(); openPostDetail('${post.id}')">
                             <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-indigo-500/30 transition">
-                                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')" alt="${title}">
+                                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" loading="lazy" alt="${title}">
                                 <div class="absolute top-0 left-0 right-0 p-2 flex items-center justify-between">
                                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[70%]">${title}</span>
                                 </div>
@@ -3815,7 +3791,7 @@ async function openUserProfileById(userId) {
         : `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition">Follow</button>`;
 
     const postsGrid = (posts && posts.length > 0)
-        ? posts.map(p => `<div class="rounded-xl overflow-hidden cursor-pointer" onclick="closeUserProfileModal(); openPostDetail('${p.id}')"><img src="${cldThumb(p.image_url)}" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')"></div>`).join('')
+        ? posts.map(p => `<div class="rounded-xl overflow-hidden cursor-pointer" onclick="closeUserProfileModal(); openPostDetail('${p.id}')"><img src="${cldThumb(p.image_url)}" class="w-full h-auto block" loading="lazy"></div>`).join('')
         : `<p class="col-span-3 text-center text-gray-500 py-8">No posts yet</p>`;
 
     modalEl.innerHTML = `
@@ -3945,7 +3921,7 @@ async function loadAdsFeed(force = false) {
             card.className = 'masonry-card group cursor-pointer';
             card.onclick = () => openPostDetail(post.id);
             card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all duration-300">'
-                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')">'
+                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
                 + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
                 + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
                 + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
@@ -3988,7 +3964,7 @@ async function loadStockFeed(force = false) {
             card.className = 'masonry-card group cursor-pointer';
             card.onclick = () => openPostDetail(post.id);
             card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all duration-300">'
-                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')">'
+                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
                 + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
                 + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
                 + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
@@ -4101,7 +4077,7 @@ function filterStockCat(cat) {
         card.className = 'masonry-card group cursor-pointer';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all duration-300">'
-            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')">'
+            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
             + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
             + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
             + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
@@ -4159,7 +4135,7 @@ function filterAdsCat(cat) {
         card.className = 'masonry-card group cursor-pointer';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all duration-300">'
-            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')">'
+            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
             + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
             + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
             + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
@@ -4187,6 +4163,19 @@ document.addEventListener('click', function(e) {
 });
 
 // ===== PROMPT SEE MORE / SEE LESS (PC ONLY) =====
+// ===== IMAGE FADE-IN ON LOAD =====
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.addEventListener('load', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.target.classList.add('loaded');
+        }
+    }, true);
+    // Mark already loaded images
+    document.querySelectorAll('img').forEach(function(img) {
+        if (img.complete) img.classList.add('loaded');
+    });
+});
+
 function togglePromptExpand() {
     var p = document.getElementById('detail-prompt');
     var btn = document.getElementById('prompt-toggle-label');
