@@ -6,7 +6,7 @@
 
     <!-- ===== SEO META TAGS ===== -->
     <title>FRAZX PRO | AI Image Community & Cinematic Prompt Library</title>
-    <meta name="description" content="FRAZX PRO is an AI image community where creators discover cinematic AI art with ready-to-copy prompts. Browse portraits, landscapes, ad posters, and stock images — then create with any AI tool.">
+    <meta name="description" content="FRAZX PRO is an AI image community where creators discover cinematic AI art with ready-to-copy prompts. Browse portraits, landscapes, ad posters, and stock images â€” then create with any AI tool.">
     <meta name="keywords" content="AI image generator, AI art, cinematic AI, AI prompts, ads poster AI, AI stock images, FRAZX PRO, AI community, stable diffusion prompts, midjourney prompts">
     <meta name="author" content="Hassan Fraz - FRAZX PRO">
     <meta name="robots" content="index, follow">
@@ -15,7 +15,7 @@
     <!-- ===== OPEN GRAPH (Facebook, WhatsApp, LinkedIn) ===== -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="FRAZX PRO | AI Image Community & Cinematic Prompt Library">
-    <meta property="og:description" content="Discover thousands of cinematic AI images with ready-to-copy prompts. Browse portraits, landscapes, ad posters, and stock images — then create with any AI tool.">
+    <meta property="og:description" content="Discover thousands of cinematic AI images with ready-to-copy prompts. Browse portraits, landscapes, ad posters, and stock images â€” then create with any AI tool.">
     <meta property="og:url" content="https://frazxpro.com">
     <meta property="og:image" content="https://frazxpro.com/og-image.jpg">
     <meta property="og:site_name" content="FRAZX PRO">
@@ -35,7 +35,7 @@
         "@type": "WebSite",
         "name": "FRAZX PRO",
         "url": "https://frazxpro.com",
-        "description": "AI image community for creators — cinematic art, prompts, ads posters and stock images",
+        "description": "AI image community for creators â€” cinematic art, prompts, ads posters and stock images",
         "potentialAction": {
             "@type": "SearchAction",
             "target": "https://frazxpro.com/#samples?search={search_term_string}",
@@ -101,7 +101,7 @@
     #sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1); z-index: 200; }
     .nav-link { cursor: pointer; transition: all 0.3s; }
     .nav-link:hover { color: #6366f1; }
-/* 🎯 100% SAFE SIDEBAR ACTIVE STATE MANAGER (NO JAVASCRIPT) */
+/* ðŸŽ¯ 100% SAFE SIDEBAR ACTIVE STATE MANAGER (NO JAVASCRIPT) */
 #home:target ~ #sidebar nav a[onclick*="home"],
 #tools-hub:target ~ #sidebar nav a[onclick*="tools-hub"],
 #samples:target ~ #sidebar nav a[onclick*="samples"],
@@ -123,12 +123,32 @@
     filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
 }
 
+        /* ===== SMOOTH SCROLL & PERFORMANCE ===== */
+        html { scroll-behavior: smooth; }
+        * { -webkit-tap-highlight-color: transparent; }
+        .page-content { -webkit-overflow-scrolling: touch; }
+        .masonry-card, .group { will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
+
+        /* ===== IMAGE BLUR-UP EFFECT ===== */
+        img.ai-img { filter: blur(10px); transition: filter 0.5s ease, opacity 0.5s ease; opacity: 0.5; }
+        img.ai-img.loaded { filter: blur(0px); opacity: 1; }
+
+        /* Shimmer placeholder */
+        .img-wrap { position: relative; overflow: hidden; background: rgba(255,255,255,0.03); }
+        .img-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+        .img-wrap.img-loaded::after { display: none; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        /* Page switch fade */
+        .page-content.active-page { animation: pageFadeIn 0.2s ease forwards; }
+        @keyframes pageFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
         /* Prompt See More/Less - PC only */
         @media (min-width: 768px) {
             .prompt-collapsed { max-height: 96px; overflow: hidden; }
             .prompt-expanded { max-height: none; overflow: visible; }
         }
-        /* 🔐 PREMIUM LOGIN MODAL GLOW EFFECTS */
+        /* ðŸ” PREMIUM LOGIN MODAL GLOW EFFECTS */
 #login-modal {
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -483,7 +503,7 @@
     <div class="max-w-3xl mx-auto flex flex-col gap-8">
         
         <div class="glass p-8 md:p-12 rounded-[2.5rem] border-t-2 border-indigo-500/40 shadow-xl">
-            <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">← Back To Tools</button>
+            <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">â† Back To Tools</button>
             <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Vision Engine <span class="text-indigo-500">V1.0</span></h2>
             <p class="text-gray-400 text-sm mb-8">Enter your basic concept below to append cinematic parameters.</p>
             
@@ -492,7 +512,7 @@
                 <button onclick="generatePowerPrompt()" class="w-full py-4 bg-indigo-600 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-indigo-500 transition">Compile Hyper-Prompt</button>
                 
                 <div id="resultBox" class="hidden glass p-6 rounded-xl border border-indigo-500/30 bg-indigo-500/5">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-2">⚡ AI-Enhanced Cinematic Prompt</p>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-2">âš¡ AI-Enhanced Cinematic Prompt</p>
                     <p id="finalPrompt" class="text-white text-sm leading-relaxed select-all italic"></p>
                     <button onclick="copyPrompt()" class="mt-4 px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-xs font-bold uppercase text-white transition">Copy To Clipboard</button>
                 </div>
@@ -502,9 +522,9 @@
 
         <div class="text-center mt-4">
             <h3 class="text-xl md:text-2xl font-black italic uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400">
-                ⚡ See The Magic In Action! Below Is A Visual Guide On How The Engine Works
+                âš¡ See The Magic In Action! Below Is A Visual Guide On How The Engine Works
             </h3>
-            <p class="text-indigo-500 text-lg mt-2 font-bold animate-pulse">↓↓↓</p>
+            <p class="text-indigo-500 text-lg mt-2 font-bold animate-pulse">â†“â†“â†“</p>
         </div>
 
         <div class="glass rounded-[2rem] border border-indigo-500/20 overflow-hidden shadow-2xl p-2 bg-black/20">
@@ -557,18 +577,18 @@
 
         <!-- Header -->
         <div class="text-center mb-4 mt-6">
-            <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-6 block mx-auto">← Back To Tools</button>
+            <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-6 block mx-auto">â† Back To Tools</button>
             <h2 class="text-3xl md:text-4xl font-black uppercase italic mb-3 text-white tracking-wide">
                 PORTRAIT <span class="text-purple-500">TRANSFORMER</span>
             </h2>
             <p class="text-gray-400 text-sm max-w-xl mx-auto font-medium leading-relaxed">
-                Describe yourself, pick a style — get a hyper-detailed AI portrait prompt instantly.
+                Describe yourself, pick a style â€” get a hyper-detailed AI portrait prompt instantly.
             </p>
         </div>
 
         <!-- User Description Input -->
         <div class="glass p-6 md:p-8 rounded-[2rem] border border-purple-500/20">
-            <p class="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-3">Step 1 — Describe Yourself (Optional)</p>
+            <p class="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-3">Step 1 â€” Describe Yourself (Optional)</p>
             <textarea id="portraitUserDesc" placeholder="e.g. male, brown eyes, short beard, dark hair, strong jawline..." 
                 class="w-full h-24 bg-black/40 border border-purple-500/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 transition resize-none text-sm"></textarea>
             <p class="text-gray-600 text-[10px] mt-2 tracking-wide">The more you describe, the more personalized your prompt will be.</p>
@@ -576,7 +596,7 @@
 
         <!-- Style Grid -->
         <div>
-            <p class="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-6 text-center">Step 2 — Select Your Style</p>
+            <p class="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-6 text-center">Step 2 â€” Select Your Style</p>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
                 <!-- Cyberpunk -->
@@ -649,7 +669,7 @@
         <!-- Result Box -->
         <div id="portraitResultBox" class="hidden glass p-6 rounded-2xl border border-purple-500/30 bg-purple-500/5">
             <div class="flex items-center justify-between mb-3">
-                <p class="text-[10px] font-black uppercase tracking-widest text-purple-400">⚡ AI-Generated Portrait Prompt</p>
+                <p class="text-[10px] font-black uppercase tracking-widest text-purple-400">âš¡ AI-Generated Portrait Prompt</p>
                 <span id="portraitStyleBadge" class="text-[9px] px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 font-bold uppercase tracking-wider"></span>
             </div>
             <div id="portraitLoading" class="hidden py-2">
@@ -722,12 +742,12 @@
                 <div id="filter-panel" class="hidden absolute right-0 top-12 w-52 bg-[#0d1117] border border-indigo-500/20 rounded-2xl shadow-2xl z-50 py-2">
                     <p class="text-[10px] font-black uppercase tracking-widest text-indigo-400 px-4 py-2">Category</p>
                     <button onclick="filterByTag('all')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-white hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="all">All Images</button>
-                    <button onclick="filterByTag('cinematic')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="cinematic">🎬 Cinematic</button>
-                    <button onclick="filterByTag('anime')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="anime">✨ Anime</button>
-                    <button onclick="filterByTag('ghibli')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="ghibli">🌿 Ghibli</button>
-                    <button onclick="filterByTag('portrait')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="portrait">👤 Portrait</button>
-                    <button onclick="filterByTag('cyberpunk')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="cyberpunk">🤖 Cyberpunk</button>
-                    <button onclick="filterByTag('fantasy')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="fantasy">⚔️ Fantasy</button>
+                    <button onclick="filterByTag('cinematic')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="cinematic">ðŸŽ¬ Cinematic</button>
+                    <button onclick="filterByTag('anime')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="anime">âœ¨ Anime</button>
+                    <button onclick="filterByTag('ghibli')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="ghibli">ðŸŒ¿ Ghibli</button>
+                    <button onclick="filterByTag('portrait')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="portrait">ðŸ‘¤ Portrait</button>
+                    <button onclick="filterByTag('cyberpunk')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="cyberpunk">ðŸ¤– Cyberpunk</button>
+                    <button onclick="filterByTag('fantasy')" class="cat-tag-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-indigo-600/20 text-sm font-bold transition" data-tag="fantasy">âš”ï¸ Fantasy</button>
                 </div>
             </div>
 
@@ -806,7 +826,7 @@
         </div>
         <!-- Info -->
         <div class="md:w-1/2 flex flex-col gap-5">
-            <div class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-400 w-fit">⚡ Prompt Detail</div>
+            <div class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-400 w-fit">âš¡ Prompt Detail</div>
             <h1 id="detail-title" class="text-xl md:text-2xl font-black text-white leading-tight uppercase tracking-wide"></h1>
             <!-- Creator Card -->
             <div class="flex items-center justify-between gap-3 py-3 px-4 bg-white/3 border border-white/8 rounded-2xl">
@@ -838,7 +858,7 @@
                 <div id="detail-prompt-wrapper" class="relative">
                     <p id="detail-prompt" class="text-gray-300 text-sm leading-relaxed md:overflow-hidden prompt-collapsed"></p>
                     <button id="prompt-toggle-btn" onclick="togglePromptExpand()" class="hidden md:inline-flex mt-2 text-indigo-400 hover:text-indigo-300 text-xs font-black uppercase tracking-widest items-center gap-1 transition">
-                        <span id="prompt-toggle-label">See More ▾</span>
+                        <span id="prompt-toggle-label">See More â–¾</span>
                     </button>
                 </div>
                 <div class="flex gap-3 mt-5">
@@ -892,7 +912,7 @@
                 <div id="upload-placeholder">
                     <i class="fa-solid fa-cloud-arrow-up text-2xl text-indigo-400 mb-2"></i>
                     <p class="text-white font-bold text-sm mb-0.5">Click to upload</p>
-                    <p class="text-gray-600 text-xs">JPG, PNG, WEBP — Max 5MB</p>
+                    <p class="text-gray-600 text-xs">JPG, PNG, WEBP â€” Max 5MB</p>
                 </div>
                 <input type="file" id="image-file-input" accept="image/*" class="hidden" onchange="previewUploadImage(event)">
             </div>
@@ -936,9 +956,9 @@
                 Post Category
             </label>
             <select id="upload-category-input" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500 transition">
-                <option value="ai_images">🎨 AI Images</option>
-                <option value="ads_poster">📢 Ads Poster</option>
-                <option value="ai_stock">📦 AI Stock</option>
+                <option value="ai_images">ðŸŽ¨ AI Images</option>
+                <option value="ads_poster">ðŸ“¢ Ads Poster</option>
+                <option value="ai_stock">ðŸ“¦ AI Stock</option>
             </select>
         </div>
 
@@ -1085,7 +1105,7 @@
                     <!-- Stats -->
                     <div class="flex items-center gap-1.5 text-gray-400 text-xs md:text-sm mt-2 flex-wrap">
                         <span><span id="account-followers-count" class="text-white font-bold">0</span> followers</span>
-                        <span class="text-gray-600">·</span>
+                        <span class="text-gray-600">Â·</span>
                         <span><span id="account-following-count" class="text-white font-bold">0</span> following</span>
                     </div>
 
@@ -1242,13 +1262,13 @@
             <div id="ads-filter-panel" class="hidden absolute right-0 top-12 w-52 bg-[#0d1117] border border-orange-500/20 rounded-2xl shadow-2xl z-50 py-2">
                 <p class="text-[10px] font-black uppercase tracking-widest text-orange-400 px-4 py-2">Category</p>
                 <button onclick="filterAdsCat('all')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-white hover:bg-orange-600/20 text-sm font-bold transition" data-tag="all">All Ads</button>
-                <button onclick="filterAdsCat('clothing')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="clothing">👗 Clothing</button>
-                <button onclick="filterAdsCat('shoes')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="shoes">👟 Shoes</button>
-                <button onclick="filterAdsCat('brands')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="brands">🏷️ Brands</button>
-                <button onclick="filterAdsCat('billboard')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="billboard">📋 Billboard</button>
-                <button onclick="filterAdsCat('watch')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="watch">⌚ Watch</button>
-                <button onclick="filterAdsCat('perfume')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="perfume">🌸 Perfume</button>
-                <button onclick="filterAdsCat('social media')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="social media">📱 Social Media</button>
+                <button onclick="filterAdsCat('clothing')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="clothing">ðŸ‘— Clothing</button>
+                <button onclick="filterAdsCat('shoes')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="shoes">ðŸ‘Ÿ Shoes</button>
+                <button onclick="filterAdsCat('brands')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="brands">ðŸ·ï¸ Brands</button>
+                <button onclick="filterAdsCat('billboard')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="billboard">ðŸ“‹ Billboard</button>
+                <button onclick="filterAdsCat('watch')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="watch">âŒš Watch</button>
+                <button onclick="filterAdsCat('perfume')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="perfume">ðŸŒ¸ Perfume</button>
+                <button onclick="filterAdsCat('social media')" class="ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition" data-tag="social media">ðŸ“± Social Media</button>
             </div>
         </div>
     </div>
@@ -1292,15 +1312,15 @@
             <div id="stock-filter-panel" class="hidden absolute right-0 top-12 w-52 bg-[#0d1117] border border-purple-500/20 rounded-2xl shadow-2xl z-50 py-2">
                 <p class="text-[10px] font-black uppercase tracking-widest text-purple-400 px-4 py-2">Category</p>
                 <button onclick="filterStockCat('all')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-white hover:bg-purple-600/20 text-sm font-bold transition" data-tag="all">All Stock</button>
-                <button onclick="filterStockCat('nature')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="nature">🌿 Nature</button>
-                <button onclick="filterStockCat('mountains')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="mountains">🏔️ Mountains</button>
-                <button onclick="filterStockCat('animal')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="animal">🐾 Animal</button>
-                <button onclick="filterStockCat('birds')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="birds">🦅 Birds</button>
-                <button onclick="filterStockCat('colourful')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="colourful">🎨 Colourful</button>
-                <button onclick="filterStockCat('futuristic city')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="futuristic city">🌆 Futuristic City</button>
-                <button onclick="filterStockCat('futuristic car')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="futuristic car">🚗 Futuristic Car</button>
-                <button onclick="filterStockCat('objects')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="objects">📦 Objects</button>
-                <button onclick="filterStockCat('sky')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="sky">☁️ Sky</button>
+                <button onclick="filterStockCat('nature')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="nature">ðŸŒ¿ Nature</button>
+                <button onclick="filterStockCat('mountains')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="mountains">ðŸ”ï¸ Mountains</button>
+                <button onclick="filterStockCat('animal')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="animal">ðŸ¾ Animal</button>
+                <button onclick="filterStockCat('birds')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="birds">ðŸ¦… Birds</button>
+                <button onclick="filterStockCat('colourful')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="colourful">ðŸŽ¨ Colourful</button>
+                <button onclick="filterStockCat('futuristic city')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="futuristic city">ðŸŒ† Futuristic City</button>
+                <button onclick="filterStockCat('futuristic car')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="futuristic car">ðŸš— Futuristic Car</button>
+                <button onclick="filterStockCat('objects')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="objects">ðŸ“¦ Objects</button>
+                <button onclick="filterStockCat('sky')" class="stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition" data-tag="sky">â˜ï¸ Sky</button>
             </div>
         </div>
     </div>
@@ -1355,7 +1375,7 @@
                 <span class="hidden sm:inline">YouTube</span>
             </a>
         </div>
-        <p class="text-gray-600 text-[9px] tracking-[0.4em] uppercase">© 2026 CRAFTED NATIVELY BY HASSAN FRAZ. ALL RIGHTS RESERVED.</p>
+        <p class="text-gray-600 text-[9px] tracking-[0.4em] uppercase">Â© 2026 CRAFTED NATIVELY BY HASSAN FRAZ. ALL RIGHTS RESERVED.</p>
     </div>
         
       </div>
@@ -1459,12 +1479,40 @@
     return url.replace('/upload/', '/upload/' + transform + '/');
   }
   // Grid/feed thumbnails - small, auto format + quality, fast to load
-  function cldThumb(url) { return cldUrl(url, 'f_auto,q_auto,w_500,c_fill'); }
+  function cldThumb(url) { return cldUrl(url, 'f_auto,q_auto:70,w_400,c_fill'); }
   // Tiny avatar / mini-thumbnail images
   function cldAvatar(url) { return cldUrl(url, 'f_auto,q_auto,w_120,h_120,c_fill'); }
   // Large detail/lightbox image - still optimized but higher resolution
   function cldFull(url) { return cldUrl(url, 'f_auto,q_auto,w_1400'); }
   window.cldThumb = cldThumb; window.cldAvatar = cldAvatar; window.cldFull = cldFull;
+
+  // ===== GLOBAL IMAGE BLUR-UP OBSERVER =====
+  function initImageObserver() {
+    if (!('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var img = entry.target;
+          img.classList.add('ai-img');
+          if (img.complete) {
+            img.classList.add('loaded');
+          } else {
+            img.addEventListener('load', function() { img.classList.add('loaded'); }, { once: true });
+          }
+          observer.unobserve(img);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('img[loading="lazy"]:not(.ai-img)').forEach(function(img) {
+      observer.observe(img);
+    });
+  }
+
+  // Re-run observer whenever new content is added
+  var _origObserveImages = window.initImageObserver;
+  document.addEventListener('DOMContentLoaded', initImageObserver);
+  window.addEventListener('load', initImageObserver);
 
   // ===== AUTH STATE LISTENER =====
   _supabase.auth.onAuthStateChange((event, session) => {
@@ -1556,8 +1604,8 @@
     if (btn) { btn.innerText = 'Create Account'; btn.disabled = false; }
 
     if (error) {
-      if (error.message.includes('already registered')) showToast("❌ Email already registered!");
-      else showToast("❌ " + error.message);
+      if (error.message.includes('already registered')) showToast("âŒ Email already registered!");
+      else showToast("âŒ " + error.message);
       return;
     }
 
@@ -1582,7 +1630,7 @@
       return;
     }
 
-    // Contributor path — check 6 month cooldown first
+    // Contributor path â€” check 6 month cooldown first
     const { data: profile } = await _supabase.from('profiles').select('onboarding_rejected_at').eq('id', session.user.id).single();
     if (profile && profile.onboarding_rejected_at) {
       const rejectedDate = new Date(profile.onboarding_rejected_at);
@@ -1601,7 +1649,7 @@
 
   window.finishAsUserAccount = function() {
     toggleLoginModal(false);
-    showToast("Welcome! 🎉");
+    showToast("Welcome! ðŸŽ‰");
     setTimeout(() => { _feedLoaded = false; showPage('samples'); }, 600);
   };
 
@@ -1658,7 +1706,7 @@
     const q = ONBOARDING_QUESTIONS[_quizStep];
     _quizAnswers[q.key] = answer;
 
-    // Question 1 — instant rejection if "No"
+    // Question 1 â€” instant rejection if "No"
     if (q.key === 'made_before' && answer === 'No') {
       const { data: { session } } = await _supabase.auth.getSession();
       if (session) {
@@ -1704,7 +1752,7 @@
 
   window.finishOnboarding = function() {
     toggleLoginModal(false);
-    showToast("Welcome to FRAZX PRO! 🎉");
+    showToast("Welcome to FRAZX PRO! ðŸŽ‰");
     setTimeout(() => { _feedLoaded = false; showPage('samples'); }, 600);
   };
 
@@ -1726,11 +1774,11 @@
     if (btn) { btn.innerText = 'Sign In'; btn.disabled = false; }
 
     if (error) {
-      showToast("❌ Wrong email or password!");
+      showToast("âŒ Wrong email or password!");
     } else {
       toggleLoginModal(false);
       const name = data.user.user_metadata?.display_name || data.user.email.split('@')[0];
-      showToast("Welcome back " + name + "! 🎉");
+      showToast("Welcome back " + name + "! ðŸŽ‰");
       setTimeout(() => { _feedLoaded = false; showPage('samples'); }, 800);
     }
   };
@@ -1850,7 +1898,7 @@ function showPage(pageId, pushToHistory = true) {
         const sidebar = document.getElementById('sidebar');
         if(sidebar) sidebar.classList.add('translate-x-full');
         
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'instant' }); setTimeout(initImageObserver, 100);
     }
 
     // 2. Direct Hardware Back Key Interception (Zero Exit Glitch)
@@ -1959,7 +2007,7 @@ function showPage(pageId, pushToHistory = true) {
         badgeEl.innerText = chosen.label;
         resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        const personDesc = userDesc ? `Person details: ${userDesc}.` : 'No specific person description provided — create a generic stunning portrait.';
+        const personDesc = userDesc ? `Person details: ${userDesc}.` : 'No specific person description provided â€” create a generic stunning portrait.';
         const systemPrompt = `You are an elite AI portrait prompt engineer. Generate a hyper-detailed, ultra-professional AI image generation prompt for portrait photography. The prompt should include: facial features, skin texture, lighting setup, camera lens, background, color grade, mood, and render quality. Start with "use my reference picture and create a". Keep under 160 words. Return ONLY the prompt.`;
         const userMsg = `Style: ${chosen.desc}. ${personDesc}`;
 
@@ -1982,7 +2030,7 @@ function showPage(pageId, pushToHistory = true) {
     }
 
     function generatePortrait(stylePreset, targetBoxId) {
-        // legacy stub — no longer used
+        // legacy stub â€” no longer used
     }
 
     function copyPortraitPrompt() {
@@ -1994,7 +2042,7 @@ function showPage(pageId, pushToHistory = true) {
     
     navigator.clipboard.writeText(textToCopy).then(() => {
         const originalText = buttonElement.innerHTML;
-        buttonElement.innerHTML = "✓ COPIED!";
+        buttonElement.innerHTML = "âœ“ COPIED!";
         buttonElement.classList.add('text-purple-400', 'border-purple-500/40');
         
         setTimeout(() => {
@@ -2196,7 +2244,7 @@ async function loadCommunityFeed(force = false) {
             card.onclick = () => openPostDetail(post.id);
             card.innerHTML = `
                 <div class="relative rounded-2xl overflow-hidden">
-                    <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+                    <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
                     
                     <!-- Always visible: title + likes at top -->
                     <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
@@ -2236,7 +2284,7 @@ async function loadCommunityFeed(force = false) {
 function copyFeedPrompt(postId) {
     const post = (window._feedPosts || []).find(p => p.id === postId);
     if (post && post.prompt) {
-        navigator.clipboard.writeText(post.prompt).then(() => showToast("Prompt copied! ✅"));
+        navigator.clipboard.writeText(post.prompt).then(() => showToast("Prompt copied! âœ…"));
         // Track copy count
         const copies = (post.copies || 0) + 1;
         _supabase.from('posts').update({ copies: copies }).eq('id', postId);
@@ -2396,7 +2444,7 @@ window.addEventListener('load', function() {
 
 function copyDetailPrompt() {
     const prompt = document.getElementById('detail-prompt').innerText;
-    navigator.clipboard.writeText(prompt).then(() => showToast("Prompt copied! ✅"));
+    navigator.clipboard.writeText(prompt).then(() => showToast("Prompt copied! âœ…"));
 }
 
 let _currentFilter = 'all';
@@ -2451,7 +2499,7 @@ async function filterByTag(tag) {
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
             <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2481,7 +2529,7 @@ async function filterFeed(filter) {
 
     // Update sort badge
     const badge = document.getElementById('active-sort-badge');
-    const labels = { all: '', liked: '❤️ Most Liked', copied: '📋 Most Copied' };
+    const labels = { all: '', liked: 'â¤ï¸ Most Liked', copied: 'ðŸ“‹ Most Copied' };
     if (badge) {
         if (filter === 'all') { badge.classList.add('hidden'); }
         else { badge.classList.remove('hidden'); badge.innerText = labels[filter]; }
@@ -2526,7 +2574,7 @@ async function filterFeed(filter) {
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
             <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2574,7 +2622,7 @@ function renderCards(posts, currentUserId) {
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = `
             <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2650,7 +2698,7 @@ async function deletePost(postId) {
     if (!confirm("Delete this post?")) return;
     const { error } = await _supabase.from('posts').delete().eq('id', postId);
     if (error) { showToast("Delete failed!"); return; }
-    showToast("Post deleted! 🗑️");
+    showToast("Post deleted! ðŸ—‘ï¸");
     loadCommunityFeed();
 }
 
@@ -2661,7 +2709,7 @@ async function editPost(postId) {
     if (!newPrompt || newPrompt === post.prompt) return;
     const { error } = await _supabase.from('posts').update({ prompt: newPrompt }).eq('id', postId);
     if (error) { showToast("Edit failed!"); return; }
-    showToast("Post updated! ✅");
+    showToast("Post updated! âœ…");
     loadCommunityFeed();
 }
 
@@ -2693,7 +2741,7 @@ document.addEventListener('click', function(e) {
 
 function shareProfile() {
     const url = window.location.href.split('#')[0];
-    navigator.clipboard.writeText(url).then(() => showToast("Profile link copied! 🔗"));
+    navigator.clipboard.writeText(url).then(() => showToast("Profile link copied! ðŸ”—"));
 }
 
 // ===== DROPDOWN TOGGLES =====
@@ -2737,7 +2785,7 @@ function filterByTag(tag) {
     const badge = document.getElementById('active-cat-badge');
     if (badge) {
         if (tag === 'all') { badge.classList.add('hidden'); }
-        else { badge.classList.remove('hidden'); badge.innerText = '× ' + tag.charAt(0).toUpperCase() + tag.slice(1); }
+        else { badge.classList.remove('hidden'); badge.innerText = 'Ã— ' + tag.charAt(0).toUpperCase() + tag.slice(1); }
     }
     
     // Update filter btn highlight
@@ -2788,7 +2836,7 @@ function renderFeedCard(feedEl, post) {
     card.onclick = () => openPostDetail(post.id);
     card.innerHTML = `
         <div class="relative rounded-2xl overflow-hidden">
-            <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+            <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
             <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                 <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                 <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2891,7 +2939,7 @@ function searchPosts(query) {
 
         card.innerHTML = `
             <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" alt="AI Art" loading="lazy" onload="this.classList.add('loaded');this.closest('.img-wrap')&&this.closest('.img-wrap').classList.add('img-loaded')'">
                 <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -2927,7 +2975,7 @@ async function deletePostFromProfile(postId) {
     if (!confirm("Delete this post permanently?")) return;
     const { error } = await _supabase.from('posts').delete().eq('id', postId);
     if (error) { showToast("Delete failed!"); return; }
-    showToast("Post deleted! 🗑️");
+    showToast("Post deleted! ðŸ—‘ï¸");
     _feedLoading = false;
     _feedLoaded = false;
     loadMyUploads();
@@ -2956,7 +3004,7 @@ async function toggleDetailLike() {
         if (idx !== -1) window._feedPosts[idx].likes = newLikes;
     }
     
-    showToast(liked ? "Unliked" : "Liked! ❤️");
+    showToast(liked ? "Unliked" : "Liked! â¤ï¸");
 }
 
 function getTimeAgo(date) {
@@ -3090,7 +3138,7 @@ async function submitCommunityPost() {
         }
 
         closeUploadModal();
-        showToast("Creation published! 🎉");
+        showToast("Creation published! ðŸŽ‰");
         // Reload the correct feed based on category
         if (selectedCategory === 'ads_poster') {
             _adsFeedLoaded = false;
@@ -3233,7 +3281,7 @@ async function submitComment() {
 
     await _supabase.from('posts').update({ comments }).eq('id', currentPostId);
     input.value = '';
-    showToast("Comment posted! 💬");
+    showToast("Comment posted! ðŸ’¬");
     renderComments(comments);
 }
 
@@ -3280,7 +3328,7 @@ window.saveDisplayName = async function() {
         const navEl = document.getElementById('navbar-auth-text');
         if (navEl) navEl.innerText = newName.split(' ')[0].toUpperCase();
         document.getElementById('edit-name-wrap').classList.add('hidden');
-        showToast("Name updated! ✅");
+        showToast("Name updated! âœ…");
     } catch(e) {
         showToast("Error: " + e.message);
     }
@@ -3316,7 +3364,7 @@ window.uploadAvatarPhoto = async function(event) {
             const el = document.getElementById(id);
             if (el) el.classList.add('hidden');
         });
-        showToast("Photo updated! ✅");
+        showToast("Photo updated! âœ…");
     } catch(e) {
         showToast("Error: " + e.message);
     }
@@ -3395,7 +3443,7 @@ async function loadMyUploads() {
 }
 
 // ===== BADGE SYSTEM =====
-// is_onboarding_verified -> yellow "✓ Verified" badge (perfect quiz answers)
+// is_onboarding_verified -> yellow "âœ“ Verified" badge (perfect quiz answers)
 // badge_tier -> achievement badge based on uploads + total likes: grey / gold / blue / red
 
 async function calculateAndSyncBadgeTier(userId) {
@@ -3475,7 +3523,7 @@ async function toggleSavePost() {
             ? 'flex items-center gap-2 px-4 py-2 bg-indigo-600/20 border border-indigo-500/30 rounded-xl text-xs font-bold text-indigo-400 transition'
             : 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-indigo-400 transition';
     }
-    showToast(saved ? "Removed from saved" : "Saved! 🔖");
+    showToast(saved ? "Removed from saved" : "Saved! ðŸ”–");
     
     // Update feed post cache
     if (window._feedPosts) {
@@ -3634,7 +3682,7 @@ function runSearch(query) {
                         const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[9px] font-bold">#${t}</span>`).join('');
                         return `<div class="masonry-card group cursor-pointer" onclick="closeSearchModal(); openPostDetail('${post.id}')">
                             <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-indigo-500/30 transition">
-                                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" loading="lazy" alt="${title}">
+                                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')" alt="${title}">
                                 <div class="absolute top-0 left-0 right-0 p-2 flex items-center justify-between">
                                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[70%]">${title}</span>
                                 </div>
@@ -3767,7 +3815,7 @@ async function openUserProfileById(userId) {
         : `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition">Follow</button>`;
 
     const postsGrid = (posts && posts.length > 0)
-        ? posts.map(p => `<div class="rounded-xl overflow-hidden cursor-pointer" onclick="closeUserProfileModal(); openPostDetail('${p.id}')"><img src="${cldThumb(p.image_url)}" class="w-full h-auto block" loading="lazy"></div>`).join('')
+        ? posts.map(p => `<div class="rounded-xl overflow-hidden cursor-pointer" onclick="closeUserProfileModal(); openPostDetail('${p.id}')"><img src="${cldThumb(p.image_url)}" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')"></div>`).join('')
         : `<p class="col-span-3 text-center text-gray-500 py-8">No posts yet</p>`;
 
     modalEl.innerHTML = `
@@ -3800,7 +3848,7 @@ async function openUserProfileById(userId) {
             </div>
             <!-- Posts Grid -->
             <div class="px-3 pb-5">
-                <p class="text-[10px] font-black uppercase tracking-widest text-gray-500 px-2 mb-3">Posts · ${posts ? posts.length : 0}</p>
+                <p class="text-[10px] font-black uppercase tracking-widest text-gray-500 px-2 mb-3">Posts Â· ${posts ? posts.length : 0}</p>
                 <div class="grid grid-cols-3 gap-2">${postsGrid}</div>
             </div>
         </div>`;
@@ -3859,7 +3907,7 @@ async function _toggleFollow(followerId, followingId, btnId) {
             btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
             btn.classList.add('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
         }
-        showToast('Following! 🎉');
+        showToast('Following! ðŸŽ‰');
     }
 }
 
@@ -3897,7 +3945,7 @@ async function loadAdsFeed(force = false) {
             card.className = 'masonry-card group cursor-pointer';
             card.onclick = () => openPostDetail(post.id);
             card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all duration-300">'
-                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
+                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')">'
                 + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
                 + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
                 + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
@@ -3940,7 +3988,7 @@ async function loadStockFeed(force = false) {
             card.className = 'masonry-card group cursor-pointer';
             card.onclick = () => openPostDetail(post.id);
             card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all duration-300">'
-                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
+                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')">'
                 + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
                 + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
                 + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
@@ -4053,7 +4101,7 @@ function filterStockCat(cat) {
         card.className = 'masonry-card group cursor-pointer';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all duration-300">'
-            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
+            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')">'
             + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
             + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
             + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
@@ -4111,7 +4159,7 @@ function filterAdsCat(cat) {
         card.className = 'masonry-card group cursor-pointer';
         card.onclick = () => openPostDetail(post.id);
         card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all duration-300">'
-            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
+            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block ai-img" loading="lazy" onload="this.classList.add('loaded')">'
             + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
             + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
             + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
@@ -4147,11 +4195,11 @@ function togglePromptExpand() {
     if (isCollapsed) {
         p.classList.remove('prompt-collapsed');
         p.classList.add('prompt-expanded');
-        btn.textContent = 'See Less ▴';
+        btn.textContent = 'See Less â–´';
     } else {
         p.classList.remove('prompt-expanded');
         p.classList.add('prompt-collapsed');
-        btn.textContent = 'See More ▾';
+        btn.textContent = 'See More â–¾';
     }
 }
 
@@ -4162,7 +4210,7 @@ function initPromptToggle() {
     p.classList.add('prompt-collapsed');
     p.classList.remove('prompt-expanded');
     var label = document.getElementById('prompt-toggle-label');
-    if (label) label.textContent = 'See More ▾';
+    if (label) label.textContent = 'See More â–¾';
     if (window.innerWidth >= 768 && p.scrollHeight > 100) {
         btn.style.display = 'inline-flex';
     } else {
