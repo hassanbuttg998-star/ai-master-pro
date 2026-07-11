@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | FRAZX PRO</title>
+    <meta name="description" content="Privacy Policy for FRAZX PRO - Learn how we handle your data.">
+    <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/pis.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #050508;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        /* Navbar */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(4,3,12,0.85);
+            border-bottom: 1px solid rgba(124,58,237,0.15);
+            backdrop-filter: blur(24px);
+        }
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+        .nav-logo img { width: 32px; height: 32px; border-radius: 50%; }
+        .nav-logo span {
+            font-size: 18px; font-weight: 900; color: white; letter-spacing: -0.03em;
+        }
+        .nav-logo .pro {
+            font-size: 9px; font-weight: 900; letter-spacing: 0.15em;
+            background: linear-gradient(135deg,#7c3aed,#c026d3);
+            color: white; padding: 2px 7px; border-radius: 4px;
+        }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #a78bfa; font-size: 13px; font-weight: 700;
+            text-decoration: none; letter-spacing: 0.05em;
+            transition: color 0.2s;
+        }
+        .back-btn:hover { color: #c4b5fd; }
+
+        /* Hero */
+        .hero {
+            padding: 120px 24px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 400px; pointer-events: none;
+            background: radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 70%);
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 999px;
+            background: linear-gradient(135deg,rgba(124,58,237,0.15),rgba(192,38,211,0.1));
+            border: 1px solid rgba(167,139,250,0.3);
+            color: #c4b5fd; font-size: 10px; font-weight: 800;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-size: clamp(32px, 6vw, 56px);
+            font-weight: 900; color: white;
+            letter-spacing: -0.03em; margin-bottom: 16px;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg,#a78bfa,#c026d3,#ec4899);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            color: #64748b; font-size: 14px; max-width: 500px; margin: 0 auto;
+        }
+        .last-updated {
+            display: inline-block; margin-top: 12px;
+            color: #475569; font-size: 12px; font-weight: 600;
+        }
+
+        /* Content */
+        .container {
+            max-width: 760px; margin: 0 auto; padding: 0 24px 80px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 28px 32px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: border-color 0.3s;
+        }
+        .section:hover { border-color: rgba(124,58,237,0.2); }
+        .section-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+        }
+        .section-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; flex-shrink: 0;
+        }
+        .section h2 {
+            font-size: 16px; font-weight: 800; color: white;
+            letter-spacing: -0.01em; text-transform: uppercase;
+        }
+        .section p, .section li {
+            color: #94a3b8; font-size: 14px; line-height: 1.8;
+        }
+        .section ul { padding-left: 20px; margin-top: 10px; }
+        .section ul li { margin-bottom: 6px; }
+        .section a {
+            color: #a78bfa; text-decoration: none; font-weight: 600;
+        }
+        .section a:hover { color: #c4b5fd; text-decoration: underline; }
+        .highlight {
+            display: inline-block;
+            background: rgba(124,58,237,0.1);
+            border: 1px solid rgba(124,58,237,0.2);
+            color: #c4b5fd; padding: 2px 8px; border-radius: 6px;
+            font-size: 12px; font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center; padding: 32px 24px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: #334155; font-size: 11px; letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        footer a { color: #7c3aed; text-decoration: none; }
+        footer a:hover { color: #a78bfa; }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+    <a href="https://frazxpro.com" class="nav-logo">
+        <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/pis.jpg" alt="FRAZX PRO">
+        <span>FRAZX <span style="color:#a78bfa;">PRO</span></span>
+        <span class="pro">PRO</span>
+    </a>
+    <a href="https://frazxpro.com" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i> Back to Website
+    </a>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="hero-badge">
+        <i class="fa-solid fa-shield-halved"></i>
+        Legal Document
+    </div>
+    <h1>Privacy <span>Policy</span></h1>
+    <p>How FRAZX PRO collects, uses, and protects your information.</p>
+    <span class="last-updated">Last Updated: July 2026</span>
+</div>
+
+<!-- Content -->
+<div class="container">
+
+    <!-- 1. Introduction -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(124,58,237,0.15);color:#a78bfa;">
+                <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <h2>1. Introduction</h2>
+        </div>
+        <p>Welcome to <strong style="color:white;">FRAZX PRO</strong> ("we", "our", or "us"). We are committed to protecting your privacy. This Privacy Policy explains how we handle information when you visit and use our website at <a href="https://frazxpro.com">frazxpro.com</a>.</p>
+        <p style="margin-top:12px;">By using FRAZX PRO, you agree to the practices described in this policy.</p>
+    </div>
+
+    <!-- 2. Information We Collect -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(6,182,212,0.15);color:#67e8f9;">
+                <i class="fa-solid fa-database"></i>
+            </div>
+            <h2>2. Information We Collect</h2>
+        </div>
+        <p>We collect minimal information necessary to provide our services:</p>
+        <ul>
+            <li><strong style="color:white;">Email Address</strong> — only if you create an account or log in.</li>
+            <li><strong style="color:white;">Password</strong> — stored securely and encrypted via Supabase. We never see your plain-text password.</li>
+            <li><strong style="color:white;">Usage Data</strong> — basic analytics like pages visited and time spent (no personal identification).</li>
+        </ul>
+        <p style="margin-top:12px;">We do <strong style="color:white;">NOT</strong> collect: your name, phone number, address, payment information, or any sensitive personal data.</p>
+    </div>
+
+    <!-- 3. How We Use Information -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(16,185,129,0.15);color:#4ade80;">
+                <i class="fa-solid fa-gear"></i>
+            </div>
+            <h2>3. How We Use Your Information</h2>
+        </div>
+        <p>We use the information solely to:</p>
+        <ul>
+            <li>Provide and maintain your account access</li>
+            <li>Allow you to save preferences and browse AI content</li>
+            <li>Improve website performance and user experience</li>
+            <li>Respond to your support requests</li>
+        </ul>
+        <p style="margin-top:12px;">We do <strong style="color:white;">NOT</strong> sell, rent, or share your personal data with third parties for marketing purposes.</p>
+    </div>
+
+    <!-- 4. Third Party Services -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(245,158,11,0.15);color:#fbbf24;">
+                <i class="fa-solid fa-plug"></i>
+            </div>
+            <h2>4. Third Party Services</h2>
+        </div>
+        <p>FRAZX PRO uses the following trusted third-party services:</p>
+        <ul>
+            <li>
+                <span class="highlight">Supabase</span> — handles user authentication (login/signup). Your email and encrypted password are stored on Supabase servers.
+                <a href="https://supabase.com/privacy" target="_blank">Supabase Privacy Policy →</a>
+            </li>
+            <li style="margin-top:10px;">
+                <span class="highlight">Cloudinary</span> — used to host and deliver AI images on the platform. No personal user data is shared with Cloudinary.
+                <a href="https://cloudinary.com/privacy" target="_blank">Cloudinary Privacy Policy →</a>
+            </li>
+            <li style="margin-top:10px;">
+                <span class="highlight">Vercel</span> — our website is hosted on Vercel. Standard server logs may be collected.
+                <a href="https://vercel.com/legal/privacy-policy" target="_blank">Vercel Privacy Policy →</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 5. Cookies -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(236,72,153,0.15);color:#f472b6;">
+                <i class="fa-solid fa-cookie-bite"></i>
+            </div>
+            <h2>5. Cookies</h2>
+        </div>
+        <p>FRAZX PRO uses minimal cookies strictly for:</p>
+        <ul>
+            <li>Keeping you logged in (session cookies via Supabase)</li>
+            <li>Remembering your dark/light mode preference</li>
+        </ul>
+        <p style="margin-top:12px;">We do not use advertising cookies or third-party tracking cookies.</p>
+    </div>
+
+    <!-- 6. Data Security -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(124,58,237,0.15);color:#a78bfa;">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2>6. Data Security</h2>
+        </div>
+        <p>We take security seriously. Your data is protected through:</p>
+        <ul>
+            <li>Encrypted password storage (handled by Supabase)</li>
+            <li>HTTPS encryption on all pages</li>
+            <li>No unnecessary data collection</li>
+        </ul>
+        <p style="margin-top:12px;">While we strive to protect your data, no method of internet transmission is 100% secure. We recommend using a strong, unique password.</p>
+    </div>
+
+    <!-- 7. Your Rights -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(6,182,212,0.15);color:#67e8f9;">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h2>7. Your Rights</h2>
+        </div>
+        <p>You have the right to:</p>
+        <ul>
+            <li>Access the personal data we hold about you</li>
+            <li>Request deletion of your account and data</li>
+            <li>Update your account information</li>
+            <li>Stop using the service at any time</li>
+        </ul>
+        <p style="margin-top:12px;">To exercise any of these rights, contact us at <a href="mailto:hassanbuttg998@gmail.com">hassanbuttg998@gmail.com</a></p>
+    </div>
+
+    <!-- 8. Children -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(16,185,129,0.15);color:#4ade80;">
+                <i class="fa-solid fa-child"></i>
+            </div>
+            <h2>8. Children's Privacy</h2>
+        </div>
+        <p>FRAZX PRO is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please contact us immediately.</p>
+    </div>
+
+    <!-- 9. Changes -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(245,158,11,0.15);color:#fbbf24;">
+                <i class="fa-solid fa-rotate"></i>
+            </div>
+            <h2>9. Changes to This Policy</h2>
+        </div>
+        <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last Updated" date at the top of this page. Continued use of FRAZX PRO after changes means you accept the updated policy.</p>
+    </div>
+
+    <!-- 10. Contact -->
+    <div class="section" style="border-color:rgba(124,58,237,0.25);background:rgba(124,58,237,0.05);">
+        <div class="section-header">
+            <div class="section-icon" style="background:rgba(124,58,237,0.2);color:#a78bfa;">
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            <h2>10. Contact Us</h2>
+        </div>
+        <p>If you have any questions about this Privacy Policy, please contact us:</p>
+        <p style="margin-top:12px;">
+            <strong style="color:white;">FRAZX PRO</strong><br>
+            <a href="mailto:hassanbuttg998@gmail.com" style="font-size:15px;">hassanbuttg998@gmail.com</a><br>
+            <a href="https://frazxpro.com" style="margin-top:4px;display:inline-block;">frazxpro.com</a>
+        </p>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 FRAZX PRO — <a href="https://frazxpro.com">frazxpro.com</a> — All Rights Reserved</p>
+</footer>
+
+</body>
+</html>
