@@ -339,93 +339,92 @@
 
     <main id="home" class="page-content active-page relative w-full min-h-screen bg-[#050508] overflow-y-auto block">
 
-<!-- ===== HERO SECTION ===== -->
 <div class="relative w-full overflow-hidden">
 
-    <!-- Background glow blobs -->
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] pointer-events-none z-0" style="background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,0.18) 0%,rgba(192,38,211,0.08) 40%,transparent 70%);"></div>
-    <div class="absolute top-32 left-0 w-72 h-72 pointer-events-none z-0" style="background:radial-gradient(circle,rgba(99,102,241,0.1) 0%,transparent 70%);"></div>
-    <div class="absolute top-20 right-0 w-96 h-96 pointer-events-none z-0" style="background:radial-gradient(circle,rgba(192,38,211,0.08) 0%,transparent 70%);"></div>
+    <!-- Subtle background glow - same as rest of site -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] pointer-events-none z-0" style="background:radial-gradient(ellipse at 50% 0%,rgba(99,102,241,0.1) 0%,transparent 70%);"></div>
 
-    <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-28 pb-12 md:pt-36 md:pb-16 text-center">
+    <div class="relative z-10 max-w-5xl mx-auto px-6 pt-28 pb-12 md:pt-36 md:pb-16 text-center">
 
-        <!-- Main Heading -->
-        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[0.92] tracking-tight mb-6">
-            <span class="text-white uppercase">AI-POWERED TOOLS</span><br>
-            <span class="uppercase" style="background:linear-gradient(135deg,#a78bfa 0%,#c026d3 50%,#ec4899 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">BUILT FOR CREATORS</span><br>
-            <span class="text-white uppercase">AND BUSINESSES</span>
+        <!-- Heading - same style as Tools Hub -->
+        <h2 class="text-xs font-black uppercase tracking-[0.4em] text-[#6366f1] mb-4">FRAZX PRO Neural Lab</h2>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight leading-[0.92] mb-6 text-white">
+            AI-POWERED TOOLS<br>
+            <span style="background:linear-gradient(135deg,#818cf8,#a78bfa,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">BUILT FOR CREATORS</span><br>
+            AND BUSINESSES
         </h1>
 
-        <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-10">
-            <button onclick="handleStartCreation()" class="px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest text-white transition-all duration-300 hover:scale-105" style="background:linear-gradient(135deg,#7c3aed,#9333ea,#c026d3);box-shadow:0 8px 30px rgba(124,58,237,0.4);">
+        <p class="text-gray-400 text-sm leading-relaxed mb-10 max-w-xl mx-auto">
+            Premium AI Prompts, Generators &amp; Assets to create stunning content <span class="text-indigo-400 font-bold">in seconds.</span>
+        </p>
+
+        <!-- 5 Feature icon cards - same style as tools hub cards -->
+        <div class="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-10 max-w-lg mx-auto">
+            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl bg-[#111827]/40 border border-indigo-500/20 backdrop-blur-sm hover:border-indigo-500/50 transition-all duration-300">
+                <i class="fa-solid fa-film text-indigo-400 text-lg"></i>
+                <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 text-center leading-tight">Cinematic Prompts</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl bg-[#111827]/40 border border-purple-500/20 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300">
+                <i class="fa-solid fa-user-gear text-purple-400 text-lg"></i>
+                <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 text-center leading-tight">Portrait Transformer</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl bg-[#111827]/40 border border-indigo-500/20 backdrop-blur-sm hover:border-indigo-500/50 transition-all duration-300">
+                <i class="fa-solid fa-rectangle-ad text-indigo-400 text-lg"></i>
+                <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 text-center leading-tight">AI Ad Poster</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl bg-[#111827]/40 border border-purple-500/20 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300">
+                <i class="fa-solid fa-images text-purple-400 text-lg"></i>
+                <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 text-center leading-tight">AI Stock Library</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl bg-[#111827]/40 border border-indigo-500/20 backdrop-blur-sm hover:border-indigo-500/50 transition-all duration-300">
+                <i class="fa-solid fa-bolt text-indigo-400 text-lg"></i>
+                <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 text-center leading-tight">Ready To Use Prompts</span>
+            </div>
+        </div>
+
+        <!-- CTA Buttons - same style as tools hub buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button onclick="handleStartCreation()" class="px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest text-white transition-all duration-300 hover:bg-[#4338CA] shadow-[0_4px_20px_rgba(79,70,229,0.25)]" style="background:#4F46E5;">
                 START CREATING FREE &rarr;
             </button>
-            <button onclick="showPage('about-frazx')" class="px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest text-white transition-all duration-300 hover:scale-105" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);">
+            <button onclick="showPage('about-frazx')" class="px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest text-white transition-all duration-300 bg-[#111827]/40 border border-white/10 hover:border-indigo-500/40 backdrop-blur-sm">
                 Learn More
             </button>
         </div>
 
-        <!-- 5 Feature icons -->
-        <div class="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-10 max-w-lg mx-auto">
-            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl" style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);">
-                <i class="fa-solid fa-film text-lg" style="color:#a78bfa;"></i>
-                <span class="text-[9px] font-black uppercase tracking-wider text-gray-300 text-center leading-tight">Cinematic Prompts</span>
-            </div>
-            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);">
-                <i class="fa-solid fa-user-gear text-lg" style="color:#c4b5fd;"></i>
-                <span class="text-[9px] font-black uppercase tracking-wider text-gray-300 text-center leading-tight">Portrait Transformer</span>
-            </div>
-            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl" style="background:rgba(192,38,211,0.1);border:1px solid rgba(192,38,211,0.25);">
-                <i class="fa-solid fa-rectangle-ad text-lg" style="color:#e879f9;"></i>
-                <span class="text-[9px] font-black uppercase tracking-wider text-gray-300 text-center leading-tight">AI Ad Poster</span>
-            </div>
-            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl" style="background:rgba(109,40,217,0.1);border:1px solid rgba(109,40,217,0.25);">
-                <i class="fa-solid fa-images text-lg" style="color:#8b5cf6;"></i>
-                <span class="text-[9px] font-black uppercase tracking-wider text-gray-300 text-center leading-tight">AI Stock Library</span>
-            </div>
-            <div class="flex flex-col items-center gap-2 p-3 rounded-2xl" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);">
-                <i class="fa-solid fa-bolt text-lg" style="color:#ddd6fe;"></i>
-                <span class="text-[9px] font-black uppercase tracking-wider text-gray-300 text-center leading-tight">Ready To Use Prompts</span>
-            </div>
-        </div>
-
-        <p class="text-gray-400 text-sm sm:text-base leading-relaxed mb-6 max-w-xl mx-auto">
-            Premium AI Prompts, Generators &amp; Assets to create stunning content <span class="text-violet-400 font-bold">in seconds.</span>
-        </p>
-        <!-- Stats bar -->
+        <!-- Stats bar - same dark card style -->
         <div class="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
-            <div class="text-center p-4 rounded-2xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);">
+            <div class="text-center p-4 rounded-2xl bg-[#111827]/40 border border-indigo-500/20 backdrop-blur-sm">
                 <div class="text-2xl font-black text-white">1,000+</div>
-                <div class="text-[10px] text-gray-400 uppercase tracking-wider font-bold mt-1">AI Images</div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider font-bold mt-1">AI Images</div>
             </div>
-            <div class="text-center p-4 rounded-2xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);">
+            <div class="text-center p-4 rounded-2xl bg-[#111827]/40 border border-indigo-500/20 backdrop-blur-sm">
                 <div class="text-2xl font-black text-white">1,000+</div>
-                <div class="text-[10px] text-gray-400 uppercase tracking-wider font-bold mt-1">Ready Prompts</div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider font-bold mt-1">Ready Prompts</div>
             </div>
-            <div class="text-center p-4 rounded-2xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);">
+            <div class="text-center p-4 rounded-2xl bg-[#111827]/40 border border-indigo-500/20 backdrop-blur-sm">
                 <div class="text-2xl font-black text-white">5</div>
-                <div class="text-[10px] text-gray-400 uppercase tracking-wider font-bold mt-1">AI Tools</div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider font-bold mt-1">AI Tools</div>
             </div>
-            <div class="text-center p-4 rounded-2xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);">
+            <div class="text-center p-4 rounded-2xl bg-[#111827]/40 border border-indigo-500/20 backdrop-blur-sm">
                 <div class="text-2xl font-black text-white">100%</div>
-                <div class="text-[10px] text-gray-400 uppercase tracking-wider font-bold mt-1">Free To Browse</div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider font-bold mt-1">Free To Browse</div>
             </div>
         </div>
 
     </div>
 </div>
 
-<!-- ===== SYSTEM UPGRADES SECTION ===== -->
-<div class="relative z-10 w-full max-w-5xl mx-auto pb-16 px-4 mt-4">
+<!-- SYSTEM UPGRADES - same dark style -->
+<div class="relative z-10 w-full max-w-5xl mx-auto pb-16 px-6 mt-4">
     <div class="flex items-center gap-4 mb-8">
         <div class="text-[10px] font-black text-indigo-400 tracking-[0.3em] uppercase whitespace-nowrap">
             &#9889; SYSTEM DEPLOYMENTS &amp; LIVE UPGRADES
         </div>
-        <div class="h-[1px] w-full bg-gradient-to-r from-indigo-500/30 via-white/5 to-transparent"></div>
+        <div class="h-[1px] w-full" style="background:linear-gradient(to right,rgba(99,102,241,0.3),rgba(255,255,255,0.05),transparent);"></div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left w-full">
-        <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-md hover:border-indigo-500/30 transition-all duration-300 shadow-xl">
+        <div class="p-6 rounded-3xl bg-[#111827]/40 border border-indigo-500/20 backdrop-blur-sm hover:border-indigo-500/40 transition-all duration-300">
             <div class="flex items-center justify-between mb-4">
                 <span class="px-2.5 py-0.5 bg-indigo-500/10 border border-indigo-500/30 rounded text-[9px] font-black tracking-wider text-indigo-400 uppercase">Upcoming Tool</span>
                 <span class="text-gray-600 text-[10px] font-bold">v2.4</span>
@@ -433,7 +432,7 @@
             <h3 class="text-white font-black text-sm tracking-wide uppercase mb-2">Background Remover</h3>
             <p class="text-gray-400 text-xs leading-relaxed">Remove backgrounds from any image instantly with pixel-perfect accuracy. High-speed AI cutting engine.</p>
         </div>
-        <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-md hover:border-purple-500/30 transition-all duration-300 shadow-xl">
+        <div class="p-6 rounded-3xl bg-[#111827]/40 border border-purple-500/20 backdrop-blur-sm hover:border-purple-500/40 transition-all duration-300">
             <div class="flex items-center justify-between mb-4">
                 <span class="px-2.5 py-0.5 bg-purple-500/10 border border-purple-500/30 rounded text-[9px] font-black tracking-wider text-purple-400 uppercase">Core Upgrade</span>
                 <span class="text-gray-600 text-[10px] font-bold">In Progress</span>
@@ -441,9 +440,9 @@
             <h3 class="text-white font-black text-sm tracking-wide uppercase mb-2">Ultra Realism Render v2.0</h3>
             <p class="text-gray-400 text-xs leading-relaxed">Integrating an advanced neural lighting model to dramatically enhance realistic surface textures, accurate skin pores, and photorealistic atmospheric ray tracing.</p>
         </div>
-        <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-md hover:border-emerald-500/30 transition-all duration-300 shadow-xl">
+        <div class="p-6 rounded-3xl bg-[#111827]/40 border border-indigo-500/20 backdrop-blur-sm hover:border-indigo-500/40 transition-all duration-300">
             <div class="flex items-center justify-between mb-4">
-                <span class="px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded text-[9px] font-black tracking-wider text-emerald-400 uppercase">Speed Deploy</span>
+                <span class="px-2.5 py-0.5 bg-indigo-500/10 border border-indigo-500/30 rounded text-[9px] font-black tracking-wider text-indigo-400 uppercase">Speed Deploy</span>
                 <span class="text-gray-600 text-[10px] font-bold">Live</span>
             </div>
             <h3 class="text-white font-black text-sm tracking-wide uppercase mb-2">1-Click Multi-Batch Render</h3>
