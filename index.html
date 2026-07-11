@@ -54,6 +54,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+    /* ===== PREMIUM SELECT DROPDOWN (Post Category) ===== */
+    select#upload-category-input {
+        color-scheme: dark;
+        accent-color: #9333ea;
+        cursor: pointer;
+    }
+    select#upload-category-input option {
+        background-color: #12121a;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 14px;
+    }
+    select#upload-category-input option:checked,
+    select#upload-category-input option:hover {
+        background: linear-gradient(135deg,#7c3aed,#9333ea,#c026d3);
+        color: #ffffff;
+    }
+
     /* ===== MASONRY FEED ===== */
     .masonry-feed { column-count: 2; column-gap: 10px; }
     @media (min-width: 640px) { .masonry-feed { column-count: 3; column-gap: 12px; } }
@@ -958,7 +976,7 @@
                 <span class="bg-indigo-600 text-white rounded-full w-4 h-4 inline-flex items-center justify-center text-[8px] mr-1">5</span>
                 Post Category
             </label>
-            <select id="upload-category-input" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500 transition">
+            <select id="upload-category-input" class="w-full bg-black/40 border border-indigo-500/30 rounded-xl px-4 py-3 text-white text-sm font-semibold focus:outline-none focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(124,58,237,0.25)] transition">
                 <option value="ai_images">AI Images</option>
                 <option value="ads_poster">Ads Poster</option>
                 <option value="ai_stock">AI Stock</option>
