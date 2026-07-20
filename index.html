@@ -415,6 +415,57 @@
     </div>
 </div>
 
+<!-- HOME PREVIEW: AI IMAGES -->
+<div class="relative z-10 w-full max-w-6xl mx-auto pb-4 px-6 mt-6">
+    <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg font-black uppercase text-white tracking-widest">AI <span class="text-indigo-500">Images</span></h2>
+        <button onclick="showPage('samples')" class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-indigo-400 hover:text-indigo-300 transition-colors bg-transparent border-none cursor-pointer">
+            View All <i class="fa-solid fa-arrow-right text-[9px]"></i>
+        </button>
+    </div>
+    <div id="home-preview-images" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <div class="skeleton rounded-xl aspect-square"></div>
+        <div class="skeleton rounded-xl aspect-square"></div>
+        <div class="skeleton rounded-xl aspect-square hidden sm:block"></div>
+        <div class="skeleton rounded-xl aspect-square hidden md:block"></div>
+        <div class="skeleton rounded-xl aspect-square hidden md:block"></div>
+    </div>
+</div>
+
+<!-- HOME PREVIEW: ADS POSTER -->
+<div class="relative z-10 w-full max-w-6xl mx-auto pb-4 px-6 mt-8">
+    <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg font-black uppercase text-white tracking-widest">Ads <span class="text-orange-500">Poster</span></h2>
+        <button onclick="showPage('ads-poster')" class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-orange-400 hover:text-orange-300 transition-colors bg-transparent border-none cursor-pointer">
+            View All <i class="fa-solid fa-arrow-right text-[9px]"></i>
+        </button>
+    </div>
+    <div id="home-preview-ads" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <div class="skeleton rounded-xl aspect-square"></div>
+        <div class="skeleton rounded-xl aspect-square"></div>
+        <div class="skeleton rounded-xl aspect-square hidden sm:block"></div>
+        <div class="skeleton rounded-xl aspect-square hidden md:block"></div>
+        <div class="skeleton rounded-xl aspect-square hidden md:block"></div>
+    </div>
+</div>
+
+<!-- HOME PREVIEW: AI STOCK -->
+<div class="relative z-10 w-full max-w-6xl mx-auto pb-4 px-6 mt-8">
+    <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg font-black uppercase text-white tracking-widest">AI <span class="text-purple-500">Stock</span></h2>
+        <button onclick="showPage('ai-stock')" class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-purple-400 hover:text-purple-300 transition-colors bg-transparent border-none cursor-pointer">
+            View All <i class="fa-solid fa-arrow-right text-[9px]"></i>
+        </button>
+    </div>
+    <div id="home-preview-stock" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <div class="skeleton rounded-xl aspect-square"></div>
+        <div class="skeleton rounded-xl aspect-square"></div>
+        <div class="skeleton rounded-xl aspect-square hidden sm:block"></div>
+        <div class="skeleton rounded-xl aspect-square hidden md:block"></div>
+        <div class="skeleton rounded-xl aspect-square hidden md:block"></div>
+    </div>
+</div>
+
 <!-- SYSTEM UPGRADES - same dark style -->
 <div class="relative z-10 w-full max-w-5xl mx-auto pb-16 px-6 mt-4">
     <div class="flex items-center gap-4 mb-8">
@@ -3719,6 +3770,9 @@ window.showPage = function(pageId, pushToHistory) {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 
+    if (pageId === 'home') {
+        loadHomePreviews();
+    }
     if (pageId === 'account') {
         _uploadsLoading = false;
         setTimeout(loadMyUploads, 300);
@@ -3910,6 +3964,40 @@ window.addEventListener('popstate', function(e) {
 });
 
 
+
+// ===== HOME PAGE PREVIEWS (AI Images / Ads Poster / AI Stock) =====
+async function loadHomePreviewCategory(category, containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    try {
+        let query;
+        if (category === 'ai_images') {
+            query = _supabase.from('posts').select('*').or('category.eq.ai_images,category.is.null').order('created_at', { ascending: false }).limit(5);
+        } else {
+            query = _supabase.from('posts').select('*').eq('category', category).order('created_at', { ascending: false }).limit(5);
+        }
+        const { data: posts, error } = await query;
+        if (error || !posts || posts.length === 0) {
+            el.innerHTML = '<div class="col-span-full text-center py-8 text-gray-600 text-xs font-bold uppercase tracking-widest">No creations yet</div>';
+            return;
+        }
+        el.innerHTML = posts.map(post => `
+            <div class="relative rounded-xl overflow-hidden cursor-pointer group aspect-square border border-white/5 hover:border-indigo-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover" loading="lazy" alt="AI Art">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+            </div>
+        `).join('');
+    } catch (e) {
+        console.error(e);
+        el.innerHTML = '<div class="col-span-full text-center py-8 text-gray-600 text-xs font-bold uppercase tracking-widest">Failed to load</div>';
+    }
+}
+
+function loadHomePreviews() {
+    loadHomePreviewCategory('ai_images', 'home-preview-images');
+    loadHomePreviewCategory('ads_poster', 'home-preview-ads');
+    loadHomePreviewCategory('ai_stock', 'home-preview-stock');
+}
 
 // ===== ADS POSTER FEED =====
 async function loadAdsFeed(force = false) {
