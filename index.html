@@ -79,6 +79,82 @@
     @media (min-width: 1400px) { .masonry-feed { column-count: 5; column-gap: 14px; } }
     .masonry-card { break-inside: avoid; display: inline-block; width: 100%; margin-bottom: 12px; }
 
+    /* ===== BEFORE/AFTER COMPARISON SLIDER ===== */
+    .ba-slider {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 24px;
+        overflow: hidden;
+        user-select: none;
+        touch-action: pan-y;
+        cursor: ew-resize;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+    .ba-slider img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        pointer-events: none;
+    }
+    .ba-slider .ba-before-img {
+        clip-path: inset(0 50% 0 0);
+    }
+    .ba-slider .ba-handle {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        transform: translateX(-50%);
+        z-index: 10;
+    }
+    .ba-slider .ba-handle-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 3px;
+        transform: translateX(-50%);
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+    .ba-slider .ba-handle-circle {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translate(-50%, -50%);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .ba-slider .ba-handle-circle i { color: #111827; font-size: 11px; }
+    .ba-slider .ba-label {
+        position: absolute;
+        bottom: 14px;
+        padding: 4px 12px;
+        border-radius: 8px;
+        background: rgba(0,0,0,0.65);
+        backdrop-filter: blur(4px);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        z-index: 5;
+    }
+    .ba-slider .ba-label-before { left: 14px; }
+    .ba-slider .ba-label-after { right: 14px; }
+
     /* ===== SKELETON LOADER ===== */
     .skeleton {
         position: relative;
@@ -412,6 +488,27 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+<!-- AI UPSCALE SHOWCASE (Before/After Slider) -->
+<div class="relative z-10 w-full max-w-lg mx-auto pb-4 px-6 mt-10">
+    <div class="text-center mb-6">
+        <span class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-[9px] font-black tracking-widest text-indigo-400 uppercase mb-3">Upcoming Tool</span>
+        <h2 class="text-2xl font-black uppercase text-white tracking-widest">AI <span class="text-indigo-500">Upscale</span></h2>
+        <p class="text-gray-500 text-xs mt-2">Drag the handle to see the difference</p>
+    </div>
+
+    <div class="ba-slider" id="upscale-demo-slider">
+        <!-- REPLACE these two image URLs with your own before/after example images -->
+        <img src="https://via.placeholder.com/800x800/1a1a2e/6366f1?text=Upscaled" class="ba-after-img" alt="After Upscale">
+        <img src="https://via.placeholder.com/800x800/2a2a2a/555555?text=Original" class="ba-before-img" alt="Before Upscale">
+        <span class="ba-label ba-label-before">Before</span>
+        <span class="ba-label ba-label-after">After</span>
+        <div class="ba-handle">
+            <div class="ba-handle-line"></div>
+            <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
+        </div>
     </div>
 </div>
 
@@ -3998,6 +4095,46 @@ function loadHomePreviews() {
     loadHomePreviewCategory('ads_poster', 'home-preview-ads');
     loadHomePreviewCategory('ai_stock', 'home-preview-stock');
 }
+
+// ===== BEFORE/AFTER COMPARISON SLIDER =====
+function initBeforeAfterSliders() {
+    document.querySelectorAll('.ba-slider').forEach(slider => {
+        if (slider._baInit) return; // avoid double-binding
+        slider._baInit = true;
+
+        const beforeImg = slider.querySelector('.ba-before-img');
+        const handle = slider.querySelector('.ba-handle');
+        let dragging = false;
+
+        function setPosition(clientX) {
+            const rect = slider.getBoundingClientRect();
+            let percent = ((clientX - rect.left) / rect.width) * 100;
+            percent = Math.max(0, Math.min(100, percent));
+            beforeImg.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+            handle.style.left = percent + '%';
+        }
+
+        function onDown(e) {
+            dragging = true;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            setPosition(clientX);
+        }
+        function onMove(e) {
+            if (!dragging) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            setPosition(clientX);
+        }
+        function onUp() { dragging = false; }
+
+        slider.addEventListener('mousedown', onDown);
+        slider.addEventListener('touchstart', onDown, { passive: true });
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('touchmove', onMove, { passive: true });
+        window.addEventListener('mouseup', onUp);
+        window.addEventListener('touchend', onUp);
+    });
+}
+document.addEventListener('DOMContentLoaded', initBeforeAfterSliders);
 
 // ===== ADS POSTER FEED =====
 async function loadAdsFeed(force = false) {
