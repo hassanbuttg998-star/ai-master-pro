@@ -88,7 +88,7 @@
         <button onclick="showPage('home')" class="hover:text-blue-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
             Home
         </button>
-        <button onclick="showPage('tools-hub')" class="hover:text-cyan-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
+        <a href="/tools.html" class="hover:text-cyan-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
             Tools
         </button>
         <a href="/ai-images.html" class="hover:text-indigo-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
@@ -103,7 +103,7 @@
         <a href="/about.html" class="hover:text-green-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
             About
         </a>
-        <button onclick="showPage('about-dev')" class="hover:text-yellow-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
+        <a href="/developer.html" class="hover:text-yellow-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
             Developer
         </button>
     </div>
@@ -183,7 +183,7 @@
         <a href="/index.html" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-house-chimney w-5 text-center text-blue-400"></i><span>Home</span>
         </a>
-        <a href="#tools-hub" onclick="showPage('tools-hub')" class="flex items-center gap-4 text-white nav-link">
+        <a href="/tools.html" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-microchip w-5 text-center text-cyan-400"></i><span>Tools Hub</span>
         </a>
         <a href="/ai-images.html" class="flex items-center gap-4 text-white nav-link">
@@ -198,7 +198,7 @@
         <a href="/about.html" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-circle-info w-5 text-center text-green-400"></i><span>About FrazX</span>
         </a>
-        <a href="#about-dev" onclick="showPage('about-dev')" class="flex items-center gap-4 text-white border-t border-white/5 pt-6 nav-link">
+        <a href="/developer.html" class="flex items-center gap-4 text-white border-t border-white/5 pt-6 nav-link">
             <i class="fa-solid fa-user-gear w-5 text-center text-yellow-400"></i><span>Developer</span>
         </a>
         <div class="border-t border-white/5 pt-6 mt-6 px-4">
@@ -421,9 +421,9 @@
                 </p>
             </div>
             <div class="mt-auto">
-                <button onclick="showPage('prompt-engine')" class="w-full bg-[#4F46E5] hover:bg-[#4338CA] text-white font-black text-sm tracking-widest py-4 rounded-2xl shadow-[0_4px_20px_rgba(79,70,229,0.25)] transition-all duration-300 uppercase">
+                <a href="/cinematic-prompts.html" class="w-full bg-[#4F46E5] hover:bg-[#4338CA] text-white font-black text-sm tracking-widest py-4 rounded-2xl shadow-[0_4px_20px_rgba(79,70,229,0.25)] transition-all duration-300 uppercase inline-block text-center">
                     Launch Engine
-                </button>
+                </a>
             </div>
         </div>
 
@@ -438,9 +438,9 @@
                 </p>
             </div>
             <div class="mt-auto">
-                <button onclick="showPage('portrait-engine')" class="w-full bg-[#BF5AF2] hover:bg-[#AC46DB] text-white font-black text-sm tracking-widest py-4 rounded-2xl shadow-[0_4px_20px_rgba(191,90,242,0.3)] transition-all duration-300 uppercase">
+                <a href="/portrait-transformer.html" class="w-full bg-[#BF5AF2] hover:bg-[#AC46DB] text-white font-black text-sm tracking-widest py-4 rounded-2xl shadow-[0_4px_20px_rgba(191,90,242,0.3)] transition-all duration-300 uppercase inline-block text-center">
                     Open Studio
-                </button>
+                </a>
             </div>
         </div>
 
@@ -455,9 +455,9 @@
                 </p>
             </div>
             <div class="mt-auto">
-                <button onclick="showPage('bg-engine')" class="w-full py-4 bg-cyan-500 hover:bg-cyan-600 text-black font-black text-sm tracking-widest rounded-2xl transition-all duration-300 uppercase shadow-[0_4px_20px_rgba(6,182,212,0.3)]">
+                <a href="/background-remover.html" class="w-full py-4 bg-cyan-500 hover:bg-cyan-600 text-black font-black text-sm tracking-widest rounded-2xl transition-all duration-300 uppercase shadow-[0_4px_20px_rgba(6,182,212,0.3)] inline-block text-center">
                     Launch BG Engine
-                </button>
+                </a>
             </div>
         </div>
 
@@ -471,7 +471,7 @@
     <div class="max-w-3xl mx-auto flex flex-col gap-8">
         
         <div class="glass p-8 md:p-12 rounded-[2.5rem] border-t-2 border-indigo-500/40 shadow-xl">
-            <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">Back To Tools</button>
+            <a href="/tools.html" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-4 block">Back To Tools</a>
             <h2 class="text-3xl font-black uppercase italic mb-2 text-white">Vision Engine <span class="text-indigo-500">V1.0</span></h2>
             <p class="text-gray-400 text-sm mb-8">Enter your basic concept below to append cinematic parameters.</p>
             
@@ -543,7 +543,7 @@
 
         <!-- Header -->
         <div class="text-center mb-4 mt-6">
-            <button onclick="showPage('tools-hub')" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-6 block mx-auto">Back To Tools</button>
+            <a href="/tools.html" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white mb-6 block mx-auto">Back To Tools</a>
             <h2 class="text-3xl md:text-4xl font-black uppercase italic mb-3 text-white tracking-wide">
                 PORTRAIT <span class="text-purple-500">TRANSFORMER</span>
             </h2>
@@ -675,9 +675,9 @@
             cooking something massive! just waiting 
         </p>
         
-        <button onclick="window.location.href=window.location.href;" class="w-full py-4 bg-cyan-500 hover:bg-cyan-600 text-black font-black text-sm tracking-widest rounded-2xl transition-all duration-300 uppercase shadow-[0_4px_20px_rgba(6,182,212,0.3)] transform active:scale-95 cursor-pointer">
+        <a href="/tools.html" class="w-full py-4 bg-cyan-500 hover:bg-cyan-600 text-black font-black text-sm tracking-widest rounded-2xl transition-all duration-300 uppercase shadow-[0_4px_20px_rgba(6,182,212,0.3)] transform active:scale-95 cursor-pointer inline-block text-center">
     Back to Dashboard
-        </button>
+        </a>
     </div>
     </section>
     
@@ -1318,10 +1318,10 @@
         </div>
         <div class="flex justify-center flex-wrap gap-8 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-10">
             <a href="/index.html" class="nav-link">Home</a>
-            <span class="nav-link" onclick="showPage('tools-hub')">Tools</span>
+            <a href="/tools.html" class="nav-link">Tools</a>
             <a href="/ai-images.html" class="nav-link">AI Images</a>
             <a href="/about.html" class="nav-link">About</a>
-            <span class="nav-link" onclick="showPage('about-dev')">Developer</span>
+            <a href="/developer.html" class="nav-link">Developer</a>
             <a href="/privacy-policy.html" class="text-gray-500 hover:text-violet-400 transition-colors duration-200">Privacy Policy</a>
         </div>
         <!-- Social Links -->
