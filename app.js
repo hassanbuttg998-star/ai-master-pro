@@ -49,11 +49,11 @@
       if (photo && imgEl) { imgEl.src = cldAvatar(photo); imgEl.classList.remove('hidden'); if(iconEl) iconEl.classList.add('hidden'); }
       if (btnEl) {
         btnEl.innerText = 'Profile';
-        btnEl.onclick = (e) => { e.stopPropagation(); showPage('account'); document.getElementById('sidebar').classList.add('translate-x-full'); };
+        btnEl.onclick = (e) => { e.stopPropagation(); window.location.href = '/account.html'; };
         btnEl.className = 'text-[10px] bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
       }
       if (navText) navText.innerText = name.split(' ')[0].toUpperCase();
-      if (navBtn) navBtn.onclick = () => showPage('account');
+      if (navBtn) navBtn.onclick = () => { window.location.href = '/account.html'; };
 
       // Account page
       const accName = document.getElementById('account-name');
@@ -314,8 +314,7 @@
   window.handleSidebarProfileClick = function() {
     _supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        showPage('account');
-        document.getElementById('sidebar').classList.add('translate-x-full');
+        window.location.href = '/account.html';
       } else {
         toggleLoginModal(true);
       }
@@ -461,13 +460,14 @@ function showPage(pageId, pushToHistory = true) {
             const systemPrompt = `You are a world-class cinematic AI prompt engineer. Transform the user's basic idea into a hyper-detailed, ultra-professional AI image/video generation prompt. Include: cinematic lighting type, camera lens & angle, mood & atmosphere, color grading style, render engine, artistic style, and micro-details. Keep it under 180 words. Return ONLY the final prompt, no explanation, no labels.`;
             const userMessage = `Basic idea: "${input}"`;
 
-            const encodedSystem = encodeURIComponent(systemPrompt);
-            const encodedMsg = encodeURIComponent(userMessage);
-            const seed = Math.floor(Math.random() * 99999);
-            const textApiUrl = `https://text.pollinations.ai/${encodedMsg}?system=${encodedSystem}&model=openai&seed=${seed}`;
-
-            const response = await fetch(textApiUrl);
-            const enhancedPrompt = (await response.text()).trim();
+            const response = await fetch('/api/generate-prompt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ system: systemPrompt, message: userMessage })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'AI request failed');
+            const enhancedPrompt = (data.text || '').trim();
 
             document.getElementById('finalPrompt').innerText = enhancedPrompt;
             document.getElementById('resultBox').classList.remove('hidden');
@@ -514,15 +514,19 @@ function showPage(pageId, pushToHistory = true) {
         badgeEl.innerText = chosen.label;
         resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        const personDesc = userDesc ? `Person details: ${userDesc}.` : 'No specific person description provided â€” create a generic stunning portrait.';
+        const personDesc = userDesc ? `Person details: ${userDesc}.` : 'No specific person description provided — create a generic stunning portrait.';
         const systemPrompt = `You are an elite AI portrait prompt engineer. Generate a hyper-detailed, ultra-professional AI image generation prompt for portrait photography. The prompt should include: facial features, skin texture, lighting setup, camera lens, background, color grade, mood, and render quality. Start with "use my reference picture and create a". Keep under 160 words. Return ONLY the prompt.`;
         const userMsg = `Style: ${chosen.desc}. ${personDesc}`;
 
         try {
-            const seed = Math.floor(Math.random() * 99999);
-            const url = `https://text.pollinations.ai/${encodeURIComponent(userMsg)}?system=${encodeURIComponent(systemPrompt)}&model=openai&seed=${seed}`;
-            const res = await fetch(url);
-            const prompt = (await res.text()).trim();
+            const res = await fetch('/api/generate-prompt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ system: systemPrompt, message: userMsg })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'AI request failed');
+            const prompt = (data.text || '').trim();
             loadingEl.classList.add('hidden');
             promptEl.innerText = prompt;
         } catch(e) {
@@ -2264,7 +2268,7 @@ window.viewCreatorProfile = function() {
     // If it's the current user, go to own account page
     _supabase.auth.getSession().then(({ data: { session } }) => {
         if (session && session.user.id === creatorId) {
-            showPage('account');
+            window.location.href = '/account.html';
         } else {
             // Open creator profile in global search / user profile view
             openUserProfileById(creatorId);
