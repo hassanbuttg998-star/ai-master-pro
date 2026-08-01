@@ -53,7 +53,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v3">
 </head>
 <body class="bg-[#050508]" onclick="closeSidebarOnEmptyClick(event)">
 
@@ -90,7 +90,7 @@
         </button>
         <a href="/tools.html" class="hover:text-cyan-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
             Tools
-        </button>
+        </a>
         <a href="/ai-images.html" class="hover:text-indigo-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
             AI Images
         </a>
@@ -105,7 +105,7 @@
         </a>
         <a href="/developer.html" class="hover:text-yellow-400 transition-colors bg-transparent border-none cursor-pointer font-black tracking-widest">
             Developer
-        </button>
+        </a>
     </div>
 
 
@@ -539,7 +539,7 @@
 </section>
 
 <section id="portrait-engine" class="page-content pt-32 pb-20 px-6">
-    <div class="max-w-4xl mx-auto flex flex-col gap-10">
+    <div class="max-w-5xl mx-auto flex flex-col gap-10">
 
         <!-- Header -->
         <div class="text-center mb-4 mt-6">
@@ -548,106 +548,175 @@
                 PORTRAIT <span class="text-purple-500">TRANSFORMER</span>
             </h2>
             <p class="text-gray-400 text-sm max-w-xl mx-auto font-medium leading-relaxed">
-                Describe yourself, pick a style get a hyper-detailed AI portrait prompt instantly.
+                Drag to compare, then copy the ready-made prompt for your favorite style.
             </p>
         </div>
 
-        <!-- User Description Input -->
-        <div class="glass p-6 md:p-8 rounded-[2rem] border border-purple-500/20">
-            <p class="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-3">Step 1 Describe Yourself (Optional)</p>
-            <textarea id="portraitUserDesc" placeholder="e.g. male, brown eyes, short beard, dark hair, strong jawline..." 
-                class="w-full h-24 bg-black/40 border border-purple-500/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 transition resize-none text-sm"></textarea>
-            <p class="text-gray-600 text-[10px] mt-2 tracking-wide">The more you describe, the more personalized your prompt will be.</p>
-        </div>
+        <!-- Style Cards (Before/After) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-        <!-- Style Grid -->
-        <div>
-            <p class="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-6 text-center">Step 2 Select Your Style</p>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-
-                <!-- Cyberpunk -->
-                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('cyberpunk')">
-                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-purple-900/60 to-cyan-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-robot text-3xl text-cyan-400"></i>
+            <!-- Cyberpunk -->
+            <div class="glass p-5 rounded-[2rem] border border-purple-500/20">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Cyberpunk</h3>
+                <div class="ba-slider portrait-ba-slider">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforecybarpunk.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/aftercybarpunk.png" class="ba-after-img" alt="After Cyberpunk">
+                    <span class="ba-label ba-label-before">Before</span>
+                    <span class="ba-label ba-label-after">After</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
                     </div>
-                    <button class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">CYBERPUNK</button>
                 </div>
-
-                <!-- Pixar 3D -->
-                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('pixar')">
-                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-yellow-900/60 to-orange-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-star text-3xl text-yellow-400"></i>
-                    </div>
-                    <button class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">PIXAR 3D</button>
-                </div>
-
-                <!-- Profile Photo -->
-                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('profile')">
-                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-blue-900/60 to-indigo-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-user-tie text-3xl text-blue-400"></i>
-                    </div>
-                    <button class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">PROFILE PHOTO</button>
-                </div>
-
-                <!-- Sketch -->
-                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('sketch')">
-                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-gray-800/60 to-gray-600/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-pencil text-3xl text-gray-300"></i>
-                    </div>
-                    <button class="w-full py-3 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-purple-300 hover:text-white transition">SKETCH</button>
-                </div>
-
-                <!-- Anime -->
-                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('anime')">
-                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-pink-900/60 to-purple-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-wand-sparkles text-3xl text-pink-400"></i>
-                    </div>
-                    <button class="w-full py-3 bg-pink-500/10 border border-pink-500/20 hover:bg-pink-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-pink-300 hover:text-white transition">ANIME</button>
-                </div>
-
-                <!-- Oil Painting -->
-                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('oilpainting')">
-                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-amber-900/60 to-red-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-palette text-3xl text-amber-400"></i>
-                    </div>
-                    <button class="w-full py-3 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-amber-300 hover:text-white transition">OIL PAINTING</button>
-                </div>
-
-                <!-- Ghibli -->
-                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('ghibli')">
-                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-green-900/60 to-teal-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-leaf text-3xl text-green-400"></i>
-                    </div>
-                    <button class="w-full py-3 bg-green-500/10 border border-green-500/20 hover:bg-green-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-green-300 hover:text-white transition">GHIBLI</button>
-                </div>
-
-                <!-- Viking / Fantasy -->
-                <div class="glass rounded-2xl border border-purple-500/10 overflow-hidden flex flex-col bg-black/30 p-3 hover:border-purple-500/40 transition cursor-pointer" onclick="generatePortraitAI('fantasy')">
-                    <div class="w-full aspect-[16/10] bg-gradient-to-br from-red-900/60 to-orange-900/60 rounded-xl overflow-hidden mb-3 border border-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-shield-halved text-3xl text-red-400"></i>
-                    </div>
-                    <button class="w-full py-3 bg-red-500/10 border border-red-500/20 hover:bg-red-600 rounded-xl font-bold uppercase text-[11px] tracking-widest text-red-300 hover:text-white transition">FANTASY / VIKING</button>
-                </div>
-
+                <button onclick="copyPortraitStylePrompt('cyberpunk', this)" class="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-purple-300 bg-[#111827]/40 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-regular fa-copy"></i> Copy Prompt
+                </button>
             </div>
-        </div>
 
-        <!-- Result Box -->
-        <div id="portraitResultBox" class="hidden glass p-6 rounded-2xl border border-purple-500/30 bg-purple-500/5">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-[10px] font-black uppercase tracking-widest text-purple-400">AI-Generated Portrait Prompt</p>
-                <span id="portraitStyleBadge" class="text-[9px] px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 font-bold uppercase tracking-wider"></span>
+            <!-- Pixar 3D -->
+            <div class="glass p-5 rounded-[2rem] border border-purple-500/20">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Pixar 3D</h3>
+                <div class="ba-slider portrait-ba-slider">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforePixar3d.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterpixar3d.png" class="ba-after-img" alt="After Pixar 3D">
+                    <span class="ba-label ba-label-before">Before</span>
+                    <span class="ba-label ba-label-after">After</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <button onclick="copyPortraitStylePrompt('pixar', this)" class="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-purple-300 bg-[#111827]/40 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-regular fa-copy"></i> Copy Prompt
+                </button>
             </div>
-            <div id="portraitLoading" class="hidden py-2">
-                <div class="skeleton h-3.5 rounded-md mb-2.5 w-full"></div>
-                <div class="skeleton h-3.5 rounded-md mb-2.5 w-[92%]"></div>
-                <div class="skeleton h-3.5 rounded-md mb-2.5 w-[78%]"></div>
-                <div class="skeleton h-3.5 rounded-md w-[60%]"></div>
+
+            <!-- Profile Photo -->
+            <div class="glass p-5 rounded-[2rem] border border-purple-500/20">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Profile Photo</h3>
+                <div class="ba-slider portrait-ba-slider">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforeprofilephoto.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterprofilphoto.png" class="ba-after-img" alt="After Profile Photo">
+                    <span class="ba-label ba-label-before">Before</span>
+                    <span class="ba-label ba-label-after">After</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <button onclick="copyPortraitStylePrompt('profile', this)" class="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-purple-300 bg-[#111827]/40 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-regular fa-copy"></i> Copy Prompt
+                </button>
             </div>
-            <p id="portraitFinalPrompt" class="text-white text-sm leading-relaxed italic select-all"></p>
-            <button onclick="copyPortraitPromptNew()" class="mt-5 w-full px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-xl text-xs font-black uppercase tracking-widest text-white transition">
-                Copy Prompt
-            </button>
+
+            <!-- Sketch -->
+            <div class="glass p-5 rounded-[2rem] border border-purple-500/20">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Sketch</h3>
+                <div class="ba-slider portrait-ba-slider">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforesketch.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/aftersketch.png" class="ba-after-img" alt="After Sketch">
+                    <span class="ba-label ba-label-before">Before</span>
+                    <span class="ba-label ba-label-after">After</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <button onclick="copyPortraitStylePrompt('sketch', this)" class="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-purple-300 bg-[#111827]/40 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-regular fa-copy"></i> Copy Prompt
+                </button>
+            </div>
+
+            <!-- Anime -->
+            <div class="glass p-5 rounded-[2rem] border border-pink-500/20">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Anime</h3>
+                <div class="ba-slider portrait-ba-slider">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforanime.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afteranime.png" class="ba-after-img" alt="After Anime">
+                    <span class="ba-label ba-label-before">Before</span>
+                    <span class="ba-label ba-label-after">After</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <button onclick="copyPortraitStylePrompt('anime', this)" class="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-pink-300 bg-[#111827]/40 border border-pink-500/20 hover:border-pink-500/40 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-regular fa-copy"></i> Copy Prompt
+                </button>
+            </div>
+
+            <!-- Oil Painting -->
+            <div class="glass p-5 rounded-[2rem] border border-amber-500/20">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Oil Painting</h3>
+                <div class="ba-slider portrait-ba-slider">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforeoilpaint.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afteroilpaint.png" class="ba-after-img" alt="After Oil Painting">
+                    <span class="ba-label ba-label-before">Before</span>
+                    <span class="ba-label ba-label-after">After</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <button onclick="copyPortraitStylePrompt('oilpainting', this)" class="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-amber-300 bg-[#111827]/40 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-regular fa-copy"></i> Copy Prompt
+                </button>
+            </div>
+
+            <!-- Ghibli -->
+            <div class="glass p-5 rounded-[2rem] border border-green-500/20">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Ghibli</h3>
+                <div class="ba-slider portrait-ba-slider">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforeghibli.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterghibli.png" class="ba-after-img" alt="After Ghibli">
+                    <span class="ba-label ba-label-before">Before</span>
+                    <span class="ba-label ba-label-after">After</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <button onclick="copyPortraitStylePrompt('ghibli', this)" class="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-green-300 bg-[#111827]/40 border border-green-500/20 hover:border-green-500/40 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-regular fa-copy"></i> Copy Prompt
+                </button>
+            </div>
+
+            <!-- Fantasy / Viking -->
+            <div class="glass p-5 rounded-[2rem] border border-red-500/20">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Fantasy / Viking</h3>
+                <div class="ba-slider portrait-ba-slider">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforefantasy.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterfantasy.png" class="ba-after-img" alt="After Fantasy Viking">
+                    <span class="ba-label ba-label-before">Before</span>
+                    <span class="ba-label ba-label-after">After</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <button onclick="copyPortraitStylePrompt('fantasy', this)" class="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-red-300 bg-[#111827]/40 border border-red-500/20 hover:border-red-500/40 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-regular fa-copy"></i> Copy Prompt
+                </button>
+            </div>
+
+            <!-- Upscale -->
+            <div class="glass p-5 rounded-[2rem] border border-indigo-500/20">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Upscale</h3>
+                <div class="ba-slider portrait-ba-slider">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/bulr.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/clean.png" class="ba-after-img" alt="After Upscale">
+                    <span class="ba-label ba-label-before">Before</span>
+                    <span class="ba-label ba-label-after">After</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-circle"><i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                <button onclick="copyPortraitStylePrompt('upscale', this)" class="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-indigo-300 bg-[#111827]/40 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-regular fa-copy"></i> Copy Prompt
+                </button>
+            </div>
+
         </div>
 
     </div>
@@ -1428,7 +1497,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>window.__DEFAULT_PAGE__ = 'about-frazx';</script>
-<script src="app.js" defer></script>
+<script src="app.js?v3" defer></script>
 
 
 
