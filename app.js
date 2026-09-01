@@ -708,6 +708,126 @@ let currentPostId = null;
 let _feedLoading = false;
 let _feedLoaded = false;
 
+// ===== SHARED GALLERY PAGINATION SYSTEM =====
+const GALLERY_PAGE_SIZE = 20;
+const GALLERY_CONFIG = {
+    feed:  { feedEl: 'community-feed', emptyEl: 'feed-empty',  paginationEl: 'feed-pagination',  storeKey: '_feedView',  accent: 'indigo' },
+    ads:   { feedEl: 'ads-feed',       emptyEl: 'ads-empty',   paginationEl: 'ads-pagination',   storeKey: '_adsView',   accent: 'orange' },
+    stock: { feedEl: 'stock-feed',     emptyEl: 'stock-empty', paginationEl: 'stock-pagination', storeKey: '_stockView', accent: 'purple' }
+};
+
+function buildGalleryCardHTML(post, accent) {
+    const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
+    const likes = post.likes ? post.likes.length : 0;
+    const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
+    const creator = post.creator_name || 'Creator';
+    return `
+        <div class="masonry-card group cursor-pointer" onclick="openPostDetail('${post.id}')">
+            <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-${accent}-500/30 transition-all duration-300">
+                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
+                <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
+                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
+                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
+                        <i class="fa-solid fa-heart text-red-400"></i> ${likes}
+                    </span>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <p class="text-gray-200 text-xs leading-relaxed line-clamp-3 mb-3">${promptPreview}</p>
+                    <div class="flex items-center justify-between">
+                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-${accent}-600/80 hover:bg-${accent}-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                        <span class="text-gray-400 text-[10px]">@${creator}</span>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+}
+
+function renderGalleryPage(posts, gallery, page) {
+    const config = GALLERY_CONFIG[gallery];
+    if (!config) return;
+
+    window[config.storeKey] = posts || [];
+
+    const feedEl = document.getElementById(config.feedEl);
+    const emptyEl = document.getElementById(config.emptyEl);
+    const paginationEl = document.getElementById(config.paginationEl);
+    if (!feedEl) return;
+
+    if (!posts || posts.length === 0) {
+        feedEl.innerHTML = '';
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        if (paginationEl) paginationEl.innerHTML = '';
+        return;
+    }
+    if (emptyEl) emptyEl.classList.add('hidden');
+
+    const totalPages = Math.max(1, Math.ceil(posts.length / GALLERY_PAGE_SIZE));
+    page = Math.min(Math.max(1, page || 1), totalPages);
+    const start = (page - 1) * GALLERY_PAGE_SIZE;
+    const pagePosts = posts.slice(start, start + GALLERY_PAGE_SIZE);
+
+    feedEl.innerHTML = pagePosts.map(post => buildGalleryCardHTML(post, config.accent)).join('');
+    window[config.storeKey + '_page'] = page;
+
+    renderPaginationControls(paginationEl, page, totalPages, gallery, config.accent);
+}
+
+function renderPaginationControls(el, page, totalPages, gallery, accent) {
+    if (!el) return;
+    if (totalPages <= 1) { el.innerHTML = ''; return; }
+
+    function pageBtn(p) {
+        const active = p === page;
+        const activeClasses = `bg-${accent}-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]`;
+        const inactiveClasses = 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10';
+        return `<button onclick="goToGalleryPage('${gallery}', ${p})" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-xs sm:text-sm transition ${active ? activeClasses : inactiveClasses}">${p}</button>`;
+    }
+
+    const windowSize = 1;
+    const pagesSet = new Set([1, totalPages, page]);
+    for (let i = page - windowSize; i <= page + windowSize; i++) {
+        if (i >= 1 && i <= totalPages) pagesSet.add(i);
+    }
+    const sortedPages = [...pagesSet].sort((a, b) => a - b);
+
+    let numbersHTML = '';
+    let prev = 0;
+    sortedPages.forEach(p => {
+        if (prev && p - prev > 1) {
+            numbersHTML += `<span class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 text-xs">...</span>`;
+        }
+        numbersHTML += pageBtn(p);
+        prev = p;
+    });
+
+    el.innerHTML = `
+        <div class="flex flex-col items-center gap-4 mt-8 mb-6 col-span-full">
+            <span class="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-[11px] font-bold text-gray-300 flex items-center gap-2 tracking-widest uppercase">
+                <span class="w-1.5 h-1.5 rounded-full bg-${accent}-500"></span> Page ${page} / ${totalPages}
+            </span>
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
+                <button onclick="goToGalleryPage('${gallery}', ${page - 1})" ${page === 1 ? 'disabled' : ''} class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition disabled:opacity-30 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                </button>
+                ${numbersHTML}
+                <button onclick="goToGalleryPage('${gallery}', ${page + 1})" ${page === totalPages ? 'disabled' : ''} class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition disabled:opacity-30 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+        </div>`;
+}
+
+function goToGalleryPage(gallery, page) {
+    const config = GALLERY_CONFIG[gallery];
+    if (!config) return;
+    const posts = window[config.storeKey] || [];
+    renderGalleryPage(posts, gallery, page);
+    const el = document.getElementById(config.feedEl);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 async function loadCommunityFeed(force = false) {
     if (_feedLoading) return;
     if (_feedLoaded && !force) return;
@@ -742,48 +862,10 @@ async function loadCommunityFeed(force = false) {
         const seen = new Set();
         const uniquePosts = posts.filter(p => { if (seen.has(p.id)) return false; seen.add(p.id); return true; });
 
-        uniquePosts.forEach(post => {
-            const likes = post.likes ? post.likes.length : 0;
-            const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
-            const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
-            const tags = post.tags || [];
-            const creator = post.creator_name || 'Creator';
-            const isOwner = currentUserId && post.creator_id === currentUserId;
-            
-            const card = document.createElement('div');
-            card.className = 'masonry-card group cursor-pointer';
-            card.onclick = () => openPostDetail(post.id);
-            card.innerHTML = `
-                <div class="relative rounded-2xl overflow-hidden">
-                    <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
-                    
-                    <!-- Always visible: title + likes at top -->
-                    <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
-                        <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
-                        <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
-                            <i class="fa-solid fa-heart text-red-400"></i> ${likes}
-                        </span>
-                    </div>
-
-                    <!-- Hover only: prompt + copy + creator -->
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <p class="text-gray-200 text-xs leading-relaxed line-clamp-3 mb-3">${promptPreview}</p>
-                        <div class="flex items-center justify-between">
-                            <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
-                                <i class="fa-regular fa-copy"></i> Copy
-                            </button>
-                            <div class="flex items-center gap-2">
-                                <span class="text-gray-400 text-[10px]">@${creator}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            feedEl.appendChild(card);
-        });
-
         // Store posts globally for detail view
         window._feedPosts = uniquePosts;
         _feedLoaded = true;
+        renderGalleryPage(uniquePosts, 'feed', 1);
 
     } catch(e) {
         console.error(e);
@@ -986,49 +1068,19 @@ async function filterByTag(tag) {
         });
     }
 
-    feedEl.innerHTML = '';
-    
     if (filtered.length === 0) {
         if (emptyEl) {
             emptyEl.classList.remove('hidden');
             emptyEl.querySelector('p') && (emptyEl.querySelector('p').innerText = `No ${tag} posts yet`);
         }
+        feedEl.innerHTML = '';
+        const paginationEl = document.getElementById('feed-pagination');
+        if (paginationEl) paginationEl.innerHTML = '';
         return;
     }
     if (emptyEl) emptyEl.classList.add('hidden');
 
-    const { data: { session: s } } = await _supabase.auth.getSession();
-    const uid = s ? s.user.id : null;
-
-    filtered.forEach(post => {
-        const likes = post.likes ? post.likes.length : 0;
-        const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
-        const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
-        const creator = post.creator_name || 'Creator';
-        const card = document.createElement('div');
-        card.className = 'masonry-card group cursor-pointer';
-        card.onclick = () => openPostDetail(post.id);
-        card.innerHTML = `
-            <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
-                <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
-                        <i class="fa-solid fa-heart text-red-400"></i> ${likes}
-                    </span>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p class="text-gray-200 text-xs leading-relaxed line-clamp-3 mb-3">${promptPreview}</p>
-                    <div class="flex items-center justify-between">
-                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
-                            <i class="fa-regular fa-copy"></i> Copy
-                        </button>
-                        <span class="text-gray-400 text-[10px]">@${creator}</span>
-                    </div>
-                </div>
-            </div>`;
-        feedEl.appendChild(card);
-    });
+    renderGalleryPage(filtered, 'feed', 1);
 }
 
 async function filterFeed(filter) {
@@ -1067,51 +1119,14 @@ async function filterFeed(filter) {
         sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     }
 
-    // Re-render with sorted posts
-    const { data: { session: feedSession } } = await _supabase.auth.getSession();
-    const currentUserId = feedSession ? feedSession.user.id : null;
-
-    feedEl.innerHTML = '';
-    sorted.forEach(post => {
-        const likes = post.likes ? post.likes.length : 0;
-        const copies = post.copies || 0;
-        const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
-        const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
-        const creator = post.creator_name || 'Creator';
-        const isOwner = currentUserId && post.creator_id === currentUserId;
-
-        const card = document.createElement('div');
-        card.className = 'masonry-card group cursor-pointer';
-        card.onclick = () => openPostDetail(post.id);
-        card.innerHTML = `
-            <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
-                <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
-                        <i class="fa-solid fa-heart text-red-400"></i> ${likes}
-                    </span>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p class="text-gray-200 text-xs leading-relaxed line-clamp-3 mb-3">${promptPreview}</p>
-                    <div class="flex items-center justify-between">
-                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
-                            <i class="fa-regular fa-copy"></i> Copy
-                        </button>
-                        <div class="flex items-center gap-1.5 ml-auto">
-                            <span class="text-gray-400 text-[10px]">@${creator}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-        feedEl.appendChild(card);
-    });
+    // Re-render with sorted posts, page 1
+    renderGalleryPage(sorted, 'feed', 1);
 }
 
 function renderCards(posts, currentUserId) {
     const feedEl = document.getElementById('community-feed');
+    const paginationEl = document.getElementById('feed-pagination');
     if (!feedEl) return;
-    feedEl.innerHTML = '';
 
     if (!posts || posts.length === 0) {
         feedEl.innerHTML = `<div class="col-span-3 text-center py-16">
@@ -1119,39 +1134,11 @@ function renderCards(posts, currentUserId) {
             <p class="text-gray-500 font-bold">No results found</p>
             <p class="text-gray-600 text-xs mt-1">Try different keywords</p>
         </div>`;
+        if (paginationEl) paginationEl.innerHTML = '';
         return;
     }
 
-    posts.forEach(post => {
-        const likes = post.likes ? post.likes.length : 0;
-        const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
-        const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
-        const creator = post.creator_name || 'Creator';
-
-        const card = document.createElement('div');
-        card.className = 'masonry-card group cursor-pointer';
-        card.onclick = () => openPostDetail(post.id);
-        card.innerHTML = `
-            <div class="relative rounded-2xl overflow-hidden">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" alt="AI Art" loading="lazy">
-                <div class="absolute top-0 left-0 right-0 p-3 flex items-center justify-between">
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg truncate max-w-[65%]">${title}</span>
-                    <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
-                        <i class="fa-solid fa-heart text-red-400"></i> ${likes}
-                    </span>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p class="text-gray-200 text-xs leading-relaxed line-clamp-3 mb-3">${promptPreview}</p>
-                    <div class="flex items-center justify-between">
-                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
-                            <i class="fa-regular fa-copy"></i> Copy
-                        </button>
-                        <span class="text-gray-400 text-[10px]">@${creator}</span>
-                    </div>
-                </div>
-            </div>`;
-        feedEl.appendChild(card);
-    });
+    renderGalleryPage(posts, 'feed', 1);
 }
 
 let _searchTimeout = null;
@@ -1322,18 +1309,19 @@ function filterByTag(tag) {
         });
     }
 
-    feedEl.innerHTML = '';
-    
     if (posts.length === 0) {
         if (emptyEl) {
             emptyEl.classList.remove('hidden');
             emptyEl.querySelector('p') && (emptyEl.querySelector('p').innerText = `No ${tag} images yet`);
         }
+        feedEl.innerHTML = '';
+        const paginationEl = document.getElementById('feed-pagination');
+        if (paginationEl) paginationEl.innerHTML = '';
         return;
     }
     if (emptyEl) emptyEl.classList.add('hidden');
 
-    posts.forEach(post => renderFeedCard(feedEl, post));
+    renderGalleryPage(posts, 'feed', 1);
 }
 
 function renderFeedCard(feedEl, post) {
@@ -2575,30 +2563,9 @@ async function loadAdsFeed(force = false) {
         const { data: posts } = await _supabase.from('posts').select('*').eq('category','ads_poster').order('created_at',{ascending:false});
         if (loadingEl) loadingEl.classList.add('hidden');
         if (!posts || posts.length === 0) { if (emptyEl) emptyEl.classList.remove('hidden'); _adsFeedLoading=false; return; }
-        posts.forEach(post => {
-            const card = document.createElement('div');
-            const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
-            const likes = post.likes ? post.likes.length : 0;
-            const promptPreview = post.prompt ? post.prompt.substring(0,120)+'...' : '';
-            const creator = post.creator_name || 'Creator';
-            card.className = 'masonry-card group cursor-pointer';
-            card.onclick = () => openPostDetail(post.id);
-            card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all duration-300">'
-                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
-                + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
-                + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
-                + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
-                + '</div>'
-                + '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">'
-                + '<p class="text-gray-200 text-xs line-clamp-3 mb-2">' + promptPreview + '</p>'
-                + '<div class="flex items-center justify-between">'
-                + '<button onclick="event.stopPropagation();copyFeedPrompt(\'' + post.id + '\')" class="flex items-center gap-1.5 bg-orange-600/80 hover:bg-orange-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>'
-                + '<span class="text-gray-400 text-[10px]">@' + creator + '</span>'
-                + '</div></div></div>';
-            feedEl.appendChild(card);
-        });
         window._adsPosts = posts;
         _adsFeedLoaded = true;
+        renderGalleryPage(posts, 'ads', 1);
     } catch(e) { if (loadingEl) loadingEl.classList.add('hidden'); if (emptyEl) emptyEl.classList.remove('hidden'); }
     _adsFeedLoading = false;
 }
@@ -2618,30 +2585,9 @@ async function loadStockFeed(force = false) {
         const { data: posts } = await _supabase.from('posts').select('*').eq('category','ai_stock').order('created_at',{ascending:false});
         if (loadingEl) loadingEl.classList.add('hidden');
         if (!posts || posts.length === 0) { if (emptyEl) emptyEl.classList.remove('hidden'); _stockFeedLoading=false; return; }
-        posts.forEach(post => {
-            const card = document.createElement('div');
-            const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
-            const likes = post.likes ? post.likes.length : 0;
-            const promptPreview = post.prompt ? post.prompt.substring(0,120)+'...' : '';
-            const creator = post.creator_name || 'Creator';
-            card.className = 'masonry-card group cursor-pointer';
-            card.onclick = () => openPostDetail(post.id);
-            card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all duration-300">'
-                + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
-                + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
-                + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
-                + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
-                + '</div>'
-                + '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">'
-                + '<p class="text-gray-200 text-xs line-clamp-3 mb-2">' + promptPreview + '</p>'
-                + '<div class="flex items-center justify-between">'
-                + '<button onclick="event.stopPropagation();copyFeedPrompt(\'' + post.id + '\')" class="flex items-center gap-1.5 bg-purple-600/80 hover:bg-purple-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>'
-                + '<span class="text-gray-400 text-[10px]">@' + creator + '</span>'
-                + '</div></div></div>';
-            feedEl.appendChild(card);
-        });
         window._stockPosts = posts;
         _stockFeedLoaded = true;
+        renderGalleryPage(posts, 'stock', 1);
     } catch(e) { if (loadingEl) loadingEl.classList.add('hidden'); if (emptyEl) emptyEl.classList.remove('hidden'); }
     _stockFeedLoading = false;
 }
@@ -2727,32 +2673,13 @@ function filterStockCat(cat) {
     const emptyEl = document.getElementById('stock-empty');
     if (posts.length === 0) {
         if (emptyEl) emptyEl.classList.remove('hidden');
+        const paginationEl = document.getElementById('stock-pagination');
+        if (paginationEl) paginationEl.innerHTML = '';
         return;
     }
     if (emptyEl) emptyEl.classList.add('hidden');
 
-    posts.forEach(post => {
-        const card = document.createElement('div');
-        const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
-        const likes = post.likes ? post.likes.length : 0;
-        const promptPreview = post.prompt ? post.prompt.substring(0,120)+'...' : '';
-        const creator = post.creator_name || 'Creator';
-        card.className = 'masonry-card group cursor-pointer';
-        card.onclick = () => openPostDetail(post.id);
-        card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all duration-300">'
-            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
-            + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
-            + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
-            + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
-            + '</div>'
-            + '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">'
-            + '<p class="text-gray-200 text-xs line-clamp-3 mb-2">' + promptPreview + '</p>'
-            + '<div class="flex items-center justify-between">'
-            + '<button onclick="event.stopPropagation();copyFeedPrompt(\'' + post.id + '\')" class="flex items-center gap-1.5 bg-purple-600/80 hover:bg-purple-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>'
-            + '<span class="text-gray-400 text-[10px]">@' + creator + '</span>'
-            + '</div></div></div>';
-        feedEl.appendChild(card);
-    });
+    renderGalleryPage(posts, 'stock', 1);
 }
 
 
@@ -2785,32 +2712,13 @@ function filterAdsCat(cat) {
     const emptyEl = document.getElementById('ads-empty');
     if (posts.length === 0) {
         if (emptyEl) emptyEl.classList.remove('hidden');
+        const paginationEl = document.getElementById('ads-pagination');
+        if (paginationEl) paginationEl.innerHTML = '';
         return;
     }
     if (emptyEl) emptyEl.classList.add('hidden');
 
-    posts.forEach(post => {
-        const card = document.createElement('div');
-        const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
-        const likes = post.likes ? post.likes.length : 0;
-        const promptPreview = post.prompt ? post.prompt.substring(0,120)+'...' : '';
-        const creator = post.creator_name || 'Creator';
-        card.className = 'masonry-card group cursor-pointer';
-        card.onclick = () => openPostDetail(post.id);
-        card.innerHTML = '<div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all duration-300">'
-            + '<img src="' + cldThumb(post.image_url) + '" class="w-full h-auto block" loading="lazy">'
-            + '<div class="absolute top-0 left-0 right-0 p-2.5 flex items-center justify-between">'
-            + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[65%]">' + title + '</span>'
-            + '<span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-lg flex items-center gap-1"><i class="fa-solid fa-heart text-red-400"></i> ' + likes + '</span>'
-            + '</div>'
-            + '<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-b-2xl">'
-            + '<p class="text-gray-200 text-xs line-clamp-3 mb-2">' + promptPreview + '</p>'
-            + '<div class="flex items-center justify-between">'
-            + '<button onclick="event.stopPropagation();copyFeedPrompt(\'' + post.id + '\')" class="flex items-center gap-1.5 bg-orange-600/80 hover:bg-orange-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition"><i class="fa-regular fa-copy"></i> Copy</button>'
-            + '<span class="text-gray-400 text-[10px]">@' + creator + '</span>'
-            + '</div></div></div>';
-        feedEl.appendChild(card);
-    });
+    renderGalleryPage(posts, 'ads', 1);
 }
 
 // Close both panels on outside click
