@@ -49,11 +49,11 @@
       if (photo && imgEl) { imgEl.src = cldAvatar(photo); imgEl.classList.remove('hidden'); if(iconEl) iconEl.classList.add('hidden'); }
       if (btnEl) {
         btnEl.innerText = 'Profile';
-        btnEl.onclick = (e) => { e.stopPropagation(); window.location.href = '/account.html'; };
+        btnEl.onclick = (e) => { e.stopPropagation(); window.location.href = '/account'; };
         btnEl.className = 'text-[10px] bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
       }
       if (navText) navText.innerText = name.split(' ')[0].toUpperCase();
-      if (navBtn) navBtn.onclick = () => { window.location.href = '/account.html'; };
+      if (navBtn) navBtn.onclick = () => { window.location.href = '/account'; };
 
       // Account page
       const accName = document.getElementById('account-name');
@@ -314,7 +314,7 @@
   window.handleSidebarProfileClick = function() {
     _supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        window.location.href = '/account.html';
+        window.location.href = '/account';
       } else {
         toggleLoginModal(true);
       }
@@ -423,7 +423,6 @@ function showPage(pageId, pushToHistory = true) {
             showPage(startingHash, false);
         } else {
             const defaultPage = window.__DEFAULT_PAGE__ || 'home';
-            window.location.hash = defaultPage;
             showPage(defaultPage, false);
         }
     });
@@ -2256,7 +2255,7 @@ window.viewCreatorProfile = function() {
     // If it's the current user, go to own account page
     _supabase.auth.getSession().then(({ data: { session } }) => {
         if (session && session.user.id === creatorId) {
-            window.location.href = '/account.html';
+            window.location.href = '/account';
         } else {
             // Open creator profile in global search / user profile view
             openUserProfileById(creatorId);
