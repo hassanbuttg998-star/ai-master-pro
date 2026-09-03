@@ -47,7 +47,8 @@
     <!-- ===== FAVICON ===== -->
     <!-- ===== FAVICON & SCHEMA ===== -->
     <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/pis.jpg">
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/pis.jpg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#7c3aed">
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"FRAZX PRO","url":"https://frazxpro.com","logo":"https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/pis.jpg","description":"AI image community where creators discover cinematic AI art with ready-to-copy prompts."}</script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -184,6 +185,9 @@
                 Sign In
             </button>
         </div>
+        <button id="install-app-btn" onclick="triggerAppInstall()" class="hidden w-full mb-4 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-indigo-500/20 text-indigo-300 text-xs font-bold py-2.5 rounded-xl transition-colors">
+            <i class="fa-solid fa-download"></i> Install App
+        </button>
         <a href="/" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-house-chimney w-5 text-center text-blue-400"></i><span>Home</span>
         </a>
