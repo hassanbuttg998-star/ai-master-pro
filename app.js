@@ -5,6 +5,41 @@
   window._supabase = _supabase;
   window._cloudinary = { cloudName: 'dt8nzlmgk', uploadPreset: 'frazx_community' };
 
+  // ===== SERVICE WORKER REGISTRATION (offline support + installability) =====
+  if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch((err) => {
+              console.error('Service worker registration failed:', err);
+          });
+      });
+  }
+
+  // ===== CUSTOM "INSTALL APP" PROMPT =====
+  let _deferredInstallPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      _deferredInstallPrompt = e;
+      const btn = document.getElementById('install-app-btn');
+      if (btn) btn.classList.remove('hidden');
+  });
+
+  window.triggerAppInstall = async function () {
+      if (!_deferredInstallPrompt) return;
+      _deferredInstallPrompt.prompt();
+      const { outcome } = await _deferredInstallPrompt.userChoice;
+      if (outcome === 'accepted' && typeof showToast === 'function') {
+          showToast('App installed!');
+      }
+      _deferredInstallPrompt = null;
+      const btn = document.getElementById('install-app-btn');
+      if (btn) btn.classList.add('hidden');
+  };
+
+  window.addEventListener('appinstalled', () => {
+      const btn = document.getElementById('install-app-btn');
+      if (btn) btn.classList.add('hidden');
+  });
+
   // ===== IMAGE OPTIMIZATION (Cloudinary on-the-fly transforms) =====
   // Inserts a transformation string right after "/upload/" in a Cloudinary URL.
   // Non-Cloudinary URLs (e.g. fallback/demo images) are returned untouched.
