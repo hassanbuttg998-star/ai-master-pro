@@ -197,3 +197,64 @@
 #login-modal > div {
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+/* ===== BOTTOM NAVIGATION BAR (mobile app feel) ===== */
+@media (max-width: 767px) {
+    body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+}
+.bottom-nav {
+    display: none;
+}
+@media (max-width: 767px) {
+    .bottom-nav {
+        display: flex;
+        position: fixed;
+        left: 0; right: 0; bottom: 0;
+        z-index: 90;
+        background: rgba(5,5,8,0.92);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        align-items: center;
+        justify-content: space-around;
+    }
+}
+.bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 4px 8px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+.bottom-nav-item i { font-size: 18px; }
+.bottom-nav-item.active { color: #818cf8; }
+.bottom-nav-create {
+    width: 46px; height: 46px;
+    border-radius: 16px;
+    background: linear-gradient(135deg,#7c3aed,#4f46e5);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 20px;
+    margin-top: -20px;
+    box-shadow: 0 4px 16px rgba(124,58,237,0.4);
+    border: 3px solid #050508;
+}
+
+/* ===== SMOOTH CROSS-PAGE TRANSITIONS (View Transitions API) ===== */
+@media (max-width: 767px) {
+    @view-transition { navigation: auto; }
+    ::view-transition-old(root) { animation-duration: 0.18s; }
+    ::view-transition-new(root) { animation-duration: 0.22s; }
+}
