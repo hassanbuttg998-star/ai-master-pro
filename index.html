@@ -188,18 +188,6 @@
         <button id="install-app-btn" onclick="triggerAppInstall()" class="hidden w-full mb-4 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-indigo-500/20 text-indigo-300 text-xs font-bold py-2.5 rounded-xl transition-colors">
             <i class="fa-solid fa-download"></i> Install App
         </button>
-        <a href="/" class="flex items-center gap-4 text-white nav-link">
-            <i class="fa-solid fa-house-chimney w-5 text-center text-blue-400"></i><span>Home</span>
-        </a>
-        <a href="/tools" class="flex items-center gap-4 text-white nav-link">
-            <i class="fa-solid fa-microchip w-5 text-center text-cyan-400"></i><span>Tools Hub</span>
-        </a>
-        <a href="/ai-images" class="flex items-center gap-4 text-white nav-link">
-            <i class="fa-solid fa-clapperboard w-5 text-center text-indigo-400"></i><span>AI Images</span>
-        </a>
-        <a href="/ads-poster" class="flex items-center gap-4 text-white nav-link">
-            <i class="fa-solid fa-rectangle-ad w-5 text-center text-orange-400"></i><span>Ads Poster</span>
-        </a>
         <a href="/ai-stock" class="flex items-center gap-4 text-white nav-link">
             <i class="fa-solid fa-layer-group w-5 text-center text-purple-400"></i><span>AI Stock</span>
         </a>
@@ -1510,8 +1498,8 @@
 
 <!-- BOTTOM NAVIGATION BAR (mobile app feel) -->
 <nav class="bottom-nav">
-    <a href="/" class="bottom-nav-item" data-page="/"><i class="fa-solid fa-house-chimney"></i>Home</a>
     <a href="/ai-images" class="bottom-nav-item" data-page="/ai-images"><i class="fa-solid fa-images"></i>Gallery</a>
+    <a href="/ads-poster" class="bottom-nav-item" data-page="/ads-poster"><i class="fa-solid fa-bullhorn"></i>Ads</a>
     <button onclick="openUploadModal()" class="bottom-nav-item" style="flex:0 0 auto;">
         <span class="bottom-nav-create"><i class="fa-solid fa-plus"></i></span>
     </button>
