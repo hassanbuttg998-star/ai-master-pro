@@ -40,6 +40,16 @@
       if (btn) btn.classList.add('hidden');
   });
 
+  // ===== BOTTOM NAV ACTIVE STATE =====
+  (function highlightBottomNav() {
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
+      document.querySelectorAll('.bottom-nav-item[data-page]').forEach((el) => {
+          const page = el.getAttribute('data-page');
+          const isActive = (page === '/' && path === '/') || (page !== '/' && path === page);
+          el.classList.toggle('active', isActive);
+      });
+  })();
+
   // ===== IMAGE OPTIMIZATION (Cloudinary on-the-fly transforms) =====
   // Inserts a transformation string right after "/upload/" in a Cloudinary URL.
   // Non-Cloudinary URLs (e.g. fallback/demo images) are returned untouched.
