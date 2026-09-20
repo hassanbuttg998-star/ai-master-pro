@@ -2194,23 +2194,21 @@ function runSearch(query) {
     _searchTimer = setTimeout(async () => {
         try {
             const q = query.toLowerCase().trim();
-            // Search from Supabase directly - no dependency on _feedPosts
-            const { data: posts } = await _supabase
+            // Search the ENTIRE database directly (title or creator name), not just a recent batch
+            const { data: posts, error } = await _supabase
                 .from('posts')
                 .select('id, title, tags, image_url, creator_name, creator_id')
+                .or(`title.ilike.%${q}%,creator_name.ilike.%${q}%`)
                 .order('created_at', { ascending: false })
-                .limit(100);
+                .limit(60);
 
-            if (!posts || posts.length === 0) {
-                resultsEl.innerHTML = '<p class="text-gray-500 text-sm text-center py-6">No posts found</p>';
+            if (error) {
+                resultsEl.innerHTML = '<p class="text-gray-500 text-sm text-center py-6">Search failed, try again</p>';
+                console.error(error);
                 return;
             }
 
-            const filtered = posts.filter(post =>
-                (post.title && post.title.toLowerCase().includes(q)) ||
-                (post.tags && post.tags.some(t => t.toLowerCase().includes(q))) ||
-                (post.creator_name && post.creator_name.toLowerCase().includes(q))
-            );
+            const filtered = posts || [];
 
             if (filtered.length === 0) {
                 resultsEl.innerHTML = `<p class="text-gray-500 text-sm text-center py-6">No results for "<span class="text-white">${query}</span>"</p>`;
