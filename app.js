@@ -348,11 +348,41 @@
   // ===== FORM SWITCH =====
   window.showSignupForm = function() {
     document.getElementById('login-form-wrap').classList.add('hidden');
+    document.getElementById('forgot-password-form-wrap').classList.add('hidden');
     document.getElementById('signup-form-wrap').classList.remove('hidden');
   };
   window.showLoginForm = function() {
     document.getElementById('signup-form-wrap').classList.add('hidden');
+    document.getElementById('forgot-password-form-wrap').classList.add('hidden');
     document.getElementById('login-form-wrap').classList.remove('hidden');
+  };
+  window.showForgotPasswordForm = function() {
+    document.getElementById('login-form-wrap').classList.add('hidden');
+    document.getElementById('signup-form-wrap').classList.add('hidden');
+    document.getElementById('forgot-password-form-wrap').classList.remove('hidden');
+  };
+
+  // ===== FORGOT PASSWORD =====
+  window.sendPasswordResetEmail = async function() {
+    const email = document.getElementById('forgot-email').value.trim();
+    if (!email) { showToast("Please enter your email!"); return; }
+
+    const btn = document.getElementById('forgot-password-btn');
+    if (btn) { btn.innerText = 'Sending...'; btn.disabled = true; }
+
+    const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://frazxpro.com/reset-password'
+    });
+
+    if (btn) { btn.innerText = 'Send Reset Link'; btn.disabled = false; }
+
+    if (error) {
+      showToast("Something went wrong. Please try again.");
+    } else {
+      showToast("Reset link sent! Check your email.");
+      document.getElementById('forgot-email').value = '';
+      window.showLoginForm();
+    }
   };
 
   // ===== PROFILE =====
@@ -403,7 +433,7 @@
         if (!modal) return;
         if (show) {
             // Always reset to the default Sign In view on open
-            const panels = ['signup-form-wrap', 'account-type-wrap', 'onboarding-quiz-wrap', 'quiz-rejected-wrap', 'quiz-success-wrap'];
+            const panels = ['signup-form-wrap', 'forgot-password-form-wrap', 'account-type-wrap', 'onboarding-quiz-wrap', 'quiz-rejected-wrap', 'quiz-success-wrap'];
             panels.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
             const loginPanel = document.getElementById('login-form-wrap');
             if (loginPanel) loginPanel.classList.remove('hidden');
