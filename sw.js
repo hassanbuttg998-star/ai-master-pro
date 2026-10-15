@@ -4,7 +4,7 @@
 // - HTML pages: network-first, falls back to cache when offline
 // - Supabase/API calls: always network (never cache live data)
 
-const CACHE_NAME = 'frazxpro-v1';
+const CACHE_NAME = 'frazxpro-v3';
 
 const STATIC_ASSETS = [
     '/style.css',
@@ -12,7 +12,8 @@ const STATIC_ASSETS = [
     '/manifest.json',
     '/icon-192.png',
     '/icon-512.png',
-    '/apple-touch-icon.png'
+    '/apple-touch-icon.png',
+    '/logo.png'
 ];
 
 // Install: pre-cache core static assets
