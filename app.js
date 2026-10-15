@@ -95,7 +95,7 @@
       if (btnEl) {
         btnEl.innerText = 'Profile';
         btnEl.onclick = (e) => { e.stopPropagation(); window.location.href = '/account'; };
-        btnEl.className = 'text-[10px] bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
+        btnEl.className = 'text-[10px] bg-neutral-600 hover:bg-neutral-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
       }
       if (navText) navText.innerText = name.split(' ')[0].toUpperCase();
       if (navBtn) navBtn.onclick = () => { window.location.href = '/account'; };
@@ -121,7 +121,7 @@
       if (btnEl) {
         btnEl.innerText = 'Sign In';
         btnEl.onclick = (e) => { e.stopPropagation(); toggleLoginModal(true); };
-        btnEl.className = 'text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
+        btnEl.className = 'text-[10px] bg-zinc-600 hover:bg-zinc-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
       }
       if (navText) navText.innerText = 'SIGN IN';
       if (navImg) navImg.classList.add('hidden');
@@ -250,7 +250,7 @@
     document.getElementById('quiz-question').innerText = q.q;
     const optsEl = document.getElementById('quiz-options');
     optsEl.innerHTML = q.options.map(opt => `
-      <button onclick="answerQuizQuestion('${opt.replace(/'/g, "\\'")}')" class="w-full text-left bg-[#050508]/60 border border-white/10 hover:border-indigo-500/50 hover:bg-indigo-600/10 rounded-xl px-4 py-3 text-white text-sm font-bold transition">
+      <button onclick="answerQuizQuestion('${opt.replace(/'/g, "\\'")}')" class="w-full text-left bg-[#050508]/60 border border-white/10 hover:border-zinc-500/50 hover:bg-zinc-600/10 rounded-xl px-4 py-3 text-white text-sm font-bold transition">
         ${opt}
       </button>`).join('');
   }
@@ -628,11 +628,11 @@ function showPage(pageId, pushToHistory = true) {
     navigator.clipboard.writeText(textToCopy).then(() => {
         const originalText = buttonElement.innerHTML;
         buttonElement.innerHTML = "âœ“ COPIED!";
-        buttonElement.classList.add('text-purple-400', 'border-purple-500/40');
+        buttonElement.classList.add('text-neutral-400', 'border-neutral-500/40');
         
         setTimeout(() => {
             buttonElement.innerHTML = originalText;
-            buttonElement.classList.remove('text-purple-400', 'border-purple-500/40');
+            buttonElement.classList.remove('text-neutral-400', 'border-neutral-500/40');
         }, 2000);
     }).catch(err => {
         console.error('Failed to copy text: ', err);
@@ -662,7 +662,7 @@ function showPage(pageId, pushToHistory = true) {
         
         // 2. Headings & Main Text Visibility Fix
         mainHeadings.forEach(el => {
-            if (!el.classList.contains('text-[#6366f1]') && !el.classList.contains('text-indigo-500')) {
+            if (!el.classList.contains('text-[#71717a]') && !el.classList.contains('text-zinc-500')) {
                 el.style.setProperty('color', '#111827', 'important');
             }
         });
@@ -688,7 +688,7 @@ function showPage(pageId, pushToHistory = true) {
             sidebar.style.setProperty('box-shadow', '-10px 0 25px -5px rgba(0, 0, 0, 0.05)', 'important');
         }
         sidebarLinks.forEach(link => {
-            if (!link.classList.contains('text-[#6366f1]') && !link.classList.contains('text-indigo-500')) {
+            if (!link.classList.contains('text-[#71717a]') && !link.classList.contains('text-zinc-500')) {
                 link.style.setProperty('color', '#374151', 'important'); // Clear dark gray text for links
             }
         });
@@ -732,7 +732,7 @@ function showPage(pageId, pushToHistory = true) {
             themeText.innerText = "DARK";
             themeText.style.removeProperty('color');
         }
-        if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#6366f1]";
+        if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#71717a]";
     }
 }
    
@@ -854,7 +854,7 @@ function renderPaginationControls(el, page, totalPages, gallery, accent) {
 
     function pageBtn(p) {
         const active = p === page;
-        const activeClasses = `bg-${accent}-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]`;
+        const activeClasses = `bg-${accent}-500 text-white shadow-[0_0_20px_rgba(113,113,122,0.4)]`;
         const inactiveClasses = 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10';
         return `<button onclick="goToGalleryPage('${gallery}', ${p})" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-xs sm:text-sm transition ${active ? activeClasses : inactiveClasses}">${p}</button>`;
     }
@@ -981,7 +981,7 @@ async function renderPostDetail(postId) {
     const saveBtn = document.getElementById('detail-save-btn');
     if (saveBtn) {
         saveBtn.querySelector('i').className = 'fa-regular fa-bookmark';
-        saveBtn.className = 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-indigo-400 transition';
+        saveBtn.className = 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-zinc-600/20 border border-white/10 hover:border-zinc-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-zinc-400 transition';
     }
 
     document.getElementById('detail-image').src = cldFull(post.image_url) || '';
@@ -992,7 +992,7 @@ async function renderPostDetail(postId) {
     if (tagsContainer) {
         const tags = post.tags || [];
         tagsContainer.innerHTML = tags.length > 0 
-            ? tags.map(t => `<span class="px-2.5 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[10px] font-bold">#${t}</span>`).join('') 
+            ? tags.map(t => `<span class="px-2.5 py-1 bg-zinc-500/10 border border-zinc-500/20 rounded-full text-zinc-400 text-[10px] font-bold">#${t}</span>`).join('') 
             : '';
     }
     // Creator card
@@ -1042,11 +1042,11 @@ async function renderPostDetail(postId) {
                     .single();
                 if (existingFollow) {
                     followBtn.innerText = 'Following';
-                    followBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+                    followBtn.classList.remove('bg-zinc-600', 'hover:bg-zinc-500');
                     followBtn.classList.add('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
                 } else {
                     followBtn.innerText = 'Follow';
-                    followBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-500');
+                    followBtn.classList.add('bg-zinc-600', 'hover:bg-zinc-500');
                     followBtn.classList.remove('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
                 }
             }
@@ -1125,7 +1125,7 @@ async function filterByTag(tag) {
         btn.className = 'cat-btn px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 font-black text-xs rounded-full transition border border-white/10';
     });
     const activeBtn = document.getElementById('cat-' + tag);
-    if (activeBtn) activeBtn.className = 'cat-btn px-4 py-2 bg-indigo-600 text-white font-black text-xs rounded-full transition border border-indigo-500';
+    if (activeBtn) activeBtn.className = 'cat-btn px-4 py-2 bg-zinc-600 text-white font-black text-xs rounded-full transition border border-zinc-500';
 
     const feedEl = document.getElementById('community-feed');
     const emptyEl = document.getElementById('feed-empty');
@@ -1176,8 +1176,8 @@ async function filterFeed(filter) {
     const sortBtn = document.getElementById('sort-btn');
     if (sortBtn) {
         sortBtn.className = filter !== 'all'
-            ? 'w-10 h-10 flex items-center justify-center bg-indigo-600/20 border border-indigo-500/40 rounded-xl transition'
-            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-indigo-500/40 hover:bg-indigo-600/10 rounded-xl transition';
+            ? 'w-10 h-10 flex items-center justify-center bg-zinc-600/20 border border-zinc-500/40 rounded-xl transition'
+            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-zinc-500/40 hover:bg-zinc-600/10 rounded-xl transition';
     }
 
     const feedEl = document.getElementById('community-feed');
@@ -1364,8 +1364,8 @@ function filterByTag(tag) {
     const filterBtn = document.getElementById('filter-btn');
     if (filterBtn) {
         filterBtn.className = tag !== 'all'
-            ? 'w-10 h-10 flex items-center justify-center bg-indigo-600/20 border border-indigo-500/40 rounded-xl transition'
-            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-indigo-500/40 hover:bg-indigo-600/10 rounded-xl transition';
+            ? 'w-10 h-10 flex items-center justify-center bg-zinc-600/20 border border-zinc-500/40 rounded-xl transition'
+            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-zinc-500/40 hover:bg-zinc-600/10 rounded-xl transition';
     }
 
     const feedEl = document.getElementById('community-feed');
@@ -1419,7 +1419,7 @@ function renderFeedCard(feedEl, post) {
             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                 <p class="text-gray-200 text-xs leading-relaxed line-clamp-3 mb-3">${promptPreview}</p>
                 <div class="flex items-center justify-between">
-                    <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
+                    <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-zinc-600/80 hover:bg-zinc-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
                         <i class="fa-regular fa-copy"></i> Copy
                     </button>
                     <span class="text-gray-400 text-[10px]">@${creator}</span>
@@ -1507,7 +1507,7 @@ function searchPosts(query) {
         // Highlight matching tags
         const tagHtml = tags.length > 0 ? tags.map(tag => {
             const isMatch = tag.toLowerCase().includes(query.toLowerCase());
-            return `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isMatch ? 'bg-indigo-500/30 border border-indigo-500/50 text-indigo-300' : 'bg-white/5 text-gray-500'}">#${tag}</span>`;
+            return `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isMatch ? 'bg-zinc-500/30 border border-zinc-500/50 text-zinc-300' : 'bg-white/5 text-gray-500'}">#${tag}</span>`;
         }).join('') : '';
 
         card.innerHTML = `
@@ -1523,7 +1523,7 @@ function searchPosts(query) {
                     <p class="text-gray-200 text-xs leading-relaxed line-clamp-2 mb-2">${promptPreview}</p>
                     ${tagHtml ? `<div class="flex flex-wrap gap-1 mb-2">${tagHtml}</div>` : ''}
                     <div class="flex items-center justify-between">
-                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-indigo-600/80 hover:bg-indigo-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
+                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-zinc-600/80 hover:bg-zinc-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
                             <i class="fa-regular fa-copy"></i> Copy
                         </button>
                         <span class="text-gray-400 text-[10px]">@${creator}</span>
@@ -1621,7 +1621,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const preview = document.getElementById('tags-preview');
             const tags = this.value.split(',').map(t => t.trim()).filter(t => t.length > 0);
             preview.innerHTML = tags.map(tag => 
-                `<span class="px-2.5 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[10px] font-bold">#${tag}</span>`
+                `<span class="px-2.5 py-1 bg-zinc-500/10 border border-zinc-500/20 rounded-full text-zinc-400 text-[10px] font-bold">#${tag}</span>`
             ).join('');
         });
     }
@@ -1953,7 +1953,7 @@ function profileCardHTML(post, showDelete) {
     const title = post.title || (post.prompt ? post.prompt.substring(0, 40) : 'Untitled');
     return `
         <div class="group cursor-pointer">
-            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-white/5 border border-white/5 group-hover:border-indigo-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
+            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-white/5 border border-white/5 group-hover:border-zinc-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
                 <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" loading="lazy">
                 ${showDelete ? `
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -1967,7 +1967,7 @@ function profileCardHTML(post, showDelete) {
                 <p class="text-white text-xs font-bold truncate">${title}</p>
                 <div class="flex items-center gap-3 text-[10px] text-gray-500 mt-1">
                     <span><i class="fa-solid fa-heart text-red-400/70 mr-1"></i>${likes}</span>
-                    <span><i class="fa-solid fa-bookmark text-indigo-400/70 mr-1"></i>${saves}</span>
+                    <span><i class="fa-solid fa-bookmark text-zinc-400/70 mr-1"></i>${saves}</span>
                 </div>
             </div>
         </div>`;
@@ -2091,10 +2091,10 @@ async function toggleSavePost() {
     
     const btn = document.getElementById('detail-save-btn');
     if (btn) {
-        btn.querySelector('i').className = !saved ? 'fa-solid fa-bookmark text-indigo-400' : 'fa-regular fa-bookmark';
+        btn.querySelector('i').className = !saved ? 'fa-solid fa-bookmark text-zinc-400' : 'fa-regular fa-bookmark';
         btn.className = !saved 
-            ? 'flex items-center gap-2 px-4 py-2 bg-indigo-600/20 border border-indigo-500/30 rounded-xl text-xs font-bold text-indigo-400 transition'
-            : 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-indigo-400 transition';
+            ? 'flex items-center gap-2 px-4 py-2 bg-zinc-600/20 border border-zinc-500/30 rounded-xl text-xs font-bold text-zinc-400 transition'
+            : 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-zinc-600/20 border border-white/10 hover:border-zinc-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-zinc-400 transition';
     }
     showToast(saved ? "Removed from saved" : "Saved! ðŸ”–");
     
@@ -2250,9 +2250,9 @@ function runSearch(query) {
                 <div class="masonry-feed">
                     ${filtered.map(post => {
                         const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
-                        const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-[9px] font-bold">#${t}</span>`).join('');
+                        const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-zinc-500/10 border border-zinc-500/20 rounded-full text-zinc-400 text-[9px] font-bold">#${t}</span>`).join('');
                         return `<div class="masonry-card group cursor-pointer" onclick="closeSearchModal(); openPostDetail('${post.id}')">
-                            <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-indigo-500/30 transition">
+                            <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-zinc-500/30 transition">
                                 <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" loading="lazy" alt="${title}">
                                 <div class="absolute top-0 left-0 right-0 p-2 flex items-center justify-between">
                                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[70%]">${title}</span>
@@ -2382,11 +2382,11 @@ async function openUserProfileById(userId) {
     const badgeHTML = profile ? renderBadgesHTML(profile, 'text-sm') : '';
     const avatarHTML = creatorAvatar
         ? `<img src="${cldAvatar(creatorAvatar)}" class="w-full h-full object-cover" alt="">`
-        : `<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-user text-indigo-400 text-2xl"></i></div>`;
+        : `<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-user text-zinc-400 text-2xl"></i></div>`;
 
     const followBtnHTML = isOwnProfile ? '' : isFollowing
         ? `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-white/10 hover:bg-white/20 text-gray-300 font-bold text-sm rounded-xl transition">Following</button>`
-        : `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition">Follow</button>`;
+        : `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-zinc-600 hover:bg-zinc-500 text-white font-bold text-sm rounded-xl transition">Follow</button>`;
 
     const postsGrid = (posts && posts.length > 0)
         ? posts.map(p => `<div class="rounded-xl overflow-hidden cursor-pointer" onclick="closeUserProfileModal(); openPostDetail('${p.id}')"><img src="${cldThumb(p.image_url)}" class="w-full h-auto block" loading="lazy"></div>`).join('')
@@ -2405,7 +2405,7 @@ async function openUserProfileById(userId) {
             <!-- Profile Info -->
             <div class="px-5 pt-6 pb-4">
                 <div class="flex items-center gap-4 mb-4">
-                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-indigo-500/40 bg-white/5 flex-shrink-0">${avatarHTML}</div>
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-500/40 bg-white/5 flex-shrink-0">${avatarHTML}</div>
                     <div class="flex-1">
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="text-white font-black text-lg">@${creatorName}</h2>
@@ -2470,7 +2470,7 @@ async function _toggleFollow(followerId, followingId, btnId) {
         if (btn) {
             btn.innerText = 'Follow';
             btn.classList.remove('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
-            btn.classList.add('bg-indigo-600', 'hover:bg-indigo-500', 'text-white');
+            btn.classList.add('bg-zinc-600', 'hover:bg-zinc-500', 'text-white');
         }
         showToast('Unfollowed');
     } else {
@@ -2478,7 +2478,7 @@ async function _toggleFollow(followerId, followingId, btnId) {
         await _supabase.from('follows').insert([{ follower_id: followerId, following_id: followingId }]);
         if (btn) {
             btn.innerText = 'Following';
-            btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+            btn.classList.remove('bg-zinc-600', 'hover:bg-zinc-500');
             btn.classList.add('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
         }
         showToast('Following! ðŸŽ‰');
@@ -2512,7 +2512,7 @@ async function loadHomePreviewCategory(category, containerId) {
             return;
         }
         el.innerHTML = posts.map(post => `
-            <div class="relative rounded-xl overflow-hidden cursor-pointer group aspect-square border border-white/5 hover:border-indigo-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
+            <div class="relative rounded-xl overflow-hidden cursor-pointer group aspect-square border border-white/5 hover:border-zinc-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
                 <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover" loading="lazy" alt="AI Art">
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
             </div>
@@ -2725,10 +2725,10 @@ function filterStockCat(cat) {
     document.getElementById('stock-filter-panel').classList.add('hidden');
     // Update active button style
     document.querySelectorAll('#stock-filter-panel .stock-cat-btn').forEach(btn => {
-        btn.className = 'stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-purple-600/20 text-sm font-bold transition';
+        btn.className = 'stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-neutral-600/20 text-sm font-bold transition';
     });
     const activeBtn = document.querySelector('#stock-filter-panel [data-tag="' + cat + '"]');
-    if (activeBtn) activeBtn.className = 'stock-cat-btn w-full text-left px-4 py-2.5 text-purple-300 bg-purple-600/20 text-sm font-bold transition';
+    if (activeBtn) activeBtn.className = 'stock-cat-btn w-full text-left px-4 py-2.5 text-neutral-300 bg-neutral-600/20 text-sm font-bold transition';
 
 
     const feedEl = document.getElementById('stock-feed');
