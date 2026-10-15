@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>FRAZX PRO | Admin Panel</title>
+<link rel="icon" type="image/png" href="/favicon-32.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:radial-gradient(circle at top right,#1c1c20,#0e0e11 50%,#050507);color:#e4e4e7;font-family:'Space Grotesk',system-ui,sans-serif;padding:24px 16px}
+  .wrap{max-width:720px;margin:0 auto}
+  h1{font-size:22px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 4px}
+  .sub{color:#71717a;font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:24px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:20px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:15px;text-transform:uppercase;letter-spacing:.1em}
+  .hint{color:#8a8a93;font-size:12px;margin:0 0 14px}
+  input[type=email],input[type=password]{width:100%;padding:12px;margin-bottom:10px;background:#0b0b0e;border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;font:inherit}
+  input[type=file]{color:#a1a1aa;font-size:13px;width:100%}
+  button{font:inherit;cursor:pointer;color:#fff;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;padding:11px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg,#52525b,#2e2e33);box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}
+  button:hover{background:linear-gradient(180deg,#71717a,#3f3f46)}
+  button.ghost{background:transparent;box-shadow:none;color:#a1a1aa}
+  button:disabled{opacity:.5;cursor:wait}
+  .row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .prev{width:96px;height:96px;border-radius:14px;background:#0b0b0e;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+  .prev img{max-width:100%;max-height:100%;object-fit:contain}
+  .prev.sm{width:48px;height:48px}
+  .btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  #msg{font-size:13px;min-height:20px;margin:8px 0}
+  .ok{color:#86efac}.err{color:#fca5a5}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>FRAZX PRO Admin</h1>
+  <div class="sub">Logo &amp; Favicon Manager</div>
+  <div id="msg"></div>
+
+  <div id="login" class="card">
+    <h2>Admin Login</h2>
+    <p class="hint">Apne admin account se login karein.</p>
+    <input id="em" type="email" placeholder="Email" autocomplete="username">
+    <input id="pw" type="password" placeholder="Password" autocomplete="current-password">
+    <button id="loginBtn">Login</button>
+  </div>
+
+  <div id="panel" class="hide">
+    <div class="card">
+      <h2>Website Logo</h2>
+      <p class="hint">Navbar mein dikhne wala logo. PNG (transparent) behtar hai, square image.</p>
+      <div class="row">
+        <div class="prev"><img id="logoPrev" alt=""></div>
+        <div style="flex:1;min-width:200px"><input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+          <div class="btns"><button id="logoSave">Upload &amp; Apply</button><button class="ghost" id="logoReset">Default par wapis</button></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Favicon</h2>
+      <p class="hint">Browser tab ka chhota icon. Square PNG, kam az kam 128x128.</p>
+      <div class="row">
+        <div class="prev sm"><img id="favPrev" alt=""></div>
+        <div style="flex:1;min-width:200px"><input id="favFile" type="file" accept="image/png,image/jpeg,image/webp,image/x-icon">
+          <div class="btns"><button id="favSave">Upload &amp; Apply</button><button class="ghost" id="favReset">Default par wapis</button></div></div>
+      </div>
+    </div>
+
+    <button class="ghost" id="logout">Logout</button>
+  </div>
+</div>
+
+<script>
+const SB_URL='https://wfmtoodutuaeousykora.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmbXRvb2R1dHVhZW91c3lrb3JhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjUwODcsImV4cCI6MjA5NTkwMTA4N30.TCav8aVw4i5KSOKcey-zRrReLPWYosIgclzMyDB5V8w';
+const ADMIN_EMAIL='hassanbuttg998@gmail.com';
+const CLOUD='dt8nzlmgk', PRESET='frazx_community';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const $=id=>document.getElementById(id);
+const say=(t,ok)=>{$('msg').textContent=t;$('msg').className=ok===undefined?'':(ok?'ok':'err')};
+const DEFAULTS={logo_url:'/logo.png',favicon_url:'/favicon-32.png'};
+
+async function loadCurrent(){
+  const {data}=await sb.from('site_settings').select('key,value');
+  const s={};(data||[]).forEach(r=>s[r.key]=r.value);
+  $('logoPrev').src=s.logo_url||DEFAULTS.logo_url;
+  $('favPrev').src=s.favicon_url||DEFAULTS.favicon_url;
+}
+function show(on){$('login').classList.toggle('hide',on);$('panel').classList.toggle('hide',!on)}
+async function check(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(session&&session.user.email===ADMIN_EMAIL){show(true);say('');loadCurrent()}
+  else{show(false);if(session){say('Ye account admin nahi hai.',false);await sb.auth.signOut()}}
+}
+$('loginBtn').onclick=async()=>{
+  say('Login ho raha hai...');
+  const {error}=await sb.auth.signInWithPassword({email:$('em').value.trim(),password:$('pw').value});
+  if(error)return say(error.message,false);
+  check();
+};
+$('logout').onclick=async()=>{await sb.auth.signOut();show(false);say('Logout ho gaya.',true)};
+
+async function upload(file){
+  const fd=new FormData();fd.append('file',file);fd.append('upload_preset',PRESET);fd.append('folder','site');
+  const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`,{method:'POST',body:fd});
+  const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'Upload fail');
+  return j.secure_url;
+}
+async function setKey(key,value){
+  const {error}=await sb.from('site_settings').upsert({key,value,updated_at:new Date().toISOString()});
+  if(error)throw error;
+}
+function wire(fileId,btnId,resetId,key,prevId){
+  $(btnId).onclick=async()=>{
+    const f=$(fileId).files[0];if(!f)return say('Pehle image select karein.',false);
+    if(f.size>5*1024*1024)return say('Image 5MB se choti honi chahiye.',false);
+    $(btnId).disabled=true;say('Upload ho raha hai...');
+    try{const url=await upload(f);await setKey(key,url);$(prevId).src=url;try{localStorage.removeItem('frazx_site_settings')}catch(e){}say('Done! Website par update ho gaya (visitors ko refresh par nazar ayega).',true)}
+    catch(e){say('Error: '+(e.message||e),false)}
+    $(btnId).disabled=false;
+  };
+  $(resetId).onclick=async()=>{
+    try{await setKey(key,'');$(prevId).src=DEFAULTS[key];try{localStorage.removeItem('frazx_site_settings')}catch(e){}say('Default par wapis aa gaya.',true)}
+    catch(e){say('Error: '+(e.message||e),false)}
+  };
+}
+wire('logoFile','logoSave','logoReset','logo_url','logoPrev');
+wire('favFile','favSave','favReset','favicon_url','favPrev');
+check();
+</script>
+</body>
+</html>
