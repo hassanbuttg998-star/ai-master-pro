@@ -95,7 +95,7 @@
       if (btnEl) {
         btnEl.innerText = 'Profile';
         btnEl.onclick = (e) => { e.stopPropagation(); window.location.href = '/account'; };
-        btnEl.className = 'text-[10px] bg-neutral-600 hover:bg-neutral-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
+        btnEl.className = 'text-[10px] bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
       }
       if (navText) navText.innerText = name.split(' ')[0].toUpperCase();
       if (navBtn) navBtn.onclick = () => { window.location.href = '/account'; };
@@ -121,7 +121,7 @@
       if (btnEl) {
         btnEl.innerText = 'Sign In';
         btnEl.onclick = (e) => { e.stopPropagation(); toggleLoginModal(true); };
-        btnEl.className = 'text-[10px] bg-zinc-600 hover:bg-zinc-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
+        btnEl.className = 'text-[10px] bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-xl font-bold tracking-wider uppercase transition-colors pointer-events-auto cursor-pointer';
       }
       if (navText) navText.innerText = 'SIGN IN';
       if (navImg) navImg.classList.add('hidden');
@@ -250,7 +250,7 @@
     document.getElementById('quiz-question').innerText = q.q;
     const optsEl = document.getElementById('quiz-options');
     optsEl.innerHTML = q.options.map(opt => `
-      <button onclick="answerQuizQuestion('${opt.replace(/'/g, "\\'")}')" class="w-full text-left bg-[#050508]/60 border border-white/10 hover:border-zinc-500/50 hover:bg-zinc-600/10 rounded-xl px-4 py-3 text-white text-sm font-bold transition">
+      <button onclick="answerQuizQuestion('${opt.replace(/'/g, "\\'")}')" class="w-full text-left bg-[#050508]/60 border border-white/10 hover:border-sky-500/50 hover:bg-sky-600/10 rounded-xl px-4 py-3 text-white text-sm font-bold transition">
         ${opt}
       </button>`).join('');
   }
@@ -628,11 +628,11 @@ function showPage(pageId, pushToHistory = true) {
     navigator.clipboard.writeText(textToCopy).then(() => {
         const originalText = buttonElement.innerHTML;
         buttonElement.innerHTML = "âœ“ COPIED!";
-        buttonElement.classList.add('text-neutral-400', 'border-neutral-500/40');
+        buttonElement.classList.add('text-cyan-400', 'border-cyan-500/40');
         
         setTimeout(() => {
             buttonElement.innerHTML = originalText;
-            buttonElement.classList.remove('text-neutral-400', 'border-neutral-500/40');
+            buttonElement.classList.remove('text-cyan-400', 'border-cyan-500/40');
         }, 2000);
     }).catch(err => {
         console.error('Failed to copy text: ', err);
@@ -662,7 +662,7 @@ function showPage(pageId, pushToHistory = true) {
         
         // 2. Headings & Main Text Visibility Fix
         mainHeadings.forEach(el => {
-            if (!el.classList.contains('text-[#71717a]') && !el.classList.contains('text-zinc-500')) {
+            if (!el.classList.contains('text-[#0ea5e9]') && !el.classList.contains('text-sky-500')) {
                 el.style.setProperty('color', '#111827', 'important');
             }
         });
@@ -688,7 +688,7 @@ function showPage(pageId, pushToHistory = true) {
             sidebar.style.setProperty('box-shadow', '-10px 0 25px -5px rgba(0, 0, 0, 0.05)', 'important');
         }
         sidebarLinks.forEach(link => {
-            if (!link.classList.contains('text-[#71717a]') && !link.classList.contains('text-zinc-500')) {
+            if (!link.classList.contains('text-[#0ea5e9]') && !link.classList.contains('text-sky-500')) {
                 link.style.setProperty('color', '#374151', 'important'); // Clear dark gray text for links
             }
         });
@@ -732,7 +732,7 @@ function showPage(pageId, pushToHistory = true) {
             themeText.innerText = "DARK";
             themeText.style.removeProperty('color');
         }
-        if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#71717a]";
+        if (themeIcon) themeIcon.className = "fa-solid fa-moon text-[#0ea5e9]";
     }
 }
    
@@ -854,7 +854,7 @@ function renderPaginationControls(el, page, totalPages, gallery, accent) {
 
     function pageBtn(p) {
         const active = p === page;
-        const activeClasses = `bg-${accent}-500 text-white shadow-[0_0_20px_rgba(113,113,122,0.4)]`;
+        const activeClasses = `bg-${accent}-500 text-white shadow-[0_0_20px_rgba(14,165,233,0.4)]`;
         const inactiveClasses = 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10';
         return `<button onclick="goToGalleryPage('${gallery}', ${p})" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-xs sm:text-sm transition ${active ? activeClasses : inactiveClasses}">${p}</button>`;
     }
@@ -981,7 +981,7 @@ async function renderPostDetail(postId) {
     const saveBtn = document.getElementById('detail-save-btn');
     if (saveBtn) {
         saveBtn.querySelector('i').className = 'fa-regular fa-bookmark';
-        saveBtn.className = 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-zinc-600/20 border border-white/10 hover:border-zinc-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-zinc-400 transition';
+        saveBtn.className = 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-sky-600/20 border border-white/10 hover:border-sky-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-sky-400 transition';
     }
 
     document.getElementById('detail-image').src = cldFull(post.image_url) || '';
@@ -992,7 +992,7 @@ async function renderPostDetail(postId) {
     if (tagsContainer) {
         const tags = post.tags || [];
         tagsContainer.innerHTML = tags.length > 0 
-            ? tags.map(t => `<span class="px-2.5 py-1 bg-zinc-500/10 border border-zinc-500/20 rounded-full text-zinc-400 text-[10px] font-bold">#${t}</span>`).join('') 
+            ? tags.map(t => `<span class="px-2.5 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-[10px] font-bold">#${t}</span>`).join('') 
             : '';
     }
     // Creator card
@@ -1042,11 +1042,11 @@ async function renderPostDetail(postId) {
                     .single();
                 if (existingFollow) {
                     followBtn.innerText = 'Following';
-                    followBtn.classList.remove('bg-zinc-600', 'hover:bg-zinc-500');
+                    followBtn.classList.remove('bg-sky-600', 'hover:bg-sky-500');
                     followBtn.classList.add('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
                 } else {
                     followBtn.innerText = 'Follow';
-                    followBtn.classList.add('bg-zinc-600', 'hover:bg-zinc-500');
+                    followBtn.classList.add('bg-sky-600', 'hover:bg-sky-500');
                     followBtn.classList.remove('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
                 }
             }
@@ -1125,7 +1125,7 @@ async function filterByTag(tag) {
         btn.className = 'cat-btn px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 font-black text-xs rounded-full transition border border-white/10';
     });
     const activeBtn = document.getElementById('cat-' + tag);
-    if (activeBtn) activeBtn.className = 'cat-btn px-4 py-2 bg-zinc-600 text-white font-black text-xs rounded-full transition border border-zinc-500';
+    if (activeBtn) activeBtn.className = 'cat-btn px-4 py-2 bg-sky-600 text-white font-black text-xs rounded-full transition border border-sky-500';
 
     const feedEl = document.getElementById('community-feed');
     const emptyEl = document.getElementById('feed-empty');
@@ -1176,8 +1176,8 @@ async function filterFeed(filter) {
     const sortBtn = document.getElementById('sort-btn');
     if (sortBtn) {
         sortBtn.className = filter !== 'all'
-            ? 'w-10 h-10 flex items-center justify-center bg-zinc-600/20 border border-zinc-500/40 rounded-xl transition'
-            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-zinc-500/40 hover:bg-zinc-600/10 rounded-xl transition';
+            ? 'w-10 h-10 flex items-center justify-center bg-sky-600/20 border border-sky-500/40 rounded-xl transition'
+            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-sky-500/40 hover:bg-sky-600/10 rounded-xl transition';
     }
 
     const feedEl = document.getElementById('community-feed');
@@ -1364,8 +1364,8 @@ function filterByTag(tag) {
     const filterBtn = document.getElementById('filter-btn');
     if (filterBtn) {
         filterBtn.className = tag !== 'all'
-            ? 'w-10 h-10 flex items-center justify-center bg-zinc-600/20 border border-zinc-500/40 rounded-xl transition'
-            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-zinc-500/40 hover:bg-zinc-600/10 rounded-xl transition';
+            ? 'w-10 h-10 flex items-center justify-center bg-sky-600/20 border border-sky-500/40 rounded-xl transition'
+            : 'w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 hover:border-sky-500/40 hover:bg-sky-600/10 rounded-xl transition';
     }
 
     const feedEl = document.getElementById('community-feed');
@@ -1419,7 +1419,7 @@ function renderFeedCard(feedEl, post) {
             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                 <p class="text-gray-200 text-xs leading-relaxed line-clamp-3 mb-3">${promptPreview}</p>
                 <div class="flex items-center justify-between">
-                    <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-zinc-600/80 hover:bg-zinc-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
+                    <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-sky-600/80 hover:bg-sky-600 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
                         <i class="fa-regular fa-copy"></i> Copy
                     </button>
                     <span class="text-gray-400 text-[10px]">@${creator}</span>
@@ -1507,7 +1507,7 @@ function searchPosts(query) {
         // Highlight matching tags
         const tagHtml = tags.length > 0 ? tags.map(tag => {
             const isMatch = tag.toLowerCase().includes(query.toLowerCase());
-            return `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isMatch ? 'bg-zinc-500/30 border border-zinc-500/50 text-zinc-300' : 'bg-white/5 text-gray-500'}">#${tag}</span>`;
+            return `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isMatch ? 'bg-sky-500/30 border border-sky-500/50 text-sky-300' : 'bg-white/5 text-gray-500'}">#${tag}</span>`;
         }).join('') : '';
 
         card.innerHTML = `
@@ -1523,7 +1523,7 @@ function searchPosts(query) {
                     <p class="text-gray-200 text-xs leading-relaxed line-clamp-2 mb-2">${promptPreview}</p>
                     ${tagHtml ? `<div class="flex flex-wrap gap-1 mb-2">${tagHtml}</div>` : ''}
                     <div class="flex items-center justify-between">
-                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-zinc-600/80 hover:bg-zinc-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
+                        <button onclick="event.stopPropagation(); copyFeedPrompt('${post.id}')" class="flex items-center gap-1.5 bg-sky-600/80 hover:bg-sky-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
                             <i class="fa-regular fa-copy"></i> Copy
                         </button>
                         <span class="text-gray-400 text-[10px]">@${creator}</span>
@@ -1621,7 +1621,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const preview = document.getElementById('tags-preview');
             const tags = this.value.split(',').map(t => t.trim()).filter(t => t.length > 0);
             preview.innerHTML = tags.map(tag => 
-                `<span class="px-2.5 py-1 bg-zinc-500/10 border border-zinc-500/20 rounded-full text-zinc-400 text-[10px] font-bold">#${tag}</span>`
+                `<span class="px-2.5 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-[10px] font-bold">#${tag}</span>`
             ).join('');
         });
     }
@@ -1953,7 +1953,7 @@ function profileCardHTML(post, showDelete) {
     const title = post.title || (post.prompt ? post.prompt.substring(0, 40) : 'Untitled');
     return `
         <div class="group cursor-pointer">
-            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-white/5 border border-white/5 group-hover:border-zinc-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
+            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-white/5 border border-white/5 group-hover:border-sky-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
                 <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" loading="lazy">
                 ${showDelete ? `
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -1967,7 +1967,7 @@ function profileCardHTML(post, showDelete) {
                 <p class="text-white text-xs font-bold truncate">${title}</p>
                 <div class="flex items-center gap-3 text-[10px] text-gray-500 mt-1">
                     <span><i class="fa-solid fa-heart text-red-400/70 mr-1"></i>${likes}</span>
-                    <span><i class="fa-solid fa-bookmark text-zinc-400/70 mr-1"></i>${saves}</span>
+                    <span><i class="fa-solid fa-bookmark text-sky-400/70 mr-1"></i>${saves}</span>
                 </div>
             </div>
         </div>`;
@@ -2091,10 +2091,10 @@ async function toggleSavePost() {
     
     const btn = document.getElementById('detail-save-btn');
     if (btn) {
-        btn.querySelector('i').className = !saved ? 'fa-solid fa-bookmark text-zinc-400' : 'fa-regular fa-bookmark';
+        btn.querySelector('i').className = !saved ? 'fa-solid fa-bookmark text-sky-400' : 'fa-regular fa-bookmark';
         btn.className = !saved 
-            ? 'flex items-center gap-2 px-4 py-2 bg-zinc-600/20 border border-zinc-500/30 rounded-xl text-xs font-bold text-zinc-400 transition'
-            : 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-zinc-600/20 border border-white/10 hover:border-zinc-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-zinc-400 transition';
+            ? 'flex items-center gap-2 px-4 py-2 bg-sky-600/20 border border-sky-500/30 rounded-xl text-xs font-bold text-sky-400 transition'
+            : 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-sky-600/20 border border-white/10 hover:border-sky-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-sky-400 transition';
     }
     showToast(saved ? "Removed from saved" : "Saved! ðŸ”–");
     
@@ -2250,9 +2250,9 @@ function runSearch(query) {
                 <div class="masonry-feed">
                     ${filtered.map(post => {
                         const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
-                        const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-zinc-500/10 border border-zinc-500/20 rounded-full text-zinc-400 text-[9px] font-bold">#${t}</span>`).join('');
+                        const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-[9px] font-bold">#${t}</span>`).join('');
                         return `<div class="masonry-card group cursor-pointer" onclick="closeSearchModal(); openPostDetail('${post.id}')">
-                            <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-zinc-500/30 transition">
+                            <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-sky-500/30 transition">
                                 <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" loading="lazy" alt="${title}">
                                 <div class="absolute top-0 left-0 right-0 p-2 flex items-center justify-between">
                                     <span class="bg-black/70 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg truncate max-w-[70%]">${title}</span>
@@ -2291,562 +2291,4 @@ let _stockFeedLoaded = false, _stockFeedLoading = false;
 
 const _origShowPage2 = window.showPage;
 window.showPage = function(pageId, pushToHistory) {
-    document.getElementById('main-navbar').style.display = '';
-    document.querySelectorAll('section').forEach(el => el.style.display = '');
-    const detailEl = document.getElementById('post-detail');
-    if (detailEl) { detailEl.style.display = 'none'; detailEl.style.paddingTop = ''; }
-    
-    _origShowPage2(pageId, pushToHistory);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-
-    if (pageId === 'home') {
-        loadHomePreviews();
-    }
-    if (pageId === 'account') {
-        _uploadsLoading = false;
-        setTimeout(loadMyUploads, 300);
-    }
-    if (pageId === 'samples') {
-        _feedLoaded = false;
-        loadCommunityFeed();
-    }
-    if (pageId === 'ads-poster') {
-        _adsFeedLoaded = false;
-        loadAdsFeed();
-    }
-    if (pageId === 'ai-stock') {
-        _stockFeedLoaded = false;
-        loadStockFeed();
-    }
-};
-
-// ===== CREATOR PROFILE VISIT =====
-window.viewCreatorProfile = function() {
-    const creatorId = window._currentDetailCreatorId;
-    if (!creatorId) return;
-    // If it's the current user, go to own account page
-    _supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session && session.user.id === creatorId) {
-            window.location.href = '/account';
-        } else {
-            // Open creator profile in global search / user profile view
-            openUserProfileById(creatorId);
-        }
-    });
-};
-
-async function openUserProfileById(userId) {
-    // Fetch user profile data
-    const { data: profile } = await _supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-    const { data: posts } = await _supabase
-        .from('posts')
-        .select('*')
-        .eq('creator_id', userId)
-        .order('created_at', { ascending: false });
-
-    if (!profile && !posts) return;
-
-    // Get name from first post if profile has no display_name
-    const creatorName = (posts && posts.length > 0) ? posts[0].creator_name : 'Creator';
-    const creatorAvatar = (posts && posts.length > 0) ? posts[0].creator_avatar : null;
-
-    // Build modal
-    let modalEl = document.getElementById('user-profile-modal');
-    if (!modalEl) {
-        modalEl = document.createElement('div');
-        modalEl.id = 'user-profile-modal';
-        modalEl.className = 'fixed inset-0 z-[10002] bg-black/80 backdrop-blur-md flex items-start justify-center overflow-y-auto';
-        modalEl.onclick = function(e) { if (e.target === modalEl) closeUserProfileModal(); };
-        document.body.appendChild(modalEl);
-    }
-
-    // Check follow state
-    const { data: { session } } = await _supabase.auth.getSession();
-    let isFollowing = false;
-    let isOwnProfile = session && session.user.id === userId;
-    if (session && !isOwnProfile) {
-        const { data: fw } = await _supabase.from('follows').select('id').eq('follower_id', session.user.id).eq('following_id', userId).single();
-        isFollowing = !!fw;
-    }
-
-    // Follower counts
-    const { count: followerCount } = await _supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', userId);
-    const { count: followingCount } = await _supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', userId);
-
-    const badgeHTML = profile ? renderBadgesHTML(profile, 'text-sm') : '';
-    const avatarHTML = creatorAvatar
-        ? `<img src="${cldAvatar(creatorAvatar)}" class="w-full h-full object-cover" alt="">`
-        : `<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-user text-zinc-400 text-2xl"></i></div>`;
-
-    const followBtnHTML = isOwnProfile ? '' : isFollowing
-        ? `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-white/10 hover:bg-white/20 text-gray-300 font-bold text-sm rounded-xl transition">Following</button>`
-        : `<button id="upm-follow-btn" onclick="toggleFollowUserModal('${userId}')" class="px-6 py-2 bg-zinc-600 hover:bg-zinc-500 text-white font-bold text-sm rounded-xl transition">Follow</button>`;
-
-    const postsGrid = (posts && posts.length > 0)
-        ? posts.map(p => `<div class="rounded-xl overflow-hidden cursor-pointer" onclick="closeUserProfileModal(); openPostDetail('${p.id}')"><img src="${cldThumb(p.image_url)}" class="w-full h-auto block" loading="lazy"></div>`).join('')
-        : `<p class="col-span-3 text-center text-gray-500 py-8">No posts yet</p>`;
-
-    modalEl.innerHTML = `
-        <div class="w-full max-w-lg mx-auto my-6 bg-[#0d0d1a] border border-white/10 rounded-3xl overflow-hidden">
-            <!-- Header -->
-            <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
-                <button onclick="closeUserProfileModal()" class="text-gray-400 hover:text-white transition">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </button>
-                <span class="text-white font-black text-sm uppercase tracking-widest">Profile</span>
-                <div class="w-6"></div>
-            </div>
-            <!-- Profile Info -->
-            <div class="px-5 pt-6 pb-4">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-500/40 bg-white/5 flex-shrink-0">${avatarHTML}</div>
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h2 class="text-white font-black text-lg">@${creatorName}</h2>
-                            ${badgeHTML}
-                        </div>
-                        <div class="flex items-center gap-4 mt-1 text-gray-400 text-xs">
-                            <span><span class="text-white font-bold">${followerCount || 0}</span> followers</span>
-                            <span><span class="text-white font-bold">${followingCount || 0}</span> following</span>
-                        </div>
-                    </div>
-                    ${followBtnHTML}
-                </div>
-                <p class="text-gray-400 text-sm">${profile?.bio || ''}</p>
-            </div>
-            <!-- Posts Grid -->
-            <div class="px-3 pb-5">
-                <p class="text-[10px] font-black uppercase tracking-widest text-gray-500 px-2 mb-3">Posts Â· ${posts ? posts.length : 0}</p>
-                <div class="grid grid-cols-3 gap-2">${postsGrid}</div>
-            </div>
-        </div>`;
-
-    modalEl.style.display = 'flex';
-    history.pushState({ userProfile: true }, '');
-}
-
-function closeUserProfileModal() {
-    const modal = document.getElementById('user-profile-modal');
-    if (modal) modal.style.display = 'none';
-}
-
-// ===== FOLLOW / UNFOLLOW FROM POST DETAIL =====
-window.toggleFollowCreator = async function() {
-    const creatorId = window._currentDetailCreatorId;
-    if (!creatorId) return;
-    const { data: { session } } = await _supabase.auth.getSession();
-    if (!session) { showToast('Sign in to follow!'); toggleLoginModal(true); return; }
-    if (session.user.id === creatorId) return;
-    await _toggleFollow(session.user.id, creatorId, 'detail-follow-btn');
-};
-
-// ===== FOLLOW / UNFOLLOW FROM USER PROFILE MODAL =====
-window.toggleFollowUserModal = async function(targetUserId) {
-    const { data: { session } } = await _supabase.auth.getSession();
-    if (!session) { showToast('Sign in to follow!'); toggleLoginModal(true); return; }
-    await _toggleFollow(session.user.id, targetUserId, 'upm-follow-btn');
-};
-
-// ===== SHARED FOLLOW LOGIC =====
-async function _toggleFollow(followerId, followingId, btnId) {
-    const { data: existing } = await _supabase
-        .from('follows')
-        .select('id')
-        .eq('follower_id', followerId)
-        .eq('following_id', followingId)
-        .single();
-
-    const btn = document.getElementById(btnId);
-
-    if (existing) {
-        // Unfollow
-        await _supabase.from('follows').delete().eq('follower_id', followerId).eq('following_id', followingId);
-        if (btn) {
-            btn.innerText = 'Follow';
-            btn.classList.remove('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
-            btn.classList.add('bg-zinc-600', 'hover:bg-zinc-500', 'text-white');
-        }
-        showToast('Unfollowed');
-    } else {
-        // Follow
-        await _supabase.from('follows').insert([{ follower_id: followerId, following_id: followingId }]);
-        if (btn) {
-            btn.innerText = 'Following';
-            btn.classList.remove('bg-zinc-600', 'hover:bg-zinc-500');
-            btn.classList.add('bg-white/10', 'hover:bg-white/20', 'text-gray-300');
-        }
-        showToast('Following! ðŸŽ‰');
-    }
-}
-
-// Close user profile modal on back button
-window.addEventListener('popstate', function(e) {
-    const modal = document.getElementById('user-profile-modal');
-    if (modal && modal.style.display !== 'none') {
-        closeUserProfileModal();
-    }
-});
-
-
-
-// ===== HOME PAGE PREVIEWS (AI Images / Ads Poster / AI Stock) =====
-async function loadHomePreviewCategory(category, containerId) {
-    const el = document.getElementById(containerId);
-    if (!el) return;
-    try {
-        let query;
-        if (category === 'ai_images') {
-            query = _supabase.from('posts').select('*').or('category.eq.ai_images,category.is.null').order('created_at', { ascending: false }).limit(5);
-        } else {
-            query = _supabase.from('posts').select('*').eq('category', category).order('created_at', { ascending: false }).limit(5);
-        }
-        const { data: posts, error } = await query;
-        if (error || !posts || posts.length === 0) {
-            el.innerHTML = '<div class="col-span-full text-center py-8 text-gray-600 text-xs font-bold uppercase tracking-widest">No creations yet</div>';
-            return;
-        }
-        el.innerHTML = posts.map(post => `
-            <div class="relative rounded-xl overflow-hidden cursor-pointer group aspect-square border border-white/5 hover:border-zinc-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
-                <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover" loading="lazy" alt="AI Art">
-                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error(e);
-        el.innerHTML = '<div class="col-span-full text-center py-8 text-gray-600 text-xs font-bold uppercase tracking-widest">Failed to load</div>';
-    }
-}
-
-function loadHomePreviews() {
-    loadHomePreviewCategory('ai_images', 'home-preview-images');
-    loadHomePreviewCategory('ads_poster', 'home-preview-ads');
-    loadHomePreviewCategory('ai_stock', 'home-preview-stock');
-}
-
-// ===== BEFORE/AFTER COMPARISON SLIDER =====
-function initBeforeAfterSliders() {
-    document.querySelectorAll('.ba-slider').forEach(slider => {
-        if (slider._baInit) return; // avoid double-binding
-        slider._baInit = true;
-
-        const beforeImg = slider.querySelector('.ba-before-img');
-        const handle = slider.querySelector('.ba-handle');
-        let dragging = false;
-
-        function setPosition(clientX) {
-            const rect = slider.getBoundingClientRect();
-            let percent = ((clientX - rect.left) / rect.width) * 100;
-            percent = Math.max(0, Math.min(100, percent));
-            beforeImg.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
-            handle.style.left = percent + '%';
-        }
-
-        function onDown(e) {
-            dragging = true;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            setPosition(clientX);
-        }
-        function onMove(e) {
-            if (!dragging) return;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            setPosition(clientX);
-        }
-        function onUp() { dragging = false; }
-
-        slider.addEventListener('mousedown', onDown);
-        slider.addEventListener('touchstart', onDown, { passive: true });
-        window.addEventListener('mousemove', onMove);
-        window.addEventListener('touchmove', onMove, { passive: true });
-        window.addEventListener('mouseup', onUp);
-        window.addEventListener('touchend', onUp);
-    });
-}
-document.addEventListener('DOMContentLoaded', initBeforeAfterSliders);
-
-// ===== COPY UPSCALE PROMPT =====
-function copyUpscalePrompt(btn) {
-    const prompt = "Ultra high-resolution photo enhancement and upscaling. Transform this image into a crystal-clear, detailed, realistic quality. Remove noise, blur, grain, scratches, and compression artifacts. Sharpen all important details while keeping natural texture. Restore faded colors, balance exposure, increase clarity and contrast. Improve skin tone and facial features naturally, without altering identity. Repair old damage or missing details. Produce a clean, vibrant, ultra-realistic result with soft.";
-    navigator.clipboard.writeText(prompt).then(() => {
-        if (typeof showToast === 'function') {
-            showToast('Prompt copied!');
-        }
-        if (btn) {
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-            setTimeout(() => { btn.innerHTML = original; }, 1800);
-        }
-    }).catch(() => {
-        if (typeof showToast === 'function') {
-            showToast('Could not copy prompt');
-        }
-    });
-}
-
-// ===== PORTRAIT TRANSFORMER - STYLE PROMPTS (no AI/API needed) =====
-// TODO: Replace each placeholder below with Hazzy's real manual prompt text.
-const PORTRAIT_STYLE_PROMPTS = {
-    cyberpunk: "use my reference picture and create a striking cyberpunk cyborg portrait: a androgynous face with asymmetrical glowing implant arcs, semi-translucent skin with faint circuitry veins, cyber biomechanical irises emitting electric blue pulsing, slightly angular jawline, subtle scar over left eyebrow. Lighting: dual-point neon backlight with electric blue and purple hues, rim lighting for chrome highlights, softfall shadows. Camera: 85mm portrait lens, f/1.4, ISO 100, shutter 1/200s. Background: neon-lit dystopian cityscape, blurred synthwave billboards, rain-slicked reflective alley. Color grade: high saturation, deep teal palette, punchy neon glow, subtle greenish tint for cool mood. Mood: tense, alluring, enigmatic, futurist. Render quality: hyperrealistic, 8k resolution, sharp depth of field, cinematic composition.",
-    pixar: "Transform the uploaded photo into a premium Pixar-style 3D animated portrait while preserving the exact identity, facial features, hairstyle, skin tone, pose, outfit, composition, and camera angle of the original image. create a heartwarming Disney-Pixar inspired character with a soft, rounded face, large expressive glossy eyes, smooth baby skin, subtle rosy cheeks, tiny realistic nose, natural lips, and an innocent calm expression. Keep the same clothing, including the navy blue hood with fluffy white fleece lining, cream sleeves, yellow teddy bear design, and zipper exactly as in the original photo. Use cinematic soft lighting with warm highlights, global illumination, realistic subsurface skin scattering, ultra-detailed fabric textures, soft plush materials, realistic embroidery, fluffy fur details, physically based rendering (PBR), ray-traced reflections, ambient occlusion, and depth of field. The background should remain soft, blurred, cozy, and clean with pastel blue and cream tones, creating a warm nursery atmosphere.Style: Authentic Pixar Animation Studios quality, feature-film character design, ultra-cute proportions, premium 3D CGI, high-end render, Unreal Engine 5 quality, Octane Render, Redshift Render, Disney-quality lighting. Ultra realistic Pixar CGI, 8K resolution, HDR, masterpiece, sharp focus, studio-quality rendering.\n\nNegative prompt: low quality, blurry, noisy, flat lighting, extra fingers, deformed face, different clothes, different pose, different background, watermark, text, logo, oversaturated colors, creepy eyes, duplicate body parts, low resolution, artifacts, anime, cartoon sketch, plastic skin.",
-    profile: "Use my reference picture and create a hyper\u2011detailed corporate headshot portrait of a generic adult professional. The face is symmetrical, with a subtle smile, warm eyes, matte translucent skin with fine pores, mild natural freckles, hair in a classic tailored cut. Two\u2011point studio lighting: 45\u00b0 key light with softbox, 135\u00b0 fill light, 2:1 ratio, smooth shadows, slight rim for depth. Capture with an 85mm f/1.4 prime lens for shallow depth of field and crisp focus on eyes, bokeh bloom. Neutral background gradient white to off\u2011white, minimal texture. Color grade: cool teal\u2011blue tint, subtle warmth at skin tone, high contrast, HDR. Mood: confident, calm, professional. Render quality: 8K resolution, ultra\u2011high detail, film\u2011style texture, perfect sharpness.",
-    sketch: "Transform the uploaded image into a premium, hand-drawn graphite pencil sketch while preserving the exact facial features, expression, head angle, proportions, and identity of the person. Keep the composition closely matched to the original image.\n\nCreate a highly realistic monochrome artwork with smooth graphite shading, delicate cross-hatching, fine pencil textures, soft gradients, and subtle skin details. The eyes should be sharp, expressive, and naturally reflective. Preserve the gentle smile and innocent facial expression exactly as in the reference.\n\nUse clean white textured drawing paper as the background with light artistic pencil strokes around the subject. Maintain realistic lighting and natural depth, giving the portrait a professional gallery-quality appearance. The sketch should look as if it was drawn by a master portrait artist using graphite pencils.\n\nUltra-detailed, photorealistic pencil drawing, museum-quality portrait, soft shadows, realistic skin texture, clean edges, professional hand-drawn illustration, 8K resolution, ultra high detail, HDR quality, masterpiece.\n\nNegative prompt: cartoon, anime, painting, watercolor, oil painting, color, CGI, low quality, blurry, noisy, distorted face, deformed eyes, extra features, duplicate face, bad anatomy, oversharpening, watermark, logo, text, frame, low resolution, oversaturated, unrealistic shading.",
-    anime: "Transform the uploaded photo into a premium high-quality anime portrait while preserving the exact facial identity, hairstyle, facial proportions, skin tone, expression, pose, camera angle, and clothing from the original image. Keep the same serious facial expression and direct eye contact.\n\nStyle: Modern Japanese anime with ultra-clean line art, soft cel shading, smooth gradients, expressive glossy brown eyes, detailed black hair with natural highlights, subtle facial shadows, and beautifully rendered skin.\n\nThe face should remain highly recognizable and closely match the original person, only converted into anime style. Maintain realistic facial proportions instead of exaggerated cartoon features.\n\nLighting: Soft natural daylight with gentle cinematic highlights and shadows.\nBackground: Clean light gradient background with minimal distractions.\nColor Palette: Warm natural skin tones, deep black hair, soft neutral colors.\nQuality: Ultra detailed, 8K, crisp edges, professional anime illustration, masterpiece, best quality, highly detailed, vibrant colors, sharp focus.\n\nNegative prompt: low quality, blurry, distorted face, wrong facial features, different hairstyle, different expression, extra eyes, extra ears, extra limbs, deformed anatomy, cropped head, watermark, logo, text, noise, oversaturated colors, low resolution, ugly, unrealistic proportions, bad hands, duplicate face.\n\nAspect Ratio: 4:5 (or keep the same aspect ratio as the original image).",
-    oilpainting: "Transform the uploaded photo into a breathtaking, museum-quality traditional oil painting while preserving the exact facial features, hairstyle, pose, clothing, composition, and peaceful expression of the original person. The subject stands in a golden field of tall dry grass with eyes closed and head gently tilted upward, illuminated by warm sunset light. Use thick, expressive impasto brushstrokes, rich canvas texture, layered oil paint, realistic skin tones, and finely painted details. The white T-shirt should feature visible textured paint strokes while remaining clean and elegant. The background should become a softly blended painterly landscape with warm golden grasses and a luminous sky painted in classical impressionist style. Create dramatic yet natural lighting with warm amber highlights and soft shadows. The artwork should feel handcrafted by a master painter, resembling a timeless gallery masterpiece with exceptional realism, depth, color harmony, and premium fine-art quality.",
-    ghibli: "Use the uploaded image as the primary reference. Preserve the exact face, hairstyle, beard, skin tone, facial expression, pose, camera angle, clothing, background, composition, lighting, and proportions exactly as in the original photo. Do not change the identity or position of any person. Transform only the visual style into a hand-painted Studio Ghibli-inspired anime illustration with soft watercolor textures, warm cinematic lighting, expressive anime eyes, delicate line art, pastel color palette, cozy atmosphere, and authentic Japanese animation aesthetics. Keep everything else identical to the original image. Ultra-detailed, masterpiece, 8K, highest quality.",
-    fantasy: "Transform the uploaded photo into an epic Viking fantasy portrait while preserving the exact face, facial features, hairstyle, skin tone, facial hair, expression, body proportions, and identity of the original person. Replace the modern clothing with authentic Nordic Viking warrior attire made of dark leather armor, engraved metal plates, thick brown fur cloak, leather belts, gauntlets, and weathered medieval fabrics. Place an intricately carved double-handed Viking battle axe in his hands. Add subtle battle scars on the face while keeping the original smile and natural appearance.\n\nCreate a breathtaking cinematic environment with dramatic Nordic mountains, a cold rocky shoreline, stormy clouds, sea mist, Viking longships with dragon-head prows, wooden shields, carved Norse pillars, burning torches, and an ancient Viking settlement in the distance. Use moody blue-gray color grading with warm orange firelight, volumetric fog, realistic atmospheric depth, flying embers, and cinematic lighting.\n\nUltra-photorealistic, fantasy realism, 8K HDR, hyper-detailed textures, DSLR quality, razor-sharp focus on the face, shallow depth of field, premium movie-poster composition, Unreal Engine quality, extremely realistic leather, fur, metal, and skin textures, dramatic composition, high contrast, masterpiece, award-winning fantasy portrait.",
-    upscale: "Ultra high-resolution photo enhancement and upscaling. Transform this image into a crystal-clear, detailed, realistic quality. Remove noise, blur, grain, scratches, and compression artifacts. Sharpen all important details while keeping natural texture. Restore faded colors, balance exposure, increase clarity and contrast. Improve skin tone and facial features naturally, without altering identity. Repair old damage or missing details. Produce a clean, vibrant, ultra-realistic result with soft."
-};
-
-function copyPortraitStylePrompt(styleKey, btn) {
-    const prompt = PORTRAIT_STYLE_PROMPTS[styleKey] || '';
-    navigator.clipboard.writeText(prompt).then(() => {
-        if (typeof showToast === 'function') {
-            showToast('Prompt copied!');
-        }
-        if (btn) {
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-            setTimeout(() => { btn.innerHTML = original; }, 1800);
-        }
-    }).catch(() => {
-        if (typeof showToast === 'function') {
-            showToast('Could not copy prompt');
-        }
-    });
-}
-
-// ===== ADS POSTER FEED =====
-async function loadAdsFeed(force = false) {
-    if (_adsFeedLoading) return;
-    if (_adsFeedLoaded && !force) return;
-    _adsFeedLoading = true;
-    const feedEl = document.getElementById('ads-feed');
-    const loadingEl = document.getElementById('ads-loading');
-    const emptyEl = document.getElementById('ads-empty');
-    if (loadingEl) loadingEl.classList.remove('hidden');
-    if (emptyEl) emptyEl.classList.add('hidden');
-    if (feedEl) feedEl.innerHTML = '';
-    try {
-        const { data: posts } = await _supabase.from('posts').select('*').eq('category','ads_poster').order('created_at',{ascending:false});
-        if (loadingEl) loadingEl.classList.add('hidden');
-        if (!posts || posts.length === 0) { if (emptyEl) emptyEl.classList.remove('hidden'); _adsFeedLoading=false; return; }
-        window._adsPosts = posts;
-        _adsFeedLoaded = true;
-        renderGalleryPage(posts, 'ads', 1);
-    } catch(e) { if (loadingEl) loadingEl.classList.add('hidden'); if (emptyEl) emptyEl.classList.remove('hidden'); }
-    _adsFeedLoading = false;
-}
-
-// ===== AI STOCK FEED =====
-async function loadStockFeed(force = false) {
-    if (_stockFeedLoading) return;
-    if (_stockFeedLoaded && !force) return;
-    _stockFeedLoading = true;
-    const feedEl = document.getElementById('stock-feed');
-    const loadingEl = document.getElementById('stock-loading');
-    const emptyEl = document.getElementById('stock-empty');
-    if (loadingEl) loadingEl.classList.remove('hidden');
-    if (emptyEl) emptyEl.classList.add('hidden');
-    if (feedEl) feedEl.innerHTML = '';
-    try {
-        const { data: posts } = await _supabase.from('posts').select('*').eq('category','ai_stock').order('created_at',{ascending:false});
-        if (loadingEl) loadingEl.classList.add('hidden');
-        if (!posts || posts.length === 0) { if (emptyEl) emptyEl.classList.remove('hidden'); _stockFeedLoading=false; return; }
-        window._stockPosts = posts;
-        _stockFeedLoaded = true;
-        renderGalleryPage(posts, 'stock', 1);
-    } catch(e) { if (loadingEl) loadingEl.classList.add('hidden'); if (emptyEl) emptyEl.classList.remove('hidden'); }
-    _stockFeedLoading = false;
-}
-
-
-// ===== PROFILE: ADS POST TAB =====
-async function loadMyAdsPosts() {
-    const { data: { session } } = await _supabase.auth.getSession();
-    if (!session) return;
-    const grid = document.getElementById('my-ads-grid');
-    const emptyEl = document.getElementById('my-ads-empty');
-    const loadingEl = document.getElementById('my-ads-loading');
-    if (grid) grid.innerHTML = '';
-    if (loadingEl) loadingEl.classList.remove('hidden');
-    if (emptyEl) emptyEl.classList.add('hidden');
-    const { data: posts } = await _supabase
-        .from('posts')
-        .select('*')
-        .eq('creator_id', session.user.id)
-        .eq('category', 'ads_poster')
-        .order('created_at', { ascending: false });
-    if (loadingEl) loadingEl.classList.add('hidden');
-    if (!posts || posts.length === 0) {
-        if (emptyEl) emptyEl.classList.remove('hidden');
-        return;
-    }
-    if (grid) grid.innerHTML = posts.map(post => profileCardHTML(post, true)).join('');
-}
-
-// ===== PROFILE: AI STOCK TAB =====
-async function loadMyStockPosts() {
-    const { data: { session } } = await _supabase.auth.getSession();
-    if (!session) return;
-    const grid = document.getElementById('my-stock-grid');
-    const emptyEl = document.getElementById('my-stock-empty');
-    const loadingEl = document.getElementById('my-stock-loading');
-    if (grid) grid.innerHTML = '';
-    if (loadingEl) loadingEl.classList.remove('hidden');
-    if (emptyEl) emptyEl.classList.add('hidden');
-    const { data: posts } = await _supabase
-        .from('posts')
-        .select('*')
-        .eq('creator_id', session.user.id)
-        .eq('category', 'ai_stock')
-        .order('created_at', { ascending: false });
-    if (loadingEl) loadingEl.classList.add('hidden');
-    if (!posts || posts.length === 0) {
-        if (emptyEl) emptyEl.classList.remove('hidden');
-        return;
-    }
-    if (grid) grid.innerHTML = posts.map(post => profileCardHTML(post, true)).join('');
-}
-
-
-// ===== AI STOCK FILTER PANEL =====
-function toggleStockFilterPanel() {
-    document.getElementById('stock-filter-panel').classList.toggle('hidden');
-}
-
-// ===== AI STOCK CATEGORY FILTER =====
-function filterStockCat(cat) {
-    // Close panel
-    document.getElementById('stock-filter-panel').classList.add('hidden');
-    // Update active button style
-    document.querySelectorAll('#stock-filter-panel .stock-cat-btn').forEach(btn => {
-        btn.className = 'stock-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-neutral-600/20 text-sm font-bold transition';
-    });
-    const activeBtn = document.querySelector('#stock-filter-panel [data-tag="' + cat + '"]');
-    if (activeBtn) activeBtn.className = 'stock-cat-btn w-full text-left px-4 py-2.5 text-neutral-300 bg-neutral-600/20 text-sm font-bold transition';
-
-
-    const feedEl = document.getElementById('stock-feed');
-    if (!feedEl || !window._stockPosts) return;
-
-    const posts = cat === 'all'
-        ? window._stockPosts
-        : window._stockPosts.filter(p =>
-            (p.tags && p.tags.some(t => t.toLowerCase().includes(cat.toLowerCase()))) ||
-            (p.title && p.title.toLowerCase().includes(cat.toLowerCase()))
-          );
-
-    feedEl.innerHTML = '';
-    const emptyEl = document.getElementById('stock-empty');
-    if (posts.length === 0) {
-        if (emptyEl) emptyEl.classList.remove('hidden');
-        const paginationEl = document.getElementById('stock-pagination');
-        if (paginationEl) paginationEl.innerHTML = '';
-        return;
-    }
-    if (emptyEl) emptyEl.classList.add('hidden');
-
-    renderGalleryPage(posts, 'stock', 1);
-}
-
-
-// ===== ADS POSTER FILTER =====
-function toggleAdsFilterPanel() {
-    document.getElementById('ads-filter-panel').classList.toggle('hidden');
-    const stockPanel = document.getElementById('stock-filter-panel');
-    if (stockPanel) stockPanel.classList.add('hidden');
-}
-
-function filterAdsCat(cat) {
-    document.getElementById('ads-filter-panel').classList.add('hidden');
-    document.querySelectorAll('#ads-filter-panel .ads-cat-btn').forEach(btn => {
-        btn.className = 'ads-cat-btn w-full text-left px-4 py-2.5 text-gray-300 hover:bg-orange-600/20 text-sm font-bold transition';
-    });
-    const activeBtn = document.querySelector('#ads-filter-panel [data-tag="' + cat + '"]');
-    if (activeBtn) activeBtn.className = 'ads-cat-btn w-full text-left px-4 py-2.5 text-orange-300 bg-orange-600/20 text-sm font-bold transition';
-
-    const feedEl = document.getElementById('ads-feed');
-    if (!feedEl || !window._adsPosts) return;
-
-    const posts = cat === 'all'
-        ? window._adsPosts
-        : window._adsPosts.filter(p =>
-            (p.tags && p.tags.some(t => t.toLowerCase().includes(cat.toLowerCase()))) ||
-            (p.title && p.title.toLowerCase().includes(cat.toLowerCase()))
-          );
-
-    feedEl.innerHTML = '';
-    const emptyEl = document.getElementById('ads-empty');
-    if (posts.length === 0) {
-        if (emptyEl) emptyEl.classList.remove('hidden');
-        const paginationEl = document.getElementById('ads-pagination');
-        if (paginationEl) paginationEl.innerHTML = '';
-        return;
-    }
-    if (emptyEl) emptyEl.classList.add('hidden');
-
-    renderGalleryPage(posts, 'ads', 1);
-}
-
-// Close both panels on outside click
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('#ads-filter-btn') && !e.target.closest('#ads-filter-panel')) {
-        const p = document.getElementById('ads-filter-panel');
-        if (p) p.classList.add('hidden');
-    }
-    if (!e.target.closest('#stock-filter-btn') && !e.target.closest('#stock-filter-panel')) {
-        const p = document.getElementById('stock-filter-panel');
-        if (p) p.classList.add('hidden');
-    }
-});
-
-// ===== PROMPT SEE MORE / SEE LESS (PC ONLY) =====
-// ===== IMAGE FADE-IN ON LOAD =====
-document.addEventListener('DOMContentLoaded', function() {
-    document.body.addEventListener('load', function(e) {
-        if (e.target.tagName === 'IMG') {
-            e.target.classList.add('loaded');
-        }
-    }, true);
-    // Mark already loaded images
-    document.querySelectorAll('img').forEach(function(img) {
-        if (img.complete) img.classList.add('loaded');
-    });
-});
-
-function togglePromptExpand() {
-    var p = document.getElementById('detail-prompt');
-    var btn = document.getElementById('prompt-toggle-label');
-    if (!p || !btn) return;
-    var isCollapsed = p.classList.contains('prompt-collapsed');
-    if (isCollapsed) {
-        p.classList.remove('prompt-collapsed');
-        p.classList.add('prompt-expanded');
-        btn.textContent = 'See Less â–´';
-    } else {
-        p.classList.remove('prompt-expanded');
-        p.classList.add('prompt-collapsed');
-        btn.textContent = 'See More â–¾';
-    }
-}
-
-function initPromptToggle() {
-    var p = document.getElementById('detail-prompt');
-    var btn = document.getElementById('prompt-toggle-btn');
-    if (!p || !btn) return;
-    p.classList.add('prompt-collapsed');
-    p.classList.remove('prompt-expanded');
-    var label = document.getElementById('prompt-toggle-label');
-    if (label) label.textContent = 'See More â–¾';
-    if (window.innerWidth >= 768 && p.scrollHeight > 100) {
-        btn.style.display = 'inline-flex';
-    } else {
-        btn.style.display = 'none';
-    }
-}
-
+    document.getEleme
