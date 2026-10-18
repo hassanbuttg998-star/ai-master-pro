@@ -50,10 +50,27 @@
       });
   })();
 
+  // ===== SECURITY HELPERS (XSS protection) =====
+  // Escapes user-supplied text before it is placed inside innerHTML templates.
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  window.esc = esc;
+  // Neutralises dangerous schemes/characters in URLs used inside HTML attributes.
+  function _safeUrl(u) {
+    if (typeof u !== 'string') return u;
+    if (/^\s*(javascript|vbscript|data):/i.test(u)) return '';
+    return u.replace(/["'<>`]/g, function (c) { return { '"': '%22', "'": '%27', '<': '%3C', '>': '%3E', '`': '%60' }[c]; });
+  }
+  window._safeUrl = _safeUrl;
+
   // ===== IMAGE OPTIMIZATION (Cloudinary on-the-fly transforms) =====
   // Inserts a transformation string right after "/upload/" in a Cloudinary URL.
   // Non-Cloudinary URLs (e.g. fallback/demo images) are returned untouched.
-  function cldUrl(url, transform) {
+  function cldUrl(url, transform) { return _safeUrl(_cldUrlRaw(url, transform)); }
+  function _cldUrlRaw(url, transform) {
     if (!url || typeof url !== 'string') return url;
     if (!url.includes('res.cloudinary.com') || !url.includes('/upload/')) return url;
     if (url.includes('/upload/' + transform)) return url; // already transformed
@@ -791,10 +808,10 @@ const GALLERY_CONFIG = {
 };
 
 function buildGalleryCardHTML(post, accent) {
-    const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
+    const title = esc(post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED'));
     const likes = post.likes ? post.likes.length : 0;
-    const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
-    const creator = post.creator_name || 'Creator';
+    const promptPreview = esc(post.prompt ? post.prompt.substring(0, 120) + '...' : '');
+    const creator = esc(post.creator_name || 'Creator');
     return `
         <div class="masonry-card group cursor-pointer" onclick="openPostDetail('${post.id}')">
             <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-${accent}-500/30 transition-all duration-300">
@@ -992,7 +1009,7 @@ async function renderPostDetail(postId) {
     if (tagsContainer) {
         const tags = post.tags || [];
         tagsContainer.innerHTML = tags.length > 0 
-            ? tags.map(t => `<span class="px-2.5 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-[10px] font-bold">#${t}</span>`).join('') 
+            ? tags.map(t => `<span class="px-2.5 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-[10px] font-bold">#${esc(t)}</span>`).join('') 
             : '';
     }
     // Creator card
@@ -1400,9 +1417,9 @@ function filterByTag(tag) {
 
 function renderFeedCard(feedEl, post) {
     const likes = post.likes ? post.likes.length : 0;
-    const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
-    const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
-    const creator = post.creator_name || 'Creator';
+    const title = esc(post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED'));
+    const promptPreview = esc(post.prompt ? post.prompt.substring(0, 120) + '...' : '');
+    const creator = esc(post.creator_name || 'Creator');
 
     const card = document.createElement('div');
     card.className = 'masonry-card group cursor-pointer';
@@ -1495,9 +1512,9 @@ function searchPosts(query) {
 
     filtered.forEach(post => {
         const likes = post.likes ? post.likes.length : 0;
-        const title = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED');
-        const promptPreview = post.prompt ? post.prompt.substring(0, 120) + '...' : '';
-        const creator = post.creator_name || 'Creator';
+        const title = esc(post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 28).toUpperCase() + '...' : 'UNTITLED'));
+        const promptPreview = esc(post.prompt ? post.prompt.substring(0, 120) + '...' : '');
+        const creator = esc(post.creator_name || 'Creator');
         const tags = post.tags || [];
 
         const card = document.createElement('div');
@@ -1507,7 +1524,7 @@ function searchPosts(query) {
         // Highlight matching tags
         const tagHtml = tags.length > 0 ? tags.map(tag => {
             const isMatch = tag.toLowerCase().includes(query.toLowerCase());
-            return `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isMatch ? 'bg-sky-500/30 border border-sky-500/50 text-sky-300' : 'bg-white/5 text-gray-500'}">#${tag}</span>`;
+            return `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isMatch ? 'bg-sky-500/30 border border-sky-500/50 text-sky-300' : 'bg-white/5 text-gray-500'}">#${esc(tag)}</span>`;
         }).join('') : '';
 
         card.innerHTML = `
@@ -1621,7 +1638,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const preview = document.getElementById('tags-preview');
             const tags = this.value.split(',').map(t => t.trim()).filter(t => t.length > 0);
             preview.innerHTML = tags.map(tag => 
-                `<span class="px-2.5 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-[10px] font-bold">#${tag}</span>`
+                `<span class="px-2.5 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-[10px] font-bold">#${esc(tag)}</span>`
             ).join('');
         });
     }
@@ -1780,8 +1797,8 @@ function renderComments(comments) {
         <div class="flex gap-3 items-start">
             <img src="${c.avatar ? cldAvatar(c.avatar) : 'https://via.placeholder.com/24/6366f1/white?text=U'}" class="w-6 h-6 rounded-full object-cover border border-white/10 flex-shrink-0" alt="">
             <div class="glass rounded-xl px-3 py-2 flex-1">
-                <p class="text-white font-black text-[10px] mb-0.5">${c.name}</p>
-                <p class="text-gray-300 text-xs">${c.text}</p>
+                <p class="text-white font-black text-[10px] mb-0.5">${esc(c.name)}</p>
+                <p class="text-gray-300 text-xs">${esc(c.text)}</p>
             </div>
         </div>`).join('');
 }
@@ -1950,7 +1967,7 @@ let _uploadsLoading = false;
 function profileCardHTML(post, showDelete) {
     const likes = post.likes ? post.likes.length : 0;
     const saves = post.saves ? post.saves.length : 0;
-    const title = post.title || (post.prompt ? post.prompt.substring(0, 40) : 'Untitled');
+    const title = esc(post.title || (post.prompt ? post.prompt.substring(0, 40) : 'Untitled'));
     return `
         <div class="group cursor-pointer">
             <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-white/5 border border-white/5 group-hover:border-sky-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
@@ -2228,7 +2245,7 @@ function runSearch(query) {
             const { data: posts, error } = await _supabase
                 .from('posts')
                 .select('id, title, tags, image_url, creator_name, creator_id')
-                .or(`title.ilike.%${q}%,creator_name.ilike.%${q}%`)
+                .or(`title.ilike.%${q.replace(/[,()%*\\]/g, ' ')}%,creator_name.ilike.%${q.replace(/[,()%*\\]/g, ' ')}%`)
                 .order('created_at', { ascending: false })
                 .limit(60);
 
@@ -2241,7 +2258,7 @@ function runSearch(query) {
             const filtered = posts || [];
 
             if (filtered.length === 0) {
-                resultsEl.innerHTML = `<p class="text-gray-500 text-sm text-center py-6">No results for "<span class="text-white">${query}</span>"</p>`;
+                resultsEl.innerHTML = `<p class="text-gray-500 text-sm text-center py-6">No results for "<span class="text-white">${esc(query)}</span>"</p>`;
                 return;
             }
 
@@ -2249,8 +2266,8 @@ function runSearch(query) {
                 <p class="text-gray-500 text-xs uppercase tracking-widest mb-3">${filtered.length} result${filtered.length !== 1 ? 's' : ''}</p>
                 <div class="masonry-feed">
                     ${filtered.map(post => {
-                        const title = post.title ? post.title.toUpperCase() : 'UNTITLED';
-                        const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-[9px] font-bold">#${t}</span>`).join('');
+                        const title = esc(post.title ? post.title.toUpperCase() : 'UNTITLED');
+                        const tags = (post.tags || []).slice(0, 3).map(t => `<span class="px-2 py-0.5 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-[9px] font-bold">#${esc(t)}</span>`).join('');
                         return `<div class="masonry-card group cursor-pointer" onclick="closeSearchModal(); openPostDetail('${post.id}')">
                             <div class="relative rounded-2xl overflow-hidden border border-white/5 hover:border-sky-500/30 transition">
                                 <img src="${cldThumb(post.image_url)}" class="w-full h-auto block" loading="lazy" alt="${title}">
@@ -2259,7 +2276,7 @@ function runSearch(query) {
                                 </div>
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-2 translate-y-full group-hover:translate-y-0 transition-transform rounded-b-2xl">
                                     <div class="flex flex-wrap gap-1 mb-1">${tags}</div>
-                                    <p class="text-gray-400 text-[10px]">@${post.creator_name || 'Creator'}</p>
+                                    <p class="text-gray-400 text-[10px]">@${esc(post.creator_name || 'Creator')}</p>
                                 </div>
                             </div>
                         </div>`;
@@ -2408,7 +2425,7 @@ async function openUserProfileById(userId) {
                     <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-sky-500/40 bg-white/5 flex-shrink-0">${avatarHTML}</div>
                     <div class="flex-1">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h2 class="text-white font-black text-lg">@${creatorName}</h2>
+                            <h2 class="text-white font-black text-lg">@${esc(creatorName)}</h2>
                             ${badgeHTML}
                         </div>
                         <div class="flex items-center gap-4 mt-1 text-gray-400 text-xs">
@@ -2418,7 +2435,7 @@ async function openUserProfileById(userId) {
                     </div>
                     ${followBtnHTML}
                 </div>
-                <p class="text-gray-400 text-sm">${profile?.bio || ''}</p>
+                <p class="text-gray-400 text-sm">${esc(profile?.bio || '')}</p>
             </div>
             <!-- Posts Grid -->
             <div class="px-3 pb-5">
