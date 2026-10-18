@@ -755,6 +755,102 @@ function showPage(pageId, pushToHistory = true) {
 }
    
     // Professional Toast Notification System (Fixed Overlap)
+
+// ===== MODAL DIALOGS (replace browser confirm() / prompt()) =====
+(function injectDialogStyles() {
+    if (document.getElementById('fx-dialog-styles')) return;
+    const st = document.createElement('style');
+    st.id = 'fx-dialog-styles';
+    st.textContent = `
+    .fx-overlay{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(3,6,12,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fxFade .18s ease}
+    .fx-dialog{width:100%;max-width:420px;background:linear-gradient(180deg,rgba(56,189,248,.08),rgba(255,255,255,.02)),#0a0f18;border:1px solid rgba(125,211,252,.18);border-radius:18px;padding:22px;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:fxPop .2s cubic-bezier(.34,1.4,.64,1);font-family:'Space Grotesk',system-ui,sans-serif}
+    .fx-dialog h3{margin:0 0 6px;color:#fff;font-size:16px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+    .fx-dialog p{margin:0 0 16px;color:#9ca3af;font-size:14px;line-height:1.5}
+    .fx-dialog textarea{width:100%;min-height:140px;max-height:50vh;resize:vertical;margin:0 0 16px;padding:12px;background:#05070b;border:1px solid rgba(255,255,255,.14);border-radius:10px;color:#fff;font:inherit;font-size:14px;line-height:1.5;outline:none}
+    .fx-dialog textarea:focus{border-color:rgba(56,189,248,.6);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+    .fx-actions{display:flex;gap:10px;justify-content:flex-end}
+    .fx-btn{cursor:pointer;font:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:11px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:transparent;color:#cbd5e1;transition:background .15s,transform .1s}
+    .fx-btn:hover{background:rgba(255,255,255,.07)}
+    .fx-btn:active{transform:scale(.97)}
+    .fx-btn.fx-primary{background:linear-gradient(135deg,#0ea5e9,#0284c7);border-color:rgba(186,230,253,.35);color:#fff}
+    .fx-btn.fx-primary:hover{background:linear-gradient(135deg,#38bdf8,#0ea5e9)}
+    .fx-btn.fx-danger{background:linear-gradient(135deg,#ef4444,#b91c1c);border-color:rgba(254,202,202,.35);color:#fff}
+    .fx-btn.fx-danger:hover{background:linear-gradient(135deg,#f87171,#dc2626)}
+    @keyframes fxFade{from{opacity:0}to{opacity:1}}
+    @keyframes fxPop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+    `;
+    document.head.appendChild(st);
+})();
+
+function _fxDialog(opts) {
+    return new Promise((resolve) => {
+        const prevFocus = document.activeElement;
+        const overlay = document.createElement('div');
+        overlay.className = 'fx-overlay';
+        const box = document.createElement('div');
+        box.className = 'fx-dialog';
+        box.setAttribute('role', 'dialog');
+        box.setAttribute('aria-modal', 'true');
+
+        const h = document.createElement('h3'); h.textContent = opts.title || ''; box.appendChild(h);
+        if (opts.message) { const p = document.createElement('p'); p.textContent = opts.message; box.appendChild(p); }
+
+        let field = null;
+        if (opts.input) {
+            field = document.createElement('textarea');
+            field.value = opts.value || '';
+            if (opts.maxLength) field.maxLength = opts.maxLength;
+            box.appendChild(field);
+        }
+
+        const actions = document.createElement('div'); actions.className = 'fx-actions';
+        const cancel = document.createElement('button');
+        cancel.type = 'button'; cancel.className = 'fx-btn'; cancel.textContent = opts.cancelText || 'Cancel';
+        const ok = document.createElement('button');
+        ok.type = 'button'; ok.className = 'fx-btn ' + (opts.danger ? 'fx-danger' : 'fx-primary'); ok.textContent = opts.confirmText || 'OK';
+        actions.appendChild(cancel); actions.appendChild(ok);
+        box.appendChild(actions);
+        overlay.appendChild(box);
+
+        function close(result) {
+            document.removeEventListener('keydown', onKey, true);
+            overlay.remove();
+            if (prevFocus && prevFocus.focus) { try { prevFocus.focus(); } catch (e) {} }
+            resolve(result);
+        }
+        function accept() { close(opts.input ? field.value : true); }
+        function dismiss() { close(opts.input ? null : false); }
+        function onKey(e) {
+            if (e.key === 'Escape') { e.preventDefault(); dismiss(); }
+            else if (e.key === 'Enter' && (!opts.input || e.ctrlKey || e.metaKey)) { e.preventDefault(); accept(); }
+            else if (e.key === 'Tab') {
+                const items = Array.from(box.querySelectorAll('textarea,button'));
+                const i = items.indexOf(document.activeElement);
+                if (e.shiftKey && i <= 0) { e.preventDefault(); items[items.length - 1].focus(); }
+                else if (!e.shiftKey && i === items.length - 1) { e.preventDefault(); items[0].focus(); }
+            }
+        }
+        ok.addEventListener('click', accept);
+        cancel.addEventListener('click', dismiss);
+        overlay.addEventListener('mousedown', (e) => { if (e.target === overlay) dismiss(); });
+        document.addEventListener('keydown', onKey, true);
+        document.body.appendChild(overlay);
+        (field || (opts.danger ? cancel : ok)).focus();
+        if (field) field.setSelectionRange(field.value.length, field.value.length);
+    });
+}
+// Resolves true / false
+function uiConfirm(message, opts) {
+    opts = opts || {};
+    return _fxDialog({ title: opts.title || 'Are you sure?', message, confirmText: opts.confirmText || 'Confirm', cancelText: opts.cancelText, danger: !!opts.danger });
+}
+// Resolves the entered text, or null if cancelled
+function uiPrompt(title, value, opts) {
+    opts = opts || {};
+    return _fxDialog({ title, message: opts.message, input: true, value: value || '', maxLength: opts.maxLength, confirmText: opts.confirmText || 'Save', cancelText: opts.cancelText });
+}
+window.uiConfirm = uiConfirm; window.uiPrompt = uiPrompt;
+
 function showToast(message) {
     // Agar pehle se koi toast screen par hai to use fauran delete karo
     const oldToast = document.getElementById('custom-toast');
@@ -1285,7 +1381,7 @@ function clearSearch() {
 }
 
 async function deletePost(postId) {
-    if (!confirm("Delete this post?")) return;
+    if (!(await uiConfirm("This post will be deleted for good. This can't be undone.", { title: 'Delete post?', confirmText: 'Delete', danger: true }))) return;
     const { error } = await _supabase.from('posts').delete().eq('id', postId);
     if (error) { showToast("Delete failed!"); return; }
     showToast("Post deleted! ðŸ—‘ï¸");
@@ -1295,8 +1391,11 @@ async function deletePost(postId) {
 async function editPost(postId) {
     const post = (window._feedPosts || []).find(p => p.id === postId);
     if (!post) return;
-    const newPrompt = prompt("Edit your prompt:", post.prompt || '');
-    if (!newPrompt || newPrompt === post.prompt) return;
+    const edited = await uiPrompt('Edit your prompt', post.prompt || '', { maxLength: 4000, confirmText: 'Save' });
+    if (edited === null) return;
+    const newPrompt = edited.trim();
+    if (!newPrompt) { showToast("Prompt can't be empty"); return; }
+    if (newPrompt === post.prompt) return;
     const { error } = await _supabase.from('posts').update({ prompt: newPrompt }).eq('id', postId);
     if (error) { showToast("Edit failed!"); return; }
     showToast("Post updated! âœ…");
@@ -1563,7 +1662,7 @@ function clearSearch() {
 }
 
 async function deletePostFromProfile(postId) {
-    if (!confirm("Delete this post permanently?")) return;
+    if (!(await uiConfirm("This post will be deleted for good. This can't be undone.", { title: 'Delete post?', confirmText: 'Delete', danger: true }))) return;
     const { error } = await _supabase.from('posts').delete().eq('id', postId);
     if (error) { showToast("Delete failed!"); return; }
     showToast("Post deleted! ðŸ—‘ï¸");
