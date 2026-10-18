@@ -310,11 +310,12 @@
       _quizAnswers.experience === '5 years' &&
       _quizAnswers.referral === 'Social media';
 
-    await _supabase.from('profiles').update({
-      account_type: 'contributor',
-      onboarding_completed: true,
-      is_onboarding_verified: isPerfect
-    }).eq('id', session.user.id);
+    await _supabase.rpc('submit_onboarding_quiz', {
+      p_daily: String(_quizAnswers.daily_uploads || ''),
+      p_social: String(_quizAnswers.social_media || ''),
+      p_exp: String(_quizAnswers.experience || ''),
+      p_ref: String(_quizAnswers.referral || '')
+    });
 
     document.getElementById('onboarding-quiz-wrap').classList.add('hidden');
     document.getElementById('quiz-success-wrap').classList.remove('hidden');
@@ -971,7 +972,7 @@ function copyFeedPrompt(postId) {
         navigator.clipboard.writeText(post.prompt).then(() => showToast("Prompt copied! âœ…"));
         // Track copy count
         const copies = (post.copies || 0) + 1;
-        _supabase.from('posts').update({ copies: copies }).eq('id', postId);
+        _supabase.rpc('increment_post_copies', { p_post_id: postId }).then(() => {}, () => {});
         post.copies = copies;
     }
 }
@@ -1576,13 +1577,9 @@ async function toggleDetailLike() {
     if (!session) { showToast("Sign in to like!"); toggleLoginModal(true); return; }
     
     const postId = window._currentDetailPostId;
-    const { data: post } = await _supabase.from('posts').select('likes').eq('id', postId).single();
-    const likes = post?.likes || [];
-    const userId = session.user.id;
-    const liked = likes.includes(userId);
-    const newLikes = liked ? likes.filter(id => id !== userId) : [...likes, userId];
-    
-    await _supabase.from('posts').update({ likes: newLikes }).eq('id', postId);
+    const { data: newLikes, error: likeErr } = await _supabase.rpc('toggle_post_like', { p_post_id: postId });
+    if (likeErr || !Array.isArray(newLikes)) { showToast('Could not update like, try again'); return; }
+    const liked = !newLikes.includes(session.user.id);
     
     document.getElementById('detail-likes-count').innerText = newLikes.length;
     const likeBtn = document.getElementById('detail-like-btn');
@@ -1815,12 +1812,9 @@ async function toggleLikePost() {
     if (!currentPostId) return;
 
     const userId = session.user.id;
-    const { data: post } = await _supabase.from('posts').select('likes').eq('id', currentPostId).single();
-    const likes = post?.likes || [];
-    const liked = likes.includes(userId);
-    const newLikes = liked ? likes.filter(id => id !== userId) : [...likes, userId];
-
-    await _supabase.from('posts').update({ likes: newLikes }).eq('id', currentPostId);
+    const { data: newLikes, error: likeErr } = await _supabase.rpc('toggle_post_like', { p_post_id: currentPostId });
+    if (likeErr || !Array.isArray(newLikes)) { showToast('Could not update like, try again'); return; }
+    const liked = !newLikes.includes(session.user.id);
     document.getElementById('post-modal-likes').innerText = newLikes.length;
     openPostModal(currentPostId);
 }
@@ -1830,12 +1824,9 @@ async function quickLike(postId, btn) {
     if (!session) { showToast("Sign in to like!"); toggleLoginModal(true); return; }
     
     const userId = session.user.id;
-    const { data: post } = await _supabase.from('posts').select('likes').eq('id', postId).single();
-    const likes = post?.likes || [];
-    const liked = likes.includes(userId);
-    const newLikes = liked ? likes.filter(id => id !== userId) : [...likes, userId];
-    
-    await _supabase.from('posts').update({ likes: newLikes }).eq('id', postId);
+    const { data: newLikes, error: likeErr } = await _supabase.rpc('toggle_post_like', { p_post_id: postId });
+    if (likeErr || !Array.isArray(newLikes)) { showToast('Could not update like, try again'); return; }
+    const liked = !newLikes.includes(session.user.id);
     
     const countEl = btn.querySelector('.like-count');
     const iconEl = btn.querySelector('i');
@@ -1859,17 +1850,8 @@ async function submitComment() {
     if (!text) return;
 
     const user = session.user;
-    const { data: post } = await _supabase.from('posts').select('comments').eq('id', currentPostId).single();
-    const comments = post?.comments || [];
-    const newComment = {
-        name: user.user_metadata?.display_name || user.email.split('@')[0],
-        avatar: user.user_metadata?.avatar_url || '',
-        text,
-        time: new Date().toISOString()
-    };
-    comments.push(newComment);
-
-    await _supabase.from('posts').update({ comments }).eq('id', currentPostId);
+    const { data: comments, error: commentErr } = await _supabase.rpc('add_post_comment', { p_post_id: currentPostId, p_text: text });
+    if (commentErr || !Array.isArray(comments)) { showToast('Could not post comment, try again'); return; }
     input.value = '';
     showToast("Comment posted! ðŸ’¬");
     renderComments(comments);
@@ -2037,26 +2019,9 @@ async function loadMyUploads() {
 // badge_tier -> achievement badge based on uploads + total likes: grey / gold / blue / red
 
 async function calculateAndSyncBadgeTier(userId) {
-    const { data: posts } = await _supabase.from('posts').select('likes').eq('creator_id', userId);
-    const { data: profileRow } = await _supabase.from('profiles').select('created_at').eq('id', userId).single();
-    if (!posts) return 'none';
-
-    const uploadCount = posts.length;
-    const totalLikes = posts.reduce((sum, p) => sum + (p.likes ? p.likes.length : 0), 0);
-
-    let accountAgeYears = 0;
-    if (profileRow && profileRow.created_at) {
-        accountAgeYears = (Date.now() - new Date(profileRow.created_at).getTime()) / (1000 * 60 * 60 * 24 * 365);
-    }
-
-    let tier = 'none';
-    if (uploadCount >= 5000 && totalLikes >= 50000 && accountAgeYears >= 2) tier = 'red';
-    else if (uploadCount >= 500 && totalLikes >= 5000) tier = 'blue';
-    else if (uploadCount >= 150 && totalLikes >= 1500) tier = 'gold';
-    else if (uploadCount >= 20 && totalLikes >= 200) tier = 'grey';
-
-    await _supabase.from('profiles').update({ badge_tier: tier }).eq('id', userId);
-    return tier;
+    // Tier is now calculated on the server (cannot be faked from the browser)
+    const { data, error } = await _supabase.rpc('sync_badge_tier', { p_user_id: userId });
+    return error ? 'none' : (data || 'none');
 }
 
 function achievementBadgeIcon(tier, size = 'text-xs') {
@@ -2099,12 +2064,9 @@ async function toggleSavePost() {
     if (!postId) return;
 
     const userId = session.user.id;
-    const { data: post } = await _supabase.from('posts').select('saves').eq('id', postId).single();
-    const saves = post?.saves || [];
-    const saved = saves.includes(userId);
-    const newSaves = saved ? saves.filter(id => id !== userId) : [...saves, userId];
-    
-    await _supabase.from('posts').update({ saves: newSaves }).eq('id', postId);
+    const { data: newSaves, error: saveErr } = await _supabase.rpc('toggle_post_save', { p_post_id: postId });
+    if (saveErr || !Array.isArray(newSaves)) { showToast('Could not update save, try again'); return; }
+    const saved = !newSaves.includes(session.user.id);
     
     const btn = document.getElementById('detail-save-btn');
     if (btn) {
