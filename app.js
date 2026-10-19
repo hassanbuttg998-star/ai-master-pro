@@ -913,6 +913,8 @@ function showToast(message) {
     
     // Text completely reset aur fresh set kiya
     toast.textContent = message;
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     
     // Solid layout aur spacing settings text overlap ko rokne ke liye
     toast.className = "fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-3 bg-[#111827]/95 text-white border border-white/10 rounded-xl text-sm font-bold tracking-wide shadow-2xl backdrop-blur-md z-[9999] transition-all duration-300 opacity-0 transform translate-y-2 whitespace-nowrap text-center block leading-normal min-w-[200px]";
@@ -1117,7 +1119,7 @@ async function loadCommunityFeed(force = false) {
 function copyFeedPrompt(postId) {
     const post = (window._feedPosts || []).find(p => p.id === postId);
     if (post && post.prompt) {
-        navigator.clipboard.writeText(post.prompt).then(() => showToast("Prompt copied! ✅"));
+        navigator.clipboard.writeText(post.prompt).then(() => { showToast("Prompt copied! ✅"); fxCopied(); });
         // Track copy count
         const copies = (post.copies || 0) + 1;
         _supabase.rpc('increment_post_copies', { p_post_id: postId }).then(() => {}, () => {});
@@ -1154,7 +1156,11 @@ async function renderPostDetail(postId) {
         saveBtn.className = 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-sky-600/20 border border-white/10 hover:border-sky-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-sky-400 transition';
     }
 
-    document.getElementById('detail-image').src = cldFull(post.image_url) || '';
+    const _dImg = document.getElementById('detail-image');
+    _dImg.classList.add('skeleton');
+    _dImg.style.minHeight = '320px';
+    _dImg.onload = _dImg.onerror = () => { _dImg.classList.remove('skeleton'); _dImg.style.minHeight = ''; };
+    _dImg.src = cldFull(post.image_url) || '';
     document.getElementById('detail-title').innerText = post.title ? post.title.toUpperCase() : (post.prompt ? post.prompt.substring(0, 60).toUpperCase() : 'AI CREATION');
     
     // Show tags
@@ -1281,7 +1287,7 @@ window.addEventListener('load', function() {
 
 function copyDetailPrompt() {
     const prompt = document.getElementById('detail-prompt').innerText;
-    navigator.clipboard.writeText(prompt).then(() => showToast("Prompt copied! ✅"));
+    navigator.clipboard.writeText(prompt).then(() => { showToast("Prompt copied! ✅"); fxCopied(); });
 }
 
 let _currentFilter = 'all';
@@ -1739,6 +1745,7 @@ async function toggleDetailLike() {
     document.getElementById('detail-likes-count').innerText = newLikes.length;
     const likeBtn = document.getElementById('detail-like-btn');
     likeBtn.querySelector('i').className = !liked ? 'fa-solid fa-heart text-red-400 text-lg' : 'fa-regular fa-heart text-lg';
+    if (!liked) fxPop(likeBtn.querySelector('i'));
     
     // Update in feed cache
     if (window._feedPosts) {
@@ -1993,6 +2000,7 @@ async function quickLike(postId, btn) {
         countEl.innerText = parseInt(countEl.innerText) + 1;
         iconEl.className = 'fa-solid fa-heart text-red-400';
         btn.classList.add('text-red-400');
+        fxPop(iconEl);
     }
 }
 
@@ -2014,7 +2022,7 @@ async function submitComment() {
 
 function copyPostPrompt() {
     const prompt = document.getElementById('post-modal-prompt').innerText;
-    navigator.clipboard.writeText(prompt).then(() => showToast("Prompt copied!"));
+    navigator.clipboard.writeText(prompt).then(() => { showToast("Prompt copied!"); fxCopied(); });
 }
 
 // ========== PROFILE FUNCTIONS ==========
@@ -2231,6 +2239,7 @@ async function toggleSavePost() {
             ? 'flex items-center gap-2 px-4 py-2 bg-sky-600/20 border border-sky-500/30 rounded-xl text-xs font-bold text-sky-400 transition'
             : 'flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-sky-600/20 border border-white/10 hover:border-sky-500/30 rounded-xl text-xs font-bold text-gray-300 hover:text-sky-400 transition';
     }
+    if (!saved && btn) fxPop(btn.querySelector('i'));
     showToast(saved ? "Removed from saved" : "Saved! 🔖");
     
     // Update feed post cache
@@ -2991,3 +3000,336 @@ function initPromptToggle() {
     }
 }
 
+
+
+// =========================================================
+// ACCESSIBILITY (item 10)
+// Labels for icon-only buttons, keyboard support for clickable
+// divs, dialog roles, Escape to close, skip link, live toasts.
+// =========================================================
+(function initA11y() {
+    const LABELS = {
+        toggleSidebar: 'Open or close menu', closeSearchModal: 'Close search', closeUploadModal: 'Close upload form',
+        closePostModal: 'Close post', toggleSearchBar: 'Search', toggleFilterPanel: 'Filter by category',
+        toggleSortPanel: 'Sort posts', goBackToGallery: 'Back to gallery', toggleTheme: 'Switch light or dark theme',
+        toggleDetailLike: 'Like this post', toggleLikePost: 'Like this post', toggleSavePost: 'Save this post',
+        editDisplayName: 'Edit display name', saveDisplayName: 'Save display name', copyDetailPrompt: 'Copy prompt',
+        copyPostPrompt: 'Copy prompt', submitComment: 'Post comment', showPage: 'Go to home page',
+        toggleLoginModal: 'Sign in'
+    };
+    const MODALS = { 'upload-modal': 'Upload your creation', 'post-modal': 'Post details', 'login-modal': 'Sign in or sign up', 'search-overlay': 'Search' };
+
+    function humanize(fn) { return fn.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase()).trim(); }
+
+    function enhance() {
+        document.querySelectorAll('i[class*="fa-"]:not([aria-hidden])').forEach(el => el.setAttribute('aria-hidden', 'true'));
+
+        document.querySelectorAll('button:not([aria-label])').forEach(btn => {
+            if (/[A-Za-z0-9]/.test(btn.textContent)) return;
+            const fn = ((btn.getAttribute('onclick') || '').match(/([A-Za-z_]+)\(/) || [])[1];
+            const label = btn.getAttribute('title') || (fn && (LABELS[fn] || humanize(fn))) || 'Button';
+            btn.setAttribute('aria-label', label);
+        });
+
+        document.querySelectorAll('[onclick]:not(button):not(a):not(input):not([role])').forEach(el => {
+            if (el.id === 'search-overlay' || el === document.body) return;
+            el.setAttribute('role', 'button');
+            if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+            if (!el.hasAttribute('aria-label') && !/[A-Za-z0-9]/.test(el.textContent)) {
+                const img = el.querySelector('img[alt]');
+                el.setAttribute('aria-label', (img && img.alt) || 'Open');
+            }
+        });
+
+        document.querySelectorAll('input:not([type=hidden]):not([aria-label]), textarea:not([aria-label]), select:not([aria-label])').forEach(el => {
+            if (el.id && document.querySelector('label[for="' + el.id + '"]')) return;
+            const txt = el.getAttribute('placeholder') || el.getAttribute('title');
+            if (txt) el.setAttribute('aria-label', txt);
+            else if (el.type === 'file') el.setAttribute('aria-label', 'Choose image');
+            else {
+                const lb = el.parentElement && el.parentElement.querySelector('label');
+                el.setAttribute('aria-label', (lb && lb.textContent.trim()) || humanize((el.id || 'field').replace(/[-_]?input$/, '').replace(/[-_]/g, ' ')));
+            }
+        });
+
+        document.querySelectorAll('img:not([alt])').forEach(img => img.setAttribute('alt', ''));
+
+        Object.keys(MODALS).forEach(id => {
+            const m = document.getElementById(id);
+            if (m && !m.hasAttribute('role')) {
+                m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-label', MODALS[id]);
+            }
+        });
+    }
+
+    let timer = null;
+    function schedule() { clearTimeout(timer); timer = setTimeout(enhance, 150); }
+
+    function isOpen(id) { const m = document.getElementById(id); return !!m && !m.classList.contains('hidden'); }
+
+    document.addEventListener('keydown', (e) => {
+        // Enter / Space on a role=button element (not a real button/input) acts like a click
+        const t = e.target;
+        if ((e.key === 'Enter' || e.key === ' ') && t && t.getAttribute && t.getAttribute('role') === 'button' && !/^(BUTTON|A|INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) {
+            e.preventDefault();
+            t.click();
+            return;
+        }
+        if (e.key !== 'Escape') return;
+        // our own confirm/prompt dialog handles Escape by itself
+        if (document.querySelector('.fx-overlay')) return;
+        try {
+            if (isOpen('post-modal') && typeof closePostModal === 'function') return closePostModal();
+            if (isOpen('upload-modal') && typeof closeUploadModal === 'function') return closeUploadModal();
+            if (isOpen('login-modal') && typeof toggleLoginModal === 'function') return toggleLoginModal(false);
+            if (isOpen('search-overlay') && typeof closeSearchModal === 'function') return closeSearchModal();
+        } catch (err) { /* ignore */ }
+    });
+
+    function addSkipLink() {
+        if (document.querySelector('.skip-link')) return;
+        const a = document.createElement('a');
+        a.className = 'skip-link'; a.href = '#'; a.textContent = 'Skip to content';
+        a.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            const main = document.querySelector('main.active-page') || document.querySelector('main');
+            if (main) { main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: false }); }
+        });
+        document.body.insertBefore(a, document.body.firstChild);
+    }
+
+    function start() {
+        addSkipLink();
+        enhance();
+        new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+
+// Skeleton placeholders for the "My Ads" and "My Stock" profile tabs (were plain "Loading..." text)
+document.addEventListener('DOMContentLoaded', function () {
+    ['my-ads-loading', 'my-stock-loading'].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-5 hidden';
+        el.innerHTML = '<div class="skeleton-card"><div class="skeleton aspect-square"></div></div>'
+            + '<div class="skeleton-card"><div class="skeleton aspect-square"></div></div>'
+            + '<div class="skeleton-card hidden sm:block"><div class="skeleton aspect-square"></div></div>'
+            + '<div class="skeleton-card hidden md:block"><div class="skeleton aspect-square"></div></div>'
+            + '<div class="skeleton-card hidden lg:block"><div class="skeleton aspect-square"></div></div>';
+    });
+});
+
+
+// =========================================================
+// MOTION + FOCUS (item 12)
+// =========================================================
+function fxPop(el) {
+    if (!el) return;
+    el.classList.remove('fx-pop');
+    void el.offsetWidth; // restart the animation
+    el.classList.add('fx-pop');
+}
+
+// Briefly turns the clicked button into a green "Copied" confirmation
+function fxCopied() {
+    try {
+        const ev = window.event;
+        const btn = ev && ev.target && ev.target.closest ? ev.target.closest('button') : null;
+        if (!btn || btn.dataset.fxBusy) return;
+        btn.dataset.fxBusy = '1';
+        const old = btn.innerHTML;
+        btn.classList.add('fx-copied');
+        btn.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i> Copied';
+        setTimeout(() => { btn.innerHTML = old; btn.classList.remove('fx-copied'); delete btn.dataset.fxBusy; }, 1400);
+    } catch (e) { /* purely cosmetic */ }
+}
+
+(function initModalFocus() {
+    const IDS = ['post-modal', 'upload-modal', 'login-modal', 'search-overlay'];
+    const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]):not([type=hidden]):not([type=file]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
+    const opener = {};
+
+    function visible(el) { return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length); }
+    function focusables(m) { return Array.from(m.querySelectorAll(FOCUSABLE)).filter(visible); }
+    function topModal() {
+        for (const id of IDS) { const m = document.getElementById(id); if (m && !m.classList.contains('hidden')) return m; }
+        return null;
+    }
+
+    function watch(m) {
+        let wasOpen = !m.classList.contains('hidden');
+        new MutationObserver(() => {
+            const open = !m.classList.contains('hidden');
+            if (open === wasOpen) return;
+            wasOpen = open;
+            if (open) {
+                opener[m.id] = document.activeElement;
+                setTimeout(() => { const f = focusables(m); if (f.length && !m.contains(document.activeElement)) f[0].focus(); }, 60);
+            } else {
+                const back = opener[m.id];
+                opener[m.id] = null;
+                if (back && back.focus && document.contains(back)) { try { back.focus(); } catch (e) { /* ignore */ } }
+            }
+        }).observe(m, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab' || document.querySelector('.fx-overlay')) return;
+        const m = topModal();
+        if (!m) return;
+        const f = focusables(m);
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (!m.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+        else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    function start() { IDS.forEach(id => { const m = document.getElementById(id); if (m) watch(m); }); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+
+// =========================================================
+// WELCOME TOUR (item 13)
+// Shown once to new visitors on the home page. Replay from the menu.
+// =========================================================
+(function initWelcomeTour() {
+    const KEY = 'frazx_tour_done';
+    const STEPS = [
+        { icon: '✨', title: 'Welcome to FRAZX PRO', text: 'A community of AI art and ready-to-use prompts. Take a 20-second tour to see what you can do here.' },
+        { icon: '🖼️', title: 'Browse and copy prompts', text: 'Open AI Images, Ads Poster or AI Stock, tap any picture and copy the exact prompt that made it. Free, no sign-up needed.' },
+        { icon: '🎬', title: 'Free AI tools', text: 'Cinematic Vision turns a simple idea into a detailed prompt. Portrait Transformer gives you ready styles like Anime, Ghibli and Pixar.' },
+        { icon: '❤️', title: 'Join the community', text: 'Create a free account to like, save and comment, and to share your own AI creations with a prompt of your own.' }
+    ];
+
+    function store(get, val) {
+        try { return get ? localStorage.getItem(KEY) : localStorage.setItem(KEY, val); } catch (e) { return null; }
+    }
+
+    function injectStyles() {
+        if (document.getElementById('fx-tour-styles')) return;
+        const st = document.createElement('style');
+        st.id = 'fx-tour-styles';
+        st.textContent = `
+        .fx-tour-ov{position:fixed;inset:0;z-index:100001;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,12,.78);backdrop-filter:blur(6px);animation:fxModalIn .25s ease}
+        .fx-tour{width:100%;max-width:400px;text-align:center;background:linear-gradient(180deg,rgba(56,189,248,.1),rgba(255,255,255,.02)),#0a0f18;border:1px solid rgba(125,211,252,.2);border-radius:22px;padding:30px 24px 22px;box-shadow:0 28px 70px rgba(0,0,0,.65);font-family:'Space Grotesk',system-ui,sans-serif}
+        .fx-tour-ic{font-size:44px;line-height:1;margin-bottom:14px}
+        .fx-tour h3{margin:0 0 8px;color:#fff;font-size:19px;font-weight:700;letter-spacing:.02em}
+        .fx-tour p{margin:0 0 22px;color:#a8b0bd;font-size:14px;line-height:1.6}
+        .fx-tour-dots{display:flex;justify-content:center;gap:7px;margin-bottom:20px}
+        .fx-tour-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);transition:all .25s}
+        .fx-tour-dots i.on{width:22px;border-radius:4px;background:#38bdf8}
+        .fx-tour-row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+        .fx-tour-btn{font:inherit;cursor:pointer;border-radius:12px;padding:11px 18px;font-size:13px;font-weight:700;letter-spacing:.04em;border:1px solid rgba(255,255,255,.14);background:transparent;color:#cbd5e1}
+        .fx-tour-btn.pri{background:#0272ad;border-color:#38bdf8;color:#fff;margin-left:auto}
+        .fx-tour-btn:hover{background:rgba(255,255,255,.07)} .fx-tour-btn.pri:hover{background:#0278b8}
+        .fx-tour-skip{background:none;border:none;color:#8a91a0;font:inherit;font-size:12px;cursor:pointer;padding:8px;text-decoration:underline}
+        `;
+        document.head.appendChild(st);
+    }
+
+    function run() {
+        if (document.querySelector('.fx-tour-ov')) return;
+        injectStyles();
+        const prev = document.activeElement;
+        let i = 0;
+        const ov = document.createElement('div');
+        ov.className = 'fx-tour-ov';
+        const box = document.createElement('div');
+        box.className = 'fx-tour';
+        box.setAttribute('role', 'dialog');
+        box.setAttribute('aria-modal', 'true');
+        box.setAttribute('aria-label', 'Welcome tour');
+        ov.appendChild(box);
+
+        function close(done) {
+            if (done) store(false, '1');
+            document.removeEventListener('keydown', onKey, true);
+            ov.remove();
+            if (prev && prev.focus) { try { prev.focus(); } catch (e) { /* ignore */ } }
+        }
+        function onKey(e) {
+            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(true); return; }
+            if (e.key === 'Tab') {
+                const f = Array.from(box.querySelectorAll('button'));
+                if (!f.length) return;
+                const first = f[0], last = f[f.length - 1];
+                if (!box.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+                else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+        }
+        document.addEventListener('keydown', onKey, true);
+
+        function render() {
+            const s = STEPS[i], last = i === STEPS.length - 1;
+            box.innerHTML = '';
+            const ic = document.createElement('div'); ic.className = 'fx-tour-ic'; ic.textContent = s.icon; ic.setAttribute('aria-hidden', 'true');
+            const h = document.createElement('h3'); h.textContent = s.title;
+            const p = document.createElement('p'); p.textContent = s.text;
+            const dots = document.createElement('div'); dots.className = 'fx-tour-dots'; dots.setAttribute('aria-hidden', 'true');
+            STEPS.forEach((_, k) => { const d = document.createElement('i'); if (k === i) d.className = 'on'; dots.appendChild(d); });
+            const row = document.createElement('div'); row.className = 'fx-tour-row';
+            if (i > 0) {
+                const back = document.createElement('button'); back.className = 'fx-tour-btn'; back.textContent = 'Back';
+                back.onclick = () => { i--; render(); };
+                row.appendChild(back);
+            } else {
+                const skip = document.createElement('button'); skip.className = 'fx-tour-skip'; skip.textContent = 'Skip tour';
+                skip.onclick = () => close(true);
+                row.appendChild(skip);
+            }
+            const next = document.createElement('button'); next.className = 'fx-tour-btn pri'; next.textContent = last ? 'Get started' : 'Next';
+            next.onclick = () => { if (last) close(true); else { i++; render(); } };
+            row.appendChild(next);
+            box.append(ic, h, p, dots, row);
+            next.focus();
+        }
+        document.body.appendChild(ov);
+        render();
+    }
+    window.startWelcomeTour = run;
+
+    function isHome() {
+        const p = location.pathname.replace(/\/+$/, '');
+        return (p === '' || p === '/index' || p === '/index.html') && !location.hash;
+    }
+
+    async function maybeAutoStart() {
+        if (store(true) || !isHome()) return;
+        try {
+            const { data } = await _supabase.auth.getSession();
+            if (data && data.session) { store(false, '1'); return; } // signed-in users are not new
+        } catch (e) { return; }
+        setTimeout(() => {
+            if (store(true)) return;
+            const blocking = ['login-modal', 'upload-modal', 'post-modal', 'search-overlay'].some(id => {
+                const m = document.getElementById(id); return m && !m.classList.contains('hidden');
+            });
+            if (!blocking && !document.querySelector('.fx-overlay')) run();
+        }, 2500);
+    }
+
+    function addReplayLink() {
+        const anchor = document.getElementById('install-app-btn');
+        if (!anchor || document.getElementById('tour-replay-btn')) return;
+        const b = document.createElement('button');
+        b.id = 'tour-replay-btn';
+        b.type = 'button';
+        b.className = 'flex items-center gap-4 text-white nav-link';
+        b.style.cssText = 'background:none;border:none;padding:0;cursor:pointer;text-transform:uppercase;font-weight:700;font-size:12px;letter-spacing:.1em;text-align:left';
+        b.innerHTML = '<i class="fa-solid fa-circle-play w-5 text-center text-sky-400" aria-hidden="true"></i><span>Take a Tour</span>';
+        b.onclick = function (e) {
+            e.stopPropagation();
+            if (typeof toggleSidebar === 'function') { try { toggleSidebar(e); } catch (err) { /* ignore */ } }
+            setTimeout(run, 200);
+        };
+        anchor.insertAdjacentElement('afterend', b);
+    }
+
+    function start() { addReplayLink(); maybeAutoStart(); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
