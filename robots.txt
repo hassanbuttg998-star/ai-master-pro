@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /reset-password
 
 Sitemap: https://frazxpro.com/sitemap.xml
