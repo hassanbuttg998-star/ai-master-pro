@@ -52,7 +52,7 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#05070b">
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"FRAZX PRO","url":"https://frazxpro.com","logo":"https://frazxpro.com/logo.png","description":"AI image community where creators discover cinematic AI art with ready-to-copy prompts."}</script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/tailwind.css?v1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
@@ -75,7 +75,6 @@
                      alt="FRAZX Logo" 
                      class="w-11 h-11 lg:w-14 lg:h-14 object-contain animate__animated animate__fadeIn group-hover:scale-110 transition-transform duration-300">
             </div>
-            
             <div class="flex flex-col justify-center">
                 <div class="flex items-center gap-1.5">
                     <span class="brand-word">
@@ -269,8 +268,8 @@
     <h2 class="text-center text-lg font-black uppercase text-white tracking-widest mb-4">Upscale with <span class="text-sky-500">AI</span></h2>
     <div class="ba-slider" id="upscale-demo-slider">
         <!-- REPLACE these two image URLs with your own before/after example images -->
-        <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/clean.png" class="ba-after-img" alt="After Upscale">
-        <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/bulr.png" class="ba-before-img" alt="Before Upscale">
+        <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/clean.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Upscale">
+        <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/bulr.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before Upscale">
         <span class="ba-label ba-label-before">Before</span>
         <span class="ba-label ba-label-after">After</span>
         <div class="ba-handle">
@@ -491,7 +490,7 @@
         </div>
 
         <div class="glass rounded-[2rem] border border-sky-500/20 overflow-hidden shadow-2xl p-2 bg-black/20">
-            <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/result.png" alt="Cinematic Vision Guide" class="w-full h-auto object-cover rounded-[1.5rem] block opacity-95">
+            <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/result.png" loading="lazy" decoding="async" alt="Cinematic Vision Guide" class="w-full h-auto object-cover rounded-[1.5rem] block opacity-95">
         </div>
         <div class="w-full mt-16 pt-10 border-t border-cyan-500/10 px-4">
             <div class="text-center mb-12">
@@ -556,8 +555,8 @@
             <div class="glass p-5 rounded-[2rem] border border-cyan-500/20">
                 <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Cyberpunk</h3>
                 <div class="ba-slider portrait-ba-slider">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/aftercybarpunk.png" class="ba-after-img" alt="After Cyberpunk">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforecybarpunk.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/aftercybarpunk.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Cyberpunk">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforecybarpunk.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before">
                     <span class="ba-label ba-label-before">Before</span>
                     <span class="ba-label ba-label-after">After</span>
                     <div class="ba-handle">
@@ -574,8 +573,8 @@
             <div class="glass p-5 rounded-[2rem] border border-cyan-500/20">
                 <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Pixar 3D</h3>
                 <div class="ba-slider portrait-ba-slider">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterpixar3d.png" class="ba-after-img" alt="After Pixar 3D">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforePixar3d.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterpixar3d.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Pixar 3D">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforePixar3d.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before">
                     <span class="ba-label ba-label-before">Before</span>
                     <span class="ba-label ba-label-after">After</span>
                     <div class="ba-handle">
@@ -592,8 +591,8 @@
             <div class="glass p-5 rounded-[2rem] border border-cyan-500/20">
                 <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Profile Photo</h3>
                 <div class="ba-slider portrait-ba-slider">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterprofilphoto.png" class="ba-after-img" alt="After Profile Photo">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforeprofilephoto.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterprofilphoto.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Profile Photo">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforeprofilephoto.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before">
                     <span class="ba-label ba-label-before">Before</span>
                     <span class="ba-label ba-label-after">After</span>
                     <div class="ba-handle">
@@ -610,8 +609,8 @@
             <div class="glass p-5 rounded-[2rem] border border-cyan-500/20">
                 <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Sketch</h3>
                 <div class="ba-slider portrait-ba-slider">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/aftersketch.png" class="ba-after-img" alt="After Sketch">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforesketch.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/aftersketch.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Sketch">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforesketch.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before">
                     <span class="ba-label ba-label-before">Before</span>
                     <span class="ba-label ba-label-after">After</span>
                     <div class="ba-handle">
@@ -628,8 +627,8 @@
             <div class="glass p-5 rounded-[2rem] border border-pink-500/20">
                 <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Anime</h3>
                 <div class="ba-slider portrait-ba-slider">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afteranime.png" class="ba-after-img" alt="After Anime">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforanime.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afteranime.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Anime">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforanime.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before">
                     <span class="ba-label ba-label-before">Before</span>
                     <span class="ba-label ba-label-after">After</span>
                     <div class="ba-handle">
@@ -646,8 +645,8 @@
             <div class="glass p-5 rounded-[2rem] border border-amber-500/20">
                 <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Oil Painting</h3>
                 <div class="ba-slider portrait-ba-slider">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afteroilpaint.png" class="ba-after-img" alt="After Oil Painting">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforeoilpaint.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afteroilpaint.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Oil Painting">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforeoilpaint.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before">
                     <span class="ba-label ba-label-before">Before</span>
                     <span class="ba-label ba-label-after">After</span>
                     <div class="ba-handle">
@@ -664,8 +663,8 @@
             <div class="glass p-5 rounded-[2rem] border border-green-500/20">
                 <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Ghibli</h3>
                 <div class="ba-slider portrait-ba-slider">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterghibli.png" class="ba-after-img" alt="After Ghibli">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforeghibli.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterghibli.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Ghibli">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforeghibli.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before">
                     <span class="ba-label ba-label-before">Before</span>
                     <span class="ba-label ba-label-after">After</span>
                     <div class="ba-handle">
@@ -682,8 +681,8 @@
             <div class="glass p-5 rounded-[2rem] border border-red-500/20">
                 <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Fantasy / Viking</h3>
                 <div class="ba-slider portrait-ba-slider">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterfantasy.png" class="ba-after-img" alt="After Fantasy Viking">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforefantasy.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/afterfantasy.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Fantasy Viking">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/beforefantasy.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before">
                     <span class="ba-label ba-label-before">Before</span>
                     <span class="ba-label ba-label-after">After</span>
                     <div class="ba-handle">
@@ -700,8 +699,8 @@
             <div class="glass p-5 rounded-[2rem] border border-sky-500/20">
                 <h3 class="text-center text-sm font-black uppercase tracking-widest text-white mb-4">Upscale</h3>
                 <div class="ba-slider portrait-ba-slider">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/clean.png" class="ba-after-img" alt="After Upscale">
-                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/bulr.png" class="ba-before-img" alt="Before">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/clean.png" loading="lazy" decoding="async" class="ba-after-img" alt="After Upscale">
+                    <img src="https://raw.githubusercontent.com/hassanbuttg998-star/ai-master-pro/main/bulr.png" loading="lazy" decoding="async" class="ba-before-img" alt="Before">
                     <span class="ba-label ba-label-before">Before</span>
                     <span class="ba-label ba-label-after">After</span>
                     <div class="ba-handle">
@@ -1079,7 +1078,7 @@
 <section id="about-dev" class="page-content pt-32 pb-20 px-6">
     <div class="max-w-2xl mx-auto glass p-10 rounded-[2.5rem] text-center border-b-4 border-sky-600 relative overflow-hidden">
         <div class="absolute -right-10 -top-10 w-40 h-40 bg-sky-600/10 rounded-full blur-3xl"></div>
-        <img src="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/profile.png?raw=true" class="w-32 h-32 rounded-full mx-auto mb-6 border-2 border-sky-500 p-1 object-cover">
+        <img src="https://github.com/hassanbuttg998-star/ai-master-pro/blob/main/profile.png?raw=true" loading="lazy" decoding="async" class="w-32 h-32 rounded-full mx-auto mb-6 border-2 border-sky-500 p-1 object-cover">
        <h1 class="text-3xl md:text-5xl font-black text-white uppercase italic tracking-tighter mb-4">
     HASSAN FRAZ
 </h1>
@@ -1520,7 +1519,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>window.__DEFAULT_PAGE__ = 'bg-engine';</script>
-<script src="app.js?v3" defer></script>
+<script src="/app.min.js?v1" defer></script>
 
 
 
