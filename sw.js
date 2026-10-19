@@ -4,11 +4,12 @@
 // - HTML pages: network-first, falls back to cache when offline
 // - Supabase/API calls: always network (never cache live data)
 
-const CACHE_NAME = 'frazxpro-v5';
+const CACHE_NAME = 'frazxpro-v7';
 
 const STATIC_ASSETS = [
     '/style.css',
-    '/app.js',
+    '/tailwind.css',
+    '/app.min.js',
     '/manifest.json',
     '/icon-192.png',
     '/icon-512.png',
