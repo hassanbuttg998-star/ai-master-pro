@@ -3333,3 +3333,92 @@ function fxCopied() {
     function start() { addReplayLink(); maybeAutoStart(); }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
+
+
+// =========================================================
+// FEATURED POSTS STRIP (item 14b)
+// Admin picks up to 8 posts in /admin; ids live in site_settings.featured_posts
+// =========================================================
+(function initFeaturedStrip() {
+    let lastLoad = 0;
+
+    function injectStyles() {
+        if (document.getElementById('fx-featured-styles')) return;
+        const st = document.createElement('style');
+        st.id = 'fx-featured-styles';
+        st.textContent = `
+        #featured-strip{position:relative;z-index:10;width:100%;max-width:1100px;margin:40px auto 0;padding:0 24px}
+        #featured-strip h2{margin:0 0 14px;text-align:center;font-size:18px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#fff}
+        #featured-strip h2 span{color:#0ea5e9}
+        .fx-feat-row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 14px;-webkit-overflow-scrolling:touch}
+        .fx-feat-card{flex:0 0 170px;scroll-snap-align:start;position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#0b0f16;cursor:pointer;padding:0;color:inherit;text-align:left;font:inherit;transition:transform .2s,border-color .2s}
+        .fx-feat-card:hover{transform:translateY(-3px);border-color:rgba(56,189,248,.5)}
+        .fx-feat-card img{display:block;width:100%;height:210px;object-fit:cover}
+        .fx-feat-badge{position:absolute;top:8px;left:8px;background:#0272ad;color:#fff;font-size:10px;font-weight:800;letter-spacing:.06em;padding:3px 8px;border-radius:999px}
+        .fx-feat-meta{padding:8px 10px 10px}
+        .fx-feat-meta b{display:block;color:#fff;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .fx-feat-meta span{display:block;color:#8a91a0;font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        @media(min-width:768px){.fx-feat-card{flex-basis:200px}.fx-feat-card img{height:250px}}
+        `;
+        document.head.appendChild(st);
+    }
+
+    async function load() {
+        const home = document.getElementById('home');
+        if (!home || !home.classList.contains('active-page')) return;
+        if (Date.now() - lastLoad < 120000) return;
+        lastLoad = Date.now();
+        let ids = [];
+        try {
+            const { data } = await _supabase.from('site_settings').select('value').eq('key', 'featured_posts').maybeSingle();
+            ids = ((data && data.value) || '').split(',').map(x => x.trim()).filter(Boolean).slice(0, 8);
+        } catch (e) { return; }
+        let strip = document.getElementById('featured-strip');
+        if (!ids.length) { if (strip) strip.remove(); return; }
+        let posts = [];
+        try {
+            const { data, error } = await _supabase.from('posts').select(POST_LIST_COLS).in('id', ids);
+            if (error || !data) return;
+            posts = ids.map(id => data.find(p => String(p.id) === id)).filter(Boolean);
+        } catch (e) { return; }
+        if (!posts.length) { if (strip) strip.remove(); return; }
+
+        injectStyles();
+        if (!strip) {
+            const anchor = document.getElementById('upscale-demo-slider');
+            const before = anchor && anchor.parentElement;
+            if (!before || !before.parentElement) return;
+            strip = document.createElement('section');
+            strip.id = 'featured-strip';
+            strip.setAttribute('aria-label', 'Featured posts');
+            before.parentElement.insertBefore(strip, before);
+        }
+        strip.innerHTML = '<h2>Featured <span>Picks</span></h2><div class="fx-feat-row"></div>';
+        const row = strip.querySelector('.fx-feat-row');
+        posts.forEach(p => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'fx-feat-card';
+            const title = p.title || (p.prompt ? p.prompt.substring(0, 40) : 'AI Art');
+            b.setAttribute('aria-label', 'Open post: ' + title);
+            const img = document.createElement('img');
+            img.loading = 'lazy'; img.decoding = 'async'; img.alt = '';
+            img.src = cldThumb(p.image_url);
+            const badge = document.createElement('div'); badge.className = 'fx-feat-badge'; badge.textContent = '★ FEATURED';
+            const meta = document.createElement('div'); meta.className = 'fx-feat-meta';
+            const t = document.createElement('b'); t.textContent = title;
+            const c = document.createElement('span'); c.textContent = '@' + (p.creator_name || 'Creator');
+            meta.append(t, c);
+            b.append(img, badge, meta);
+            b.onclick = () => { window._feedPosts = window._feedPosts || []; if (!window._feedPosts.find(x => x.id === p.id)) window._feedPosts.push(p); openPostDetail(p.id); };
+            row.appendChild(b);
+        });
+    }
+
+    function start() {
+        load();
+        const home = document.getElementById('home');
+        if (home) new MutationObserver(load).observe(home, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
