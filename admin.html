@@ -17,7 +17,7 @@
   .card{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:20px;margin-bottom:16px}
   .card h2{margin:0 0 4px;font-size:15px;text-transform:uppercase;letter-spacing:.1em}
   .hint{color:#8a8a93;font-size:12px;margin:0 0 14px}
-  input[type=email],input[type=password]{width:100%;padding:12px;margin-bottom:10px;background:#0b0b0e;border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;font:inherit}
+  input[type=email],input[type=password],input[type=text]{width:100%;padding:12px;margin-bottom:10px;background:#0b0b0e;border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;font:inherit}
   input[type=file]{color:#a1a1aa;font-size:13px;width:100%}
   button{font:inherit;cursor:pointer;color:#fff;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;padding:11px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg,#52525b,#2e2e33);box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}
   button:hover{background:linear-gradient(180deg,#71717a,#3f3f46)}
@@ -30,6 +30,13 @@
   .btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
   #msg{font-size:13px;min-height:20px;margin:8px 0}
   .ok{color:#86efac}.err{color:#fca5a5}
+  .pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:12px}
+  .pk{position:relative;border:2px solid rgba(255,255,255,.1);border-radius:10px;overflow:hidden;cursor:pointer;background:#0b0b0e;padding:0}
+  .pk img{display:block;width:100%;height:110px;object-fit:cover}
+  .pk small{display:block;padding:4px 6px;font-size:10px;color:#a1a1aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:none;letter-spacing:0;font-weight:500}
+  .pk.on{border-color:#38bdf8}
+  .pk .n{position:absolute;top:4px;left:4px;background:#0ea5e9;color:#04101a;font-size:11px;font-weight:800;border-radius:999px;width:20px;height:20px;display:none;align-items:center;justify-content:center}
+  .pk.on .n{display:flex}
   .hide{display:none}
 </style>
 </head>
@@ -68,6 +75,22 @@
       </div>
     </div>
 
+    <div class="card">
+      <h2>Featured Posts</h2>
+      <p class="hint">Home page pe "Featured Picks" mein dikhne wali posts (zyada se zyada 8). Jis tarteeb mein tap karenge usi tarteeb mein dikhengi.</p>
+      <div class="btns" style="margin-top:0"><button id="featLoad">Posts load karein</button><button id="featSave" class="hide">Save Featured</button><button class="ghost hide" id="featClear">Sab hata dein</button></div>
+      <div id="featGrid" class="pick"></div>
+    </div>
+
+    <div class="card">
+      <h2>Announcement Banner</h2>
+      <p class="hint">Site ke upar sab pages pe dikhne wala message. Visitor use &times; se band kar sakta hai; text badalne par wo dobara sab ko dikhta hai.</p>
+      <input id="banText" type="text" maxlength="160" placeholder="Message (max 160 characters)">
+      <input id="banLink" type="text" placeholder="Link (optional), e.g. /ai-images ya https://...">
+      <label style="display:flex;gap:8px;align-items:center;font-size:13px;color:#a1a1aa;margin:4px 0 8px"><input id="banOn" type="checkbox"> Banner ON rakhein</label>
+      <div class="btns"><button id="banSave">Save Banner</button></div>
+    </div>
+
     <button class="ghost" id="logout">Logout</button>
   </div>
 </div>
@@ -87,6 +110,8 @@ async function loadCurrent(){
   const s={};(data||[]).forEach(r=>s[r.key]=r.value);
   $('logoPrev').src=s.logo_url||DEFAULTS.logo_url;
   $('favPrev').src=s.favicon_url||DEFAULTS.favicon_url;
+  $('banText').value=s.banner_text||'';$('banLink').value=s.banner_link||'';$('banOn').checked=s.banner_on==='1';
+  featIds=(s.featured_posts||'').split(',').map(x=>x.trim()).filter(Boolean);
 }
 function show(on){$('login').classList.toggle('hide',on);$('panel').classList.toggle('hide',!on)}
 async function check(){
@@ -126,6 +151,60 @@ function wire(fileId,btnId,resetId,key,prevId){
     catch(e){say('Error: '+(e.message||e),false)}
   };
 }
+let featIds=[];
+function thumb(u){return (u&&u.includes('res.cloudinary.com')&&u.includes('/upload/'))?u.replace('/upload/','/upload/f_auto,q_auto,w_220,h_220,c_fill/'):(u||'')}
+function renderFeat(posts){
+  const g=$('featGrid');g.textContent='';
+  posts.forEach(p=>{
+    const b=document.createElement('button');b.type='button';b.className='pk';b.dataset.id=String(p.id);
+    const im=document.createElement('img');im.loading='lazy';im.alt='';im.src=thumb(p.image_url);
+    const n=document.createElement('div');n.className='n';
+    const sm=document.createElement('small');sm.textContent=(p.title||p.prompt||'Post').slice(0,40)+' - @'+(p.creator_name||'');
+    b.append(im,n,sm);
+    b.onclick=()=>{
+      const id=String(p.id),i=featIds.indexOf(id);
+      if(i>=0)featIds.splice(i,1);
+      else{if(featIds.length>=8)return say('Zyada se zyada 8 posts.',false);featIds.push(id)}
+      markFeat();
+    };
+    g.appendChild(b);
+  });
+  markFeat();
+}
+function markFeat(){
+  document.querySelectorAll('#featGrid .pk').forEach(b=>{
+    const i=featIds.indexOf(b.dataset.id);b.classList.toggle('on',i>=0);b.querySelector('.n').textContent=i>=0?String(i+1):'';
+  });
+  say(featIds.length+' post(s) chuni hui hain.');
+}
+$('featLoad').onclick=async()=>{
+  $('featLoad').disabled=true;say('Posts load ho rahi hain...');
+  const {data,error}=await sb.from('posts').select('id,image_url,title,prompt,creator_name').order('created_at',{ascending:false}).limit(60);
+  $('featLoad').disabled=false;
+  if(error||!data)return say('Posts load nahi huin: '+(error&&error.message||''),false);
+  renderFeat(data);$('featSave').classList.remove('hide');$('featClear').classList.remove('hide');
+};
+$('featClear').onclick=()=>{featIds=[];markFeat()};
+$('featSave').onclick=async()=>{
+  $('featSave').disabled=true;say('Save ho raha hai...');
+  try{await setKey('featured_posts',featIds.join(','));try{localStorage.removeItem('frazx_site_settings')}catch(e){}
+    say(featIds.length?'Featured posts save ho gayin (home page par 2 minute ke andar nazar ayengi).':'Featured band kar diya.',true)}
+  catch(e){say('Error: '+(e.message||e),false)}
+  $('featSave').disabled=false;
+};
+$('banSave').onclick=async()=>{
+  const text=$('banText').value.trim(),link=$('banLink').value.trim(),on=$('banOn').checked;
+  if(on&&!text)return say('Banner ON karne ke liye message likhein.',false);
+  if(link&&!/^(https?:\/\/|\/)/i.test(link))return say('Link / se ya https:// se shuru hona chahiye.',false);
+  $('banSave').disabled=true;say('Save ho raha hai...');
+  try{
+    await setKey('banner_text',text);await setKey('banner_link',link);
+    await setKey('banner_id',String(Date.now()));await setKey('banner_on',on?'1':'');
+    try{localStorage.removeItem('frazx_site_settings')}catch(e){}
+    say(on?'Banner live ho gaya (visitors ko refresh par nazar ayega).':'Banner band kar diya.',true);
+  }catch(e){say('Error: '+(e.message||e),false)}
+  $('banSave').disabled=false;
+};
 wire('logoFile','logoSave','logoReset','logo_url','logoPrev');
 wire('favFile','favSave','favReset','favicon_url','favPrev');
 check();
