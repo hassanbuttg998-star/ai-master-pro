@@ -37,6 +37,17 @@
   .pk.on{border-color:#38bdf8}
   .pk .n{position:absolute;top:4px;left:4px;background:#0ea5e9;color:#04101a;font-size:11px;font-weight:800;border-radius:999px;width:20px;height:20px;display:none;align-items:center;justify-content:center}
   .pk.on .n{display:flex}
+  .col{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
+  .col img.cv{width:72px;height:72px;object-fit:cover;border-radius:10px;background:#0b0b0e;border:1px solid rgba(255,255,255,.1);flex:none}
+  .col .mid{flex:1;min-width:180px}
+  .col input[type=text]{margin-bottom:6px}
+  .col .btns{margin-top:4px}
+  .col button{padding:7px 11px;font-size:11px}
+  .col.off{opacity:.55}
+  .cposts{width:100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+  .cp{position:relative;border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;background:#0b0b0e}
+  .cp img{display:block;width:100%;height:92px;object-fit:cover}
+  .cp button{width:100%;border-radius:0;padding:5px;font-size:10px;background:#7f1d1d}
   .hide{display:none}
 </style>
 </head>
@@ -73,6 +84,15 @@
         <div style="flex:1;min-width:200px"><input id="favFile" type="file" accept="image/png,image/jpeg,image/webp,image/x-icon">
           <div class="btns"><button id="favSave">Upload &amp; Apply</button><button class="ghost" id="favReset">Default par wapis</button></div></div>
       </div>
+    </div>
+
+    <div class="card">
+      <h2>Collections</h2>
+      <p class="hint">Themes jaise "Black &amp; White" ya "Cyberpunk". Creators upload ke waqt inmein se ek chunte hain. Cover image square honi chahiye.</p>
+      <input id="colName" type="text" maxlength="60" placeholder="Naya collection ka naam">
+      <input id="colCover" type="file" accept="image/png,image/jpeg,image/webp">
+      <div class="btns"><button id="colAdd">Collection add karein</button></div>
+      <div id="colList"></div>
     </div>
 
     <div class="card">
@@ -116,7 +136,7 @@ async function loadCurrent(){
 function show(on){$('login').classList.toggle('hide',on);$('panel').classList.toggle('hide',!on)}
 async function check(){
   const {data:{session}}=await sb.auth.getSession();
-  if(session&&session.user.email===ADMIN_EMAIL){show(true);say('');loadCurrent()}
+  if(session&&session.user.email===ADMIN_EMAIL){show(true);say('');loadCurrent();loadCols()}
   else{show(false);if(session){say('Ye account admin nahi hai.',false);await sb.auth.signOut()}}
 }
 $('loginBtn').onclick=async()=>{
@@ -127,8 +147,8 @@ $('loginBtn').onclick=async()=>{
 };
 $('logout').onclick=async()=>{await sb.auth.signOut();show(false);say('Logout ho gaya.',true)};
 
-async function upload(file){
-  const fd=new FormData();fd.append('file',file);fd.append('upload_preset',PRESET);fd.append('folder','site');
+async function upload(file,folder){
+  const fd=new FormData();fd.append('file',file);fd.append('upload_preset',PRESET);fd.append('folder',folder||'site');
   const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`,{method:'POST',body:fd});
   const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'Upload fail');
   return j.secure_url;
@@ -205,6 +225,104 @@ $('banSave').onclick=async()=>{
   }catch(e){say('Error: '+(e.message||e),false)}
   $('banSave').disabled=false;
 };
+
+/* ===== Collections ===== */
+let COLS=[];
+function slugify(n){return n.toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'collection'}
+async function loadCols(){
+  const {data,error}=await sb.from('collections').select('*').order('sort_order',{ascending:true}).order('created_at',{ascending:true});
+  if(error){say('Collections load nahi huin: '+error.message,false);return}
+  COLS=data||[];renderCols();
+}
+function mkBtn(t,fn,cls){const b=document.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.onclick=fn;return b}
+function renderCols(){
+  const box=$('colList');box.textContent='';
+  if(!COLS.length){const p=document.createElement('p');p.className='hint';p.textContent='Abhi koi collection nahi hai.';box.appendChild(p);return}
+  COLS.forEach((c,i)=>{
+    const row=document.createElement('div');row.className='col'+(c.is_active?'':' off');
+    const im=document.createElement('img');im.className='cv';im.alt='';im.src=c.cover_url?c.cover_url.replace('/upload/','/upload/f_auto,q_auto,w_160,h_160,c_fill/'):'/logo.png';
+    const mid=document.createElement('div');mid.className='mid';
+    const nm=document.createElement('input');nm.type='text';nm.maxLength=60;nm.value=c.name;
+    const meta=document.createElement('div');meta.className='hint';meta.style.margin='0 0 4px';meta.textContent='/collections/'+c.slug+(c.is_active?'':'  (chhupa hua)');
+    const btns=document.createElement('div');btns.className='btns';
+    btns.append(
+      mkBtn('Naam save',async()=>{const v=nm.value.trim();if(!v)return say('Naam khali nahi ho sakta.',false);await colUpdate(c.id,{name:v},'Naam save ho gaya.')}),
+      mkBtn('\u2191',()=>colMove(i,-1),'ghost'),
+      mkBtn('\u2193',()=>colMove(i,1),'ghost'),
+      mkBtn(c.is_active?'Chhupayen':'Dikhayen',()=>colUpdate(c.id,{is_active:!c.is_active},c.is_active?'Chhupa diya.':'Ab dikh raha hai.'),'ghost'),
+      mkBtn('Cover badlein',()=>colCover(c),'ghost'),
+      mkBtn('Posts',()=>colPosts(c,row),'ghost'),
+      mkBtn('Delete',()=>colDelete(c),'ghost')
+    );
+    mid.append(nm,meta,btns);row.append(im,mid);box.appendChild(row);
+  });
+}
+async function colUpdate(id,patch,msg){
+  const {error}=await sb.from('collections').update(patch).eq('id',id);
+  if(error)return say('Error: '+error.message,false);
+  say(msg,true);await loadCols();
+}
+async function colMove(i,d){
+  const j=i+d;if(j<0||j>=COLS.length)return;
+  const a=COLS[i],b=COLS[j];
+  const r1=await sb.from('collections').update({sort_order:j}).eq('id',a.id);
+  const r2=await sb.from('collections').update({sort_order:i}).eq('id',b.id);
+  if(r1.error||r2.error)return say('Order badalne mein error.',false);
+  await loadCols();
+}
+function colCover(c){
+  const f=document.createElement('input');f.type='file';f.accept='image/png,image/jpeg,image/webp';
+  f.onchange=async()=>{
+    const file=f.files[0];if(!file)return;
+    if(file.size>5*1024*1024)return say('Image 5MB se choti honi chahiye.',false);
+    try{say('Cover upload ho raha hai...');const url=await upload(file,'collections');await colUpdate(c.id,{cover_url:url},'Cover badal gaya.')}
+    catch(e){say('Error: '+(e.message||e),false)}
+  };f.click();
+}
+async function colDelete(c){
+  if(!confirm('"'+c.name+'" delete karein? Is ki posts delete nahi hongi, sirf collection se nikal jayengi.'))return;
+  const {error}=await sb.from('collections').delete().eq('id',c.id);
+  if(error)return say('Error: '+error.message,false);
+  say('Collection delete ho gaya.',true);await loadCols();
+}
+async function colPosts(c,row){
+  let box=row.querySelector('.cposts');
+  if(box){box.remove();return}
+  box=document.createElement('div');box.className='cposts';row.appendChild(box);
+  const {data,error}=await sb.from('posts').select('id,image_url,title,creator_name').eq('collection_id',c.id).order('created_at',{ascending:false}).limit(100);
+  if(error){box.textContent='Error: '+error.message;return}
+  if(!data.length){box.textContent='Is collection mein abhi koi post nahi.';box.style.color='#8a8a93';box.style.fontSize='12px';return}
+  data.forEach(p=>{
+    const d=document.createElement('div');d.className='cp';
+    const im=document.createElement('img');im.alt='';im.loading='lazy';im.title=(p.title||'')+' @'+(p.creator_name||'');im.src=thumb(p.image_url);
+    d.append(im,mkBtn('Hatayen',async()=>{
+      const r=await sb.from('posts').update({collection_id:null}).eq('id',p.id);
+      if(r.error)return say('Error: '+r.error.message,false);
+      d.remove();say('Post collection se hata di (post site pe rahegi).',true);
+    }));
+    box.appendChild(d);
+  });
+}
+$('colAdd').onclick=async()=>{
+  const name=$('colName').value.trim();if(!name)return say('Collection ka naam likhein.',false);
+  const file=$('colCover').files[0];
+  if(file&&file.size>5*1024*1024)return say('Cover 5MB se choti honi chahiye.',false);
+  $('colAdd').disabled=true;say('Collection ban raha hai...');
+  try{
+    const cover=file?await upload(file,'collections'):null;
+    const base=slugify(name);let slug=base,n=1,err=null;
+    for(;n<=6;n++){
+      const r=await sb.from('collections').insert({name,slug,cover_url:cover,sort_order:COLS.length});
+      err=r.error;if(!err)break;
+      if(err.code==='23505'){slug=base+'-'+(n+1);continue}
+      break;
+    }
+    if(err)throw err;
+    $('colName').value='';$('colCover').value='';say('Collection add ho gaya.',true);await loadCols();
+  }catch(e){say('Error: '+(e.message||e),false)}
+  $('colAdd').disabled=false;
+};
+
 wire('logoFile','logoSave','logoReset','logo_url','logoPrev');
 wire('favFile','favSave','favReset','favicon_url','favPrev');
 check();
