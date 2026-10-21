@@ -1267,6 +1267,7 @@ window.addEventListener('hashchange', function() {
         const postId = hash.replace('#post/', '');
         renderPostDetail(postId);
     } else {
+        window._fxBackTo = null;
         // Restore normal view
         document.getElementById('main-navbar').style.display = '';
         document.querySelectorAll('section').forEach(el => el.style.display = '');
@@ -1465,13 +1466,15 @@ async function editPost(postId) {
 }
 
 function goBackToGallery() {
-    window.location.hash = 'samples';
+    const _backTo = window._fxBackTo || 'samples';
+    window._fxBackTo = null;
+    window.location.hash = _backTo;
     document.getElementById('main-navbar').style.display = '';
     document.querySelectorAll('section').forEach(el => el.style.display = '');
     document.getElementById('post-detail').style.display = 'none';
     document.getElementById('post-detail').style.paddingTop = '';
     document.documentElement.scrollTop = 0;
-    showPage('samples');
+    showPage(_backTo);
 }
 
 function toggleFilterPanel() {
@@ -1784,6 +1787,7 @@ function closeUploadModal() {
     document.getElementById('upload-prompt-input').value = '';
     document.getElementById('upload-title-input').value = '';
     document.getElementById('upload-tags-input').value = '';
+    { const _c = document.getElementById('upload-collection-input'); if (_c) _c.value = ''; }
     document.getElementById('tags-preview').innerHTML = '';
     document.getElementById('image-file-input').value = '';
     document.getElementById('upload-status').classList.add('hidden');
@@ -1866,6 +1870,8 @@ async function submitCommunityPost() {
         // Read category BEFORE closing modal
         const categoryEl = document.getElementById('upload-category-input');
         const selectedCategory = categoryEl ? categoryEl.value : 'ai_images';
+        const colEl = document.getElementById('upload-collection-input');
+        const collectionId = colEl && colEl.value ? colEl.value : null;
 
         const { error: dbError } = await _supabase
             .from('posts')
@@ -1877,7 +1883,8 @@ async function submitCommunityPost() {
                 creator_name: creatorName,
                 creator_avatar: creatorAvatar,
                 creator_id: user.id,
-                category: selectedCategory
+                category: selectedCategory,
+                ...(collectionId ? { collection_id: collectionId } : {})
             }]);
 
         if (dbError) {
@@ -3386,7 +3393,7 @@ function fxCopied() {
         injectStyles();
         if (!strip) {
             const anchor = document.getElementById('upscale-demo-slider');
-            const before = anchor && anchor.parentElement;
+            const before = document.getElementById('collections-strip') || (anchor && anchor.parentElement);
             if (!before || !before.parentElement) return;
             strip = document.createElement('section');
             strip.id = 'featured-strip';
@@ -3421,4 +3428,300 @@ function fxCopied() {
         if (home) new MutationObserver(load).observe(home, { attributes: true, attributeFilter: ['class'] });
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+
+// =========================================================
+// COLLECTION PICKER IN THE UPLOAD FORM (collections, part 1)
+// =========================================================
+(function initUploadCollectionPicker() {
+    let lastFetch = 0;
+
+    function ensureBlock() {
+        if (document.getElementById('upload-collection-wrap')) return document.getElementById('upload-collection-wrap');
+        const cat = document.getElementById('upload-category-input');
+        if (!cat || !cat.parentElement) return null;
+        const wrap = document.createElement('div');
+        wrap.id = 'upload-collection-wrap';
+        wrap.className = 'mb-5 hidden';
+        wrap.innerHTML = '<label for="upload-collection-input" class="block text-[10px] font-black uppercase tracking-widest text-sky-400 mb-2">'
+            + '<span class="bg-sky-600 text-white rounded-full w-4 h-4 inline-flex items-center justify-center text-[8px] mr-1">6</span>'
+            + 'Collection <span class="text-gray-500 normal-case tracking-normal font-semibold">(optional)</span></label>'
+            + '<select id="upload-collection-input" class="' + cat.className + '"></select>';
+        cat.parentElement.insertAdjacentElement('afterend', wrap);
+        return wrap;
+    }
+
+    async function refresh() {
+        const wrap = ensureBlock();
+        if (!wrap) return;
+        if (Date.now() - lastFetch < 60000 && wrap.querySelector('option')) return;
+        lastFetch = Date.now();
+        try {
+            const { data, error } = await _supabase.from('collections').select('id,name').eq('is_active', true).order('sort_order', { ascending: true });
+            if (error || !data || !data.length) { wrap.classList.add('hidden'); return; }
+            const sel = wrap.querySelector('select');
+            const keep = sel.value;
+            sel.textContent = '';
+            const none = document.createElement('option'); none.value = ''; none.textContent = 'No collection'; sel.appendChild(none);
+            data.forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.name; sel.appendChild(o); });
+            if (keep) sel.value = keep;
+            wrap.classList.remove('hidden');
+        } catch (e) { wrap.classList.add('hidden'); }
+    }
+
+    function start() {
+        const modal = document.getElementById('upload-modal');
+        if (!modal) return;
+        new MutationObserver(() => { if (!modal.classList.contains('hidden')) refresh(); })
+            .observe(modal, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+
+// =========================================================
+// COLLECTIONS (part 2): home strip, /collections page, /collections/<slug>
+// =========================================================
+(function initCollections() {
+    const PAGE_ID = 'collections-page';
+    const cache = { t: 0, list: null };
+    let postsShown = 0, currentPosts = [];
+
+    function injectStyles() {
+        if (document.getElementById('fx-collections-styles')) return;
+        const st = document.createElement('style');
+        st.id = 'fx-collections-styles';
+        st.textContent = `
+        .fx-wrap{width:100%;max-width:1200px;margin:0 auto;padding:0 16px}
+        .fx-col-head{text-align:center;margin-bottom:28px}
+        .fx-col-head h1{margin:0 0 8px;color:#fff;font-size:30px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+        .fx-col-head h1 span{color:#0ea5e9}
+        .fx-col-head p{margin:0;color:#9aa3b2;font-size:14px}
+        .fx-col-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+        @media(min-width:768px){.fx-col-grid{grid-template-columns:repeat(3,1fr);gap:16px}}
+        @media(min-width:1100px){.fx-col-grid{grid-template-columns:repeat(4,1fr)}}
+        .fx-col-card{position:relative;display:block;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#0b0f16;aspect-ratio:4/5;text-decoration:none;transition:transform .25s,border-color .25s}
+        .fx-col-card:hover{transform:translateY(-4px);border-color:rgba(56,189,248,.55)}
+        .fx-col-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .fx-col-card .ph{position:absolute;inset:0;background:linear-gradient(135deg,#0c4a6e,#0e7490)}
+        .fx-col-card .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.25) 55%,rgba(0,0,0,0) 100%)}
+        .fx-col-card .txt{position:absolute;left:0;right:0;bottom:0;padding:14px}
+        .fx-col-card b{display:block;color:#fff;font-size:15px;font-weight:800;line-height:1.25}
+        .fx-col-card span{display:block;margin-top:3px;color:#7dd3fc;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+        .fx-back{background:none;border:none;color:#9aa3b2;font:inherit;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:14px;padding:6px 0}
+        .fx-back:hover{color:#fff}
+        .fx-more{display:block;margin:26px auto 0;padding:12px 28px;border-radius:12px;border:1px solid rgba(56,189,248,.4);background:rgba(2,132,199,.15);color:#7dd3fc;font:inherit;font-size:13px;font-weight:800;letter-spacing:.06em;cursor:pointer}
+        .fx-more:hover{background:rgba(2,132,199,.3)}
+        .fx-msg{text-align:center;color:#8a91a0;padding:56px 16px;font-size:14px}
+        .fx-msg a{color:#38bdf8}
+        #collections-strip{position:relative;z-index:10;width:100%;max-width:1100px;margin:36px auto 0;padding:0 24px}
+        #collections-strip .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        #collections-strip h2{margin:0;font-size:18px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#fff}
+        #collections-strip h2 span{color:#0ea5e9}
+        #collections-strip .va{font-size:12px;font-weight:800;letter-spacing:.06em;color:#7dd3fc;text-decoration:none;border:1px solid rgba(56,189,248,.4);border-radius:999px;padding:7px 14px;white-space:nowrap}
+        #collections-strip .va:hover{background:rgba(2,132,199,.25)}
+        .fx-strip-row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 14px;-webkit-overflow-scrolling:touch}
+        .fx-strip-row .fx-col-card{flex:0 0 150px;aspect-ratio:4/5;scroll-snap-align:start}
+        @media(min-width:768px){.fx-strip-row .fx-col-card{flex-basis:190px}}
+        `;
+        document.head.appendChild(st);
+    }
+
+    async function fetchCollections() {
+        if (cache.list && Date.now() - cache.t < 120000) return cache.list;
+        let cols = [];
+        try {
+            const { data, error } = await _supabase.from('collections').select('id,name,slug,cover_url,sort_order')
+                .eq('is_active', true).order('sort_order', { ascending: true });
+            if (error || !data) return cache.list || [];
+            cols = data;
+        } catch (e) { return cache.list || []; }
+        let counts = null;
+        try {
+            const r = await _supabase.rpc('collection_counts');
+            if (!r.error && Array.isArray(r.data)) { counts = {}; r.data.forEach(x => { counts[x.collection_id] = x; }); }
+        } catch (e) { /* counts are optional */ }
+        cols.forEach(c => {
+            const k = counts && counts[c.id];
+            c.count = counts ? (k ? Number(k.n) : 0) : null;
+            c.cover = c.cover_url || (k && k.cover) || '';
+        });
+        cache.list = cols; cache.t = Date.now();
+        return cols;
+    }
+
+    function cardEl(c) {
+        const a = document.createElement('a');
+        a.className = 'fx-col-card';
+        a.href = '/collections/' + encodeURIComponent(c.slug);
+        a.dataset.slug = c.slug;
+        if (c.cover) {
+            const img = document.createElement('img');
+            img.loading = 'lazy'; img.decoding = 'async'; img.alt = '';
+            img.src = cldThumb(c.cover);
+            a.appendChild(img);
+        } else {
+            const ph = document.createElement('div'); ph.className = 'ph'; a.appendChild(ph);
+        }
+        const sh = document.createElement('div'); sh.className = 'shade'; a.appendChild(sh);
+        const t = document.createElement('div'); t.className = 'txt';
+        const b = document.createElement('b'); b.textContent = c.name;
+        t.appendChild(b);
+        if (c.count !== null) { const s = document.createElement('span'); s.textContent = c.count + (c.count === 1 ? ' prompt' : ' prompts'); t.appendChild(s); }
+        a.appendChild(t);
+        return a;
+    }
+
+    // ---------- HOME STRIP ----------
+    let homeLast = 0;
+    async function loadHomeStrip() {
+        const home = document.getElementById('home');
+        if (!home || !home.classList.contains('active-page')) return;
+        if (Date.now() - homeLast < 120000) return;
+        homeLast = Date.now();
+        let cols = await fetchCollections();
+        cols = cols.filter(c => c.count === null || c.count > 0).slice(0, 10);
+        let strip = document.getElementById('collections-strip');
+        if (!cols.length) { if (strip) strip.remove(); return; }
+        injectStyles();
+        if (!strip) {
+            const anchor = document.getElementById('upscale-demo-slider');
+            const before = anchor && anchor.parentElement;
+            if (!before || !before.parentElement) return;
+            strip = document.createElement('section');
+            strip.id = 'collections-strip';
+            strip.setAttribute('aria-label', 'Collections');
+            const feat = document.getElementById('featured-strip');
+            if (feat) feat.insertAdjacentElement('afterend', strip); else before.parentElement.insertBefore(strip, before);
+        }
+        strip.innerHTML = '<div class="hd"><h2>Browse <span>Collections</span></h2><a class="va" href="/collections">View all →</a></div><div class="fx-strip-row"></div>';
+        const row = strip.querySelector('.fx-strip-row');
+        cols.forEach(c => row.appendChild(cardEl(c)));
+    }
+
+    // ---------- COLLECTIONS PAGE ----------
+    function ensureSection() {
+        if (document.getElementById(PAGE_ID)) return;
+        const ref = document.getElementById('ai-stock') || document.querySelector('section.page-content');
+        if (!ref || !ref.parentElement) return;
+        injectStyles();
+        const sec = document.createElement('section');
+        sec.id = PAGE_ID;
+        sec.className = 'page-content pt-28 pb-20 w-full';
+        sec.style.display = 'none';
+        sec.innerHTML = '<div class="fx-wrap">'
+            + '<div id="col-list-view"><div class="fx-col-head"><h1>Prompt <span>Collections</span></h1><p>Browse AI prompts by theme and copy your favourites.</p></div>'
+            + '<div id="col-grid" class="fx-col-grid"></div></div>'
+            + '<div id="col-detail-view" style="display:none"><button type="button" class="fx-back" id="col-back">← All collections</button>'
+            + '<div class="fx-col-head"><h1 id="col-title"></h1><p id="col-sub"></p></div>'
+            + '<div id="col-feed" class="masonry-feed"></div><div id="col-msg"></div>'
+            + '<button type="button" class="fx-more" id="col-more" style="display:none">Load more</button></div>'
+            + '</div>';
+        ref.parentElement.insertBefore(sec, ref);
+        sec.querySelector('#col-back').onclick = () => go('/collections');
+        sec.querySelector('#col-more').onclick = showMore;
+        sec.querySelector('#col-feed').addEventListener('click', () => { window._fxBackTo = PAGE_ID; }, true);
+    }
+
+    function skeletons(n) {
+        let h = '';
+        const hs = [300, 380, 260, 340, 290, 410, 270, 330];
+        for (let i = 0; i < n; i++) h += '<div class="masonry-card"><div class="skeleton rounded-2xl" style="height:' + hs[i % hs.length] + 'px"></div></div>';
+        return h;
+    }
+
+    function setMeta(title, desc, path) {
+        document.title = title;
+        const d = document.querySelector('meta[name="description"]'); if (d && desc) d.setAttribute('content', desc);
+        const c = document.querySelector('link[rel="canonical"]'); if (c) c.setAttribute('href', 'https://frazxpro.com' + path);
+        [['og:title', title], ['og:description', desc], ['og:url', 'https://frazxpro.com' + path]].forEach(([p, v]) => {
+            const m = document.querySelector('meta[property="' + p + '"]'); if (m && v) m.setAttribute('content', v);
+        });
+    }
+
+    async function showList() {
+        document.getElementById('col-list-view').style.display = '';
+        document.getElementById('col-detail-view').style.display = 'none';
+        setMeta('Prompt Collections | FRAZX PRO', 'Browse AI prompt collections by theme: black and white, cyberpunk, anime and more. Copy ready-made prompts free on FRAZX PRO.', '/collections');
+        const grid = document.getElementById('col-grid');
+        grid.innerHTML = '';
+        const cols = await fetchCollections();
+        if (!cols.length) { grid.innerHTML = '<div class="fx-msg" style="grid-column:1/-1">No collections yet. Check back soon.</div>'; return; }
+        cols.forEach(c => grid.appendChild(cardEl(c)));
+    }
+
+    async function showDetail(slug) {
+        document.getElementById('col-list-view').style.display = 'none';
+        document.getElementById('col-detail-view').style.display = '';
+        const feed = document.getElementById('col-feed'), msg = document.getElementById('col-msg'), more = document.getElementById('col-more');
+        const title = document.getElementById('col-title'), sub = document.getElementById('col-sub');
+        feed.innerHTML = skeletons(8); msg.innerHTML = ''; more.style.display = 'none'; title.textContent = ''; sub.textContent = '';
+        const cols = await fetchCollections();
+        const c = cols.find(x => x.slug === slug);
+        if (!c) {
+            feed.innerHTML = '';
+            msg.innerHTML = '<div class="fx-msg">This collection was not found. <a href="/collections">See all collections</a></div>';
+            return;
+        }
+        title.textContent = c.name;
+        setMeta(c.name + ' AI Prompts | FRAZX PRO', 'Browse and copy ' + c.name + ' AI prompts and images. Free prompt collection on FRAZX PRO.', '/collections/' + c.slug);
+        let posts = [];
+        try {
+            const { data, error } = await _supabase.from('posts').select(POST_LIST_COLS).eq('collection_id', c.id).order('created_at', { ascending: false }).limit(200);
+            if (error) throw error;
+            posts = data || [];
+        } catch (e) {
+            feed.innerHTML = '';
+            showLoadError(msg, () => showDetail(slug));
+            return;
+        }
+        window._feedPosts = window._feedPosts || [];
+        posts.forEach(p => { if (!window._feedPosts.find(x => x.id === p.id)) window._feedPosts.push(p); });
+        currentPosts = posts; postsShown = 0;
+        feed.innerHTML = '';
+        sub.textContent = posts.length + (posts.length === 1 ? ' prompt' : ' prompts');
+        if (!posts.length) { msg.innerHTML = '<div class="fx-msg">No prompts in this collection yet.</div>'; return; }
+        showMore();
+    }
+
+    function showMore() {
+        const feed = document.getElementById('col-feed'), more = document.getElementById('col-more');
+        const next = currentPosts.slice(postsShown, postsShown + 20);
+        feed.insertAdjacentHTML('beforeend', next.map(p => buildGalleryCardHTML(p, 'sky')).join(''));
+        postsShown += next.length;
+        more.style.display = postsShown < currentPosts.length ? '' : 'none';
+    }
+
+    function route() {
+        const m = location.pathname.match(/^\/collections\/([^\/]+)\/?$/);
+        if (m) showDetail(decodeURIComponent(m[1])); else showList();
+        window.scrollTo(0, 0);
+    }
+    function go(path) { history.pushState({}, '', path); route(); }
+
+    function startPage() {
+        ensureSection();
+        if (!document.getElementById(PAGE_ID)) return;
+        document.getElementById(PAGE_ID).addEventListener('click', (e) => {
+            const a = e.target.closest && e.target.closest('a.fx-col-card');
+            if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
+            e.preventDefault();
+            go('/collections/' + a.dataset.slug);
+        });
+        window.addEventListener('popstate', () => { if (document.getElementById(PAGE_ID).classList.contains('active-page')) route(); });
+        route();
+    }
+
+    if (window.__DEFAULT_PAGE__ === PAGE_ID) {
+        // The page section must exist before showPage() runs on DOMContentLoaded
+        ensureSection();
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startPage); else startPage();
+    }
+    function startHome() {
+        loadHomeStrip();
+        const home = document.getElementById('home');
+        if (home) new MutationObserver(loadHomeStrip).observe(home, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startHome); else startHome();
 })();
