@@ -3924,3 +3924,193 @@ function fxCopied() {
         title.focus();
     };
 })();
+
+
+// =========================================================
+// SHARE CARD (image + prompt in one card, for WhatsApp / Instagram)
+// =========================================================
+(function initShareCard() {
+    const W = 1080, H = 1350;
+
+    function loadImg(src) {
+        return new Promise((resolve, reject) => {
+            const im = new Image();
+            im.crossOrigin = 'anonymous';
+            im.onload = () => resolve(im);
+            im.onerror = () => reject(new Error('img'));
+            im.src = src;
+        });
+    }
+    function rr(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+    }
+    function wrap(ctx, text, maxW, maxLines) {
+        const words = String(text).replace(/\s+/g, ' ').trim().split(' ');
+        const lines = []; let cur = '';
+        for (let i = 0; i < words.length; i++) {
+            const t = cur ? cur + ' ' + words[i] : words[i];
+            if (ctx.measureText(t).width > maxW && cur) {
+                lines.push(cur); cur = words[i];
+                if (lines.length === maxLines) { cur = ''; lines[maxLines - 1] += '…'; break; }
+            } else cur = t;
+        }
+        if (cur && lines.length < maxLines) lines.push(cur);
+        // trim last line if ellipsis overflows
+        return lines;
+    }
+
+    async function buildCard(post) {
+        try { await document.fonts.load('700 40px "Space Grotesk"'); } catch (e) { /* fallback font */ }
+        const FONT = '"Space Grotesk", system-ui, sans-serif';
+        const c = document.createElement('canvas'); c.width = W; c.height = H;
+        const ctx = c.getContext('2d');
+
+        // background
+        const bg = ctx.createLinearGradient(0, 0, W, H);
+        bg.addColorStop(0, '#05070d'); bg.addColorStop(1, '#0b1626');
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+        const glow = ctx.createRadialGradient(W / 2, 360, 40, W / 2, 360, 620);
+        glow.addColorStop(0, 'rgba(14,165,233,.28)'); glow.addColorStop(1, 'rgba(14,165,233,0)');
+        ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+
+        // image (cover into a rounded frame)
+        const fx = 60, fy = 60, fw = W - 120, fh = 700;
+        const img = await loadImg(cldUrl(post.image_url, 'f_jpg,q_auto,w_1400'));
+        ctx.save(); rr(ctx, fx, fy, fw, fh, 36); ctx.clip();
+        const s = Math.max(fw / img.width, fh / img.height);
+        const dw = img.width * s, dh = img.height * s;
+        ctx.drawImage(img, fx + (fw - dw) / 2, fy + (fh - dh) / 2, dw, dh);
+        ctx.restore();
+        ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(125,211,252,.35)'; rr(ctx, fx, fy, fw, fh, 36); ctx.stroke();
+
+        // title
+        let y = fy + fh + 30;
+        ctx.textBaseline = 'top'; ctx.fillStyle = '#ffffff';
+        ctx.font = '800 50px ' + FONT;
+        const title = (post.title || 'AI Creation');
+        const tl = wrap(ctx, title, W - 120, 1);
+        ctx.fillText(tl[0] || '', 60, y);
+        y += 70;
+
+        // prompt box
+        ctx.font = '500 28px ' + FONT;
+        const pl = wrap(ctx, post.prompt || '', W - 120 - 60, 6);
+        const boxH = 36 + 20 + pl.length * 40 + 24;
+        ctx.fillStyle = 'rgba(255,255,255,.06)'; rr(ctx, 60, y, W - 120, boxH, 24); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 2; rr(ctx, 60, y, W - 120, boxH, 24); ctx.stroke();
+        ctx.fillStyle = '#7dd3fc'; ctx.font = '800 20px ' + FONT; ctx.fillText('AI PROMPT', 90, y + 20);
+        ctx.fillStyle = '#e5e7eb'; ctx.font = '500 28px ' + FONT;
+        pl.forEach((ln, i) => ctx.fillText(ln, 90, y + 56 + i * 40));
+
+        // footer
+        const fyb = H - 90;
+        ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.fillRect(60, fyb - 22, W - 120, 2);
+        try {
+            const lg = await loadImg('/logo.png');
+            const lh = 56, lw = lg.width * (lh / lg.height);
+            ctx.drawImage(lg, 60, fyb, lw, lh);
+        } catch (e) { /* logo optional */ }
+        ctx.textAlign = 'right'; ctx.fillStyle = '#ffffff'; ctx.font = '800 30px ' + FONT;
+        ctx.fillText('frazxpro.com', W - 60, fyb + 2);
+        ctx.fillStyle = '#8a91a0'; ctx.font = '500 22px ' + FONT;
+        ctx.fillText('by @' + (post.creator_name || 'creator'), W - 60, fyb + 38);
+        ctx.textAlign = 'left';
+        return c;
+    }
+
+    function postUrl(id) { return location.origin + location.pathname + '#post/' + id; }
+
+    window.openShareCard = async function (postId) {
+        const post = (window._feedPosts || []).find(p => p.id === (postId || window._currentDetailPostId));
+        if (!post) { showToast('Post not ready, try again'); return; }
+        if (document.querySelector('.fx-overlay')) return;
+        const prev = document.activeElement;
+
+        const ov = document.createElement('div'); ov.className = 'fx-overlay';
+        const box = document.createElement('div'); box.className = 'fx-dialog';
+        box.style.maxWidth = '420px';
+        box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'Share card');
+        const h = document.createElement('h3'); h.textContent = 'Share card'; box.appendChild(h);
+        const holder = document.createElement('div');
+        holder.style.cssText = 'min-height:200px;display:flex;align-items:center;justify-content:center;color:#8a91a0;font-size:13px;margin:6px 0 14px';
+        holder.textContent = 'Creating your card...';
+        box.appendChild(holder);
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap';
+        const mkb = (t, pri) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.disabled = true;
+            b.style.cssText = 'font:inherit;cursor:pointer;border-radius:12px;padding:11px 18px;font-size:13px;font-weight:700;border:1px solid ' + (pri ? '#38bdf8' : 'rgba(255,255,255,.14)') + ';background:' + (pri ? '#0272ad' : 'transparent') + ';color:' + (pri ? '#fff' : '#cbd5e1');
+            return b; };
+        const closeB = mkb('Close'); closeB.disabled = false;
+        const dlB = mkb('Download');
+        const shB = mkb('Share', true);
+        row.append(closeB, dlB, shB); box.appendChild(row);
+        ov.appendChild(box); document.body.appendChild(ov);
+        closeB.focus();
+
+        function close() {
+            document.removeEventListener('keydown', onKey, true); ov.remove();
+            if (prev && prev.focus && document.contains(prev)) { try { prev.focus(); } catch (e) { /* ignore */ } }
+        }
+        function onKey(e) {
+            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
+            else if (e.key === 'Tab') {
+                const f = Array.from(box.querySelectorAll('button')).filter(x => !x.disabled);
+                if (!f.length) return;
+                const first = f[0], last = f[f.length - 1];
+                if (!box.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+                else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+        }
+        document.addEventListener('keydown', onKey, true);
+        closeB.onclick = close;
+        ov.addEventListener('mousedown', (e) => { if (e.target === ov) close(); });
+
+        let blob = null;
+        try {
+            const canvas = await buildCard(post);
+            blob = await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('blob')), 'image/png'));
+            canvas.style.cssText = 'width:100%;height:auto;border-radius:14px;display:block';
+            canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', 'Preview of the share card');
+            holder.style.minHeight = ''; holder.textContent = ''; holder.appendChild(canvas);
+        } catch (err) {
+            holder.textContent = "Couldn't create the card for this image. Please try another post.";
+            return;
+        }
+        const fname = 'frazxpro-' + String(post.title || 'creation').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) + '.png';
+        const file = new File([blob], fname, { type: 'image/png' });
+        dlB.disabled = false; shB.disabled = false;
+        dlB.onclick = () => {
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname;
+            document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+            showToast('Card saved 📥');
+        };
+        shB.onclick = async () => {
+            const data = { files: [file], title: post.title || 'FRAZX PRO', text: (post.title || 'AI creation') + ' on FRAZX PRO\n' + postUrl(post.id) };
+            try {
+                if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share(data); }
+                else if (navigator.share) { await navigator.share({ title: data.title, text: data.text, url: postUrl(post.id) }); }
+                else { dlB.click(); }
+            } catch (e) { if (e && e.name !== 'AbortError') showToast('Sharing failed, try Download'); }
+        };
+    };
+
+    // inject the Share button on the post detail page (no HTML changes needed)
+    function injectBtn() {
+        const save = document.getElementById('detail-save-btn');
+        if (!save || document.getElementById('detail-share-btn')) return;
+        const wrap = document.createElement('div');
+        wrap.className = 'flex items-center gap-2';
+        save.parentNode.insertBefore(wrap, save);
+        const b = document.createElement('button');
+        b.id = 'detail-share-btn'; b.type = 'button';
+        b.setAttribute('aria-label', 'Create share card');
+        b.className = save.className;
+        b.innerHTML = '<i class="fa-solid fa-share-nodes" aria-hidden="true"></i><span>Share</span>';
+        b.onclick = () => openShareCard();
+        wrap.append(b, save);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectBtn); else injectBtn();
+})();
