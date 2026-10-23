@@ -1451,19 +1451,7 @@ async function deletePost(postId) {
     loadCommunityFeed();
 }
 
-async function editPost(postId) {
-    const post = (window._feedPosts || []).find(p => p.id === postId);
-    if (!post) return;
-    const edited = await uiPrompt('Edit your prompt', post.prompt || '', { maxLength: 4000, confirmText: 'Save' });
-    if (edited === null) return;
-    const newPrompt = edited.trim();
-    if (!newPrompt) { showToast("Prompt can't be empty"); return; }
-    if (newPrompt === post.prompt) return;
-    const { error } = await _supabase.from('posts').update({ prompt: newPrompt }).eq('id', postId);
-    if (error) { showToast("Edit failed!"); return; }
-    showToast("Post updated! ✅");
-    loadCommunityFeed();
-}
+async function editPost(postId) { openEditPost(postId); }
 
 function goBackToGallery() {
     const _backTo = window._fxBackTo || 'samples';
@@ -1733,7 +1721,17 @@ async function deletePostFromProfile(postId) {
     showToast("Post deleted! 🗑️");
     _feedLoading = false;
     _feedLoaded = false;
+    _adsFeedLoaded = false;
+    _stockFeedLoaded = false;
+    refreshMyPostTabs();
+}
+
+function refreshMyPostTabs() {
+    _uploadsLoading = false;
     loadMyUploads();
+    loadMyAdsPosts();
+    loadMyStockPosts();
+    if (window.fxInvalidateCollections) window.fxInvalidateCollections();
 }
 
 async function toggleDetailLike() {
@@ -2125,12 +2123,10 @@ function profileCardHTML(post, showDelete) {
             <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-white/5 border border-white/5 group-hover:border-sky-500/30 transition-all duration-300" onclick="openPostDetail('${post.id}')">
                 <img src="${cldThumb(post.image_url)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" loading="lazy">
                 ${showDelete ? `
-                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <button onclick="event.stopPropagation(); deletePostFromProfile('${post.id}')" 
-                        class="w-9 h-9 bg-red-500/80 hover:bg-red-500 rounded-full flex items-center justify-center text-white transition">
-                        <i class="fa-solid fa-trash text-xs"></i>
-                    </button>
-                </div>` : ''}
+                <button type="button" aria-label="Post options" aria-haspopup="menu" onclick="event.stopPropagation(); openPostMenu(this, '${post.id}')"
+                    class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/80 transition">
+                    <i class="fa-solid fa-ellipsis-vertical text-sm" aria-hidden="true"></i>
+                </button>` : ''}
             </div>
             <div class="pt-2 px-0.5 cursor-pointer" onclick="openPostDetail('${post.id}')">
                 <p class="text-white text-xs font-bold truncate">${title}</p>
@@ -2178,6 +2174,7 @@ async function loadMyUploads() {
 
     if (!posts || posts.length === 0) {
         if (emptyEl) emptyEl.classList.remove('hidden');
+        _uploadsLoading = false;
         return;
     }
 
@@ -3554,7 +3551,7 @@ function fxCopied() {
     function cardEl(c) {
         const a = document.createElement('a');
         a.className = 'fx-col-card';
-        a.href = '/collections/' + encodeURIComponent(c.slug);
+        a.href = '/collections?c=' + encodeURIComponent(c.slug);
         a.dataset.slug = c.slug;
         if (c.cover) {
             const img = document.createElement('img');
@@ -3665,7 +3662,7 @@ function fxCopied() {
             return;
         }
         title.textContent = c.name;
-        setMeta(c.name + ' AI Prompts | FRAZX PRO', 'Browse and copy ' + c.name + ' AI prompts and images. Free prompt collection on FRAZX PRO.', '/collections/' + c.slug);
+        setMeta(c.name + ' AI Prompts | FRAZX PRO', 'Browse and copy ' + c.name + ' AI prompts and images. Free prompt collection on FRAZX PRO.', '/collections?c=' + encodeURIComponent(c.slug));
         let posts = [];
         try {
             const { data, error } = await _supabase.from('posts').select(POST_LIST_COLS).eq('collection_id', c.id).order('created_at', { ascending: false }).limit(200);
@@ -3693,9 +3690,14 @@ function fxCopied() {
         more.style.display = postsShown < currentPosts.length ? '' : 'none';
     }
 
+    window.fxInvalidateCollections = function () { cache.t = 0; homeLast = 0; };
+
     function route() {
+        // Works with /collections?c=<slug> (no server rewrite needed) and with the pretty /collections/<slug>
         const m = location.pathname.match(/^\/collections\/([^\/]+)\/?$/);
-        if (m) showDetail(decodeURIComponent(m[1])); else showList();
+        const q = new URLSearchParams(location.search).get('c');
+        const slug = m ? decodeURIComponent(m[1]) : q;
+        if (slug) showDetail(slug); else showList();
         window.scrollTo(0, 0);
     }
     function go(path) { history.pushState({}, '', path); route(); }
@@ -3707,7 +3709,7 @@ function fxCopied() {
             const a = e.target.closest && e.target.closest('a.fx-col-card');
             if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
             e.preventDefault();
-            go('/collections/' + a.dataset.slug);
+            go('/collections?c=' + encodeURIComponent(a.dataset.slug));
         });
         window.addEventListener('popstate', () => { if (document.getElementById(PAGE_ID).classList.contains('active-page')) route(); });
         route();
@@ -3724,4 +3726,201 @@ function fxCopied() {
         if (home) new MutationObserver(loadHomeStrip).observe(home, { attributes: true, attributeFilter: ['class'] });
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startHome); else startHome();
+})();
+
+
+// =========================================================
+// POST MENU (3 dots) + FULL EDIT FORM
+// =========================================================
+(function initPostEditing() {
+    function injectStyles() {
+        if (document.getElementById('fx-edit-styles')) return;
+        const st = document.createElement('style');
+        st.id = 'fx-edit-styles';
+        st.textContent = `
+        #fx-post-menu{position:fixed;z-index:100002;min-width:160px;background:#0d131d;border:1px solid rgba(125,211,252,.22);border-radius:14px;padding:6px;box-shadow:0 18px 45px rgba(0,0,0,.6);font-family:'Space Grotesk',system-ui,sans-serif;animation:fxModalIn .15s ease}
+        #fx-post-menu button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:#e5e7eb;font:inherit;font-size:14px;font-weight:600;padding:10px 12px;border-radius:9px;cursor:pointer;text-align:left}
+        #fx-post-menu button:hover,#fx-post-menu button:focus-visible{background:rgba(255,255,255,.08);outline:none}
+        #fx-post-menu button.danger{color:#f87171}
+        .fx-edit{max-width:480px !important;max-height:92vh;overflow-y:auto}
+        .fx-edit label{display:block;margin:0 0 6px;color:#7dd3fc;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+        .fx-edit .fld{margin-bottom:14px}
+        .fx-edit input[type=text],.fx-edit select,.fx-edit textarea{width:100%;box-sizing:border-box;background:#05070b;border:1px solid rgba(255,255,255,.14);border-radius:10px;color:#fff;font:inherit;font-size:14px;padding:11px 12px;outline:none}
+        .fx-edit textarea{min-height:130px;resize:vertical;line-height:1.5}
+        .fx-edit input:focus,.fx-edit select:focus,.fx-edit textarea:focus{border-color:rgba(56,189,248,.6);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+        .fx-edit .hint{color:#8a91a0;font-size:11px;margin-top:4px}
+        .fx-edit .row{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
+        .fx-edit .btn{font:inherit;cursor:pointer;border-radius:12px;padding:11px 20px;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.14);background:transparent;color:#cbd5e1}
+        .fx-edit .btn.pri{background:#0272ad;border-color:#38bdf8;color:#fff}
+        .fx-edit .btn:disabled{opacity:.6;cursor:wait}
+        `;
+        document.head.appendChild(st);
+    }
+
+    // ----- dropdown -----
+    let menuEl = null, menuBtn = null;
+    function closeMenu() {
+        if (menuEl) { menuEl.remove(); menuEl = null; }
+        if (menuBtn) { menuBtn.setAttribute('aria-expanded', 'false'); menuBtn = null; }
+        document.removeEventListener('mousedown', onOutside, true);
+        document.removeEventListener('keydown', onMenuKey, true);
+        window.removeEventListener('scroll', onScroll, true);
+        window.removeEventListener('resize', closeMenu);
+    }
+    function onScroll(e) { if (menuEl && menuEl.contains(e.target)) return; closeMenu(); }
+    function onOutside(e) { if (menuEl && !menuEl.contains(e.target) && e.target !== menuBtn && !(menuBtn && menuBtn.contains(e.target))) closeMenu(); }
+    function onMenuKey(e) {
+        if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); const b = menuBtn; closeMenu(); if (b) b.focus(); }
+        else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            const items = Array.from(menuEl.querySelectorAll('button'));
+            const i = items.indexOf(document.activeElement);
+            items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus();
+        } else if (e.key === 'Tab') { closeMenu(); }
+    }
+
+    window.openPostMenu = function (btn, postId) {
+        if (menuBtn === btn) { closeMenu(); return; }
+        closeMenu();
+        injectStyles();
+        menuEl = document.createElement('div');
+        menuEl.id = 'fx-post-menu';
+        menuEl.setAttribute('role', 'menu');
+        const mk = (icon, label, cls, fn) => {
+            const b = document.createElement('button');
+            b.type = 'button'; b.setAttribute('role', 'menuitem'); if (cls) b.className = cls;
+            b.innerHTML = '<i class="fa-solid ' + icon + '" aria-hidden="true" style="width:16px;text-align:center"></i><span>' + label + '</span>';
+            b.onclick = (e) => { e.stopPropagation(); closeMenu(); fn(); };
+            return b;
+        };
+        menuEl.append(
+            mk('fa-pen', 'Edit', '', () => openEditPost(postId)),
+            mk('fa-trash', 'Delete', 'danger', () => deletePostFromProfile(postId))
+        );
+        document.body.appendChild(menuEl);
+        const r = btn.getBoundingClientRect();
+        const w = menuEl.offsetWidth || 170, h = menuEl.offsetHeight || 96;
+        let left = Math.min(Math.max(8, r.right - w), window.innerWidth - w - 8);
+        let top = r.bottom + 6;
+        if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 6);
+        menuEl.style.left = left + 'px'; menuEl.style.top = top + 'px';
+        menuBtn = btn; btn.setAttribute('aria-expanded', 'true');
+        document.addEventListener('mousedown', onOutside, true);
+        document.addEventListener('keydown', onMenuKey, true);
+        setTimeout(() => { if (menuEl) window.addEventListener('scroll', onScroll, true); }, 150);
+        window.addEventListener('resize', closeMenu);
+        const first = menuEl.querySelector('button'); if (first) first.focus({ preventScroll: true });
+    };
+
+    // ----- edit form -----
+    window.openEditPost = async function (postId) {
+        if (document.querySelector('.fx-overlay')) return;
+        const { data: { session } } = await _supabase.auth.getSession();
+        if (!session) { showToast('Please sign in first'); toggleLoginModal(true); return; }
+
+        const { data: post, error } = await _supabase.from('posts').select('id,title,prompt,tags,category,collection_id,creator_id').eq('id', postId).single();
+        if (error || !post) { showToast("Couldn't load this post. Try again."); return; }
+        if (post.creator_id !== session.user.id) { showToast('You can only edit your own posts'); return; }
+
+        let cols = [];
+        try {
+            const r = await _supabase.from('collections').select('id,name').eq('is_active', true).order('sort_order', { ascending: true });
+            if (!r.error && r.data) cols = r.data;
+        } catch (e) { /* collections are optional */ }
+
+        injectStyles();
+        const prev = document.activeElement;
+        const ov = document.createElement('div');
+        ov.className = 'fx-overlay';
+        const box = document.createElement('div');
+        box.className = 'fx-dialog fx-edit';
+        box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'Edit post');
+        ov.appendChild(box);
+
+        const h = document.createElement('h3'); h.textContent = 'Edit post'; box.appendChild(h);
+
+        function field(id, label, el, hint) {
+            const d = document.createElement('div'); d.className = 'fld';
+            const l = document.createElement('label'); l.htmlFor = id; l.textContent = label;
+            el.id = id; d.append(l, el);
+            if (hint) { const p = document.createElement('div'); p.className = 'hint'; p.textContent = hint; d.appendChild(p); }
+            box.appendChild(d);
+            return el;
+        }
+        const title = document.createElement('input'); title.type = 'text'; title.maxLength = 60; title.value = post.title || '';
+        const prompt = document.createElement('textarea'); prompt.maxLength = 4000; prompt.value = post.prompt || '';
+        const tags = document.createElement('input'); tags.type = 'text'; tags.value = (post.tags || []).join(', ');
+        const cat = document.createElement('select');
+        [['ai_images', 'AI Images'], ['ads_poster', 'Ads Poster'], ['ai_stock', 'AI Stock']].forEach(([v, t]) => { const o = document.createElement('option'); o.value = v; o.textContent = t; cat.appendChild(o); });
+        cat.value = post.category || 'ai_images';
+        const col = document.createElement('select');
+        const none = document.createElement('option'); none.value = ''; none.textContent = 'No collection'; col.appendChild(none);
+        cols.forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.name; col.appendChild(o); });
+        const origCol = post.collection_id || '';
+        if (origCol && !cols.find(c => c.id === origCol)) { const o = document.createElement('option'); o.value = origCol; o.textContent = 'Current collection (hidden)'; col.appendChild(o); }
+        col.value = origCol;
+
+        field('fx-e-title', 'Title', title);
+        field('fx-e-prompt', 'AI prompt', prompt);
+        field('fx-e-tags', 'Tags (optional)', tags, 'Separate with commas, e.g. cyberpunk, portrait');
+        field('fx-e-cat', 'Post category', cat);
+        if (cols.length || origCol) field('fx-e-col', 'Collection (optional)', col);
+
+        const row = document.createElement('div'); row.className = 'row';
+        const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = 'Cancel';
+        const save = document.createElement('button'); save.type = 'button'; save.className = 'btn pri'; save.textContent = 'Save changes';
+        row.append(cancel, save); box.appendChild(row);
+
+        function close() {
+            document.removeEventListener('keydown', onKey, true);
+            ov.remove();
+            if (prev && prev.focus && document.contains(prev)) { try { prev.focus(); } catch (e) { /* ignore */ } }
+        }
+        function onKey(e) {
+            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); return; }
+            if (e.key === 'Tab') {
+                const f = Array.from(box.querySelectorAll('input,select,textarea,button')).filter(x => !x.disabled);
+                const first = f[0], last = f[f.length - 1];
+                if (!box.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+                else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+        }
+        document.addEventListener('keydown', onKey, true);
+        cancel.onclick = close;
+        ov.addEventListener('mousedown', (e) => { if (e.target === ov) close(); });
+
+        save.onclick = async () => {
+            const nt = title.value.trim(), np = prompt.value.trim();
+            if (!nt) { showToast('Please add a title'); title.focus(); return; }
+            if (!np) { showToast("Prompt can't be empty"); prompt.focus(); return; }
+            const nTags = tags.value.split(',').map(t => t.trim()).filter(Boolean).slice(0, 10);
+            const patch = {};
+            if (nt !== (post.title || '')) patch.title = nt;
+            if (np !== (post.prompt || '')) patch.prompt = np;
+            if (nTags.join('|') !== (post.tags || []).join('|')) patch.tags = nTags;
+            if (cat.value !== (post.category || 'ai_images')) patch.category = cat.value;
+            if (col.value !== origCol) patch.collection_id = col.value || null;
+            if (!Object.keys(patch).length) { close(); showToast('No changes to save'); return; }
+            save.disabled = true; cancel.disabled = true; save.textContent = 'Saving...';
+            const { error: upErr } = await _supabase.from('posts').update(patch).eq('id', postId);
+            if (upErr) {
+                save.disabled = false; cancel.disabled = false; save.textContent = 'Save changes';
+                showToast('Could not save: ' + (upErr.message || 'try again'));
+                return;
+            }
+            close();
+            showToast('Post updated! ✅');
+            // keep caches in step
+            const cached = (window._feedPosts || []).find(p => p.id === postId);
+            if (cached) Object.assign(cached, patch);
+            _feedLoading = false; _feedLoaded = false; _adsFeedLoaded = false; _stockFeedLoaded = false;
+            if (typeof refreshMyPostTabs === 'function') refreshMyPostTabs();
+            const det = document.getElementById('post-detail');
+            if (det && det.style.display === 'block' && window._currentDetailPostId === postId) renderPostDetail(postId);
+        };
+
+        document.body.appendChild(ov);
+        title.focus();
+    };
 })();
