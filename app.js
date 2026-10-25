@@ -129,6 +129,7 @@
       if (photo && accAvatarImg) { accAvatarImg.src = cldAvatar(photo); accAvatarImg.classList.remove('hidden'); if (accAvatarIcon) accAvatarIcon.classList.add('hidden'); }
       if (guestCard) guestCard.classList.add('hidden');
       if (profileCard) { profileCard.classList.remove('hidden'); profileCard.style.display = ''; }
+      if (window.fxLoadOwnFollowCounts) window.fxLoadOwnFollowCounts(user.id);
 
     } else {
       if (nameEl) nameEl.innerText = 'Anonymous';
@@ -3927,190 +3928,138 @@ function fxCopied() {
 
 
 // =========================================================
-// SHARE CARD (image + prompt in one card, for WhatsApp / Instagram)
+// FOLLOW COUNTS + FOLLOWERS LIST + "FOLLOWING" GALLERY FILTER
 // =========================================================
-(function initShareCard() {
-    const W = 1080, H = 1350;
-
-    function loadImg(src) {
-        return new Promise((resolve, reject) => {
-            const im = new Image();
-            im.crossOrigin = 'anonymous';
-            im.onload = () => resolve(im);
-            im.onerror = () => reject(new Error('img'));
-            im.src = src;
+(function initFollowing() {
+    // ---- own profile counts ----
+    window.fxLoadOwnFollowCounts = async function (uid) {
+        const fe = document.getElementById('account-followers-count');
+        if (!fe) return;
+        try {
+            const a = await _supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', uid);
+            fe.textContent = a.count || 0;
+        } catch (e) { /* keep 0 */ }
+        // make the number tappable (once)
+        [['followers', fe]].forEach(([kind, el]) => {
+            const wrap = el.parentElement;
+            if (!wrap || wrap.dataset.fxList) return;
+            wrap.dataset.fxList = '1';
+            wrap.style.cursor = 'pointer';
+            wrap.setAttribute('role', 'button'); wrap.tabIndex = 0;
+            const open = () => openFollowList(kind, uid);
+            wrap.addEventListener('click', open);
+            wrap.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
         });
-    }
-    function rr(ctx, x, y, w, h, r) {
-        ctx.beginPath();
-        ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
-        ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
-    }
-    function wrap(ctx, text, maxW, maxLines) {
-        const words = String(text).replace(/\s+/g, ' ').trim().split(' ');
-        const lines = []; let cur = '';
-        for (let i = 0; i < words.length; i++) {
-            const t = cur ? cur + ' ' + words[i] : words[i];
-            if (ctx.measureText(t).width > maxW && cur) {
-                lines.push(cur); cur = words[i];
-                if (lines.length === maxLines) { cur = ''; lines[maxLines - 1] += '…'; break; }
-            } else cur = t;
-        }
-        if (cur && lines.length < maxLines) lines.push(cur);
-        // trim last line if ellipsis overflows
-        return lines;
-    }
-
-    async function buildCard(post) {
-        try { await document.fonts.load('700 40px "Space Grotesk"'); } catch (e) { /* fallback font */ }
-        const FONT = '"Space Grotesk", system-ui, sans-serif';
-        const c = document.createElement('canvas'); c.width = W; c.height = H;
-        const ctx = c.getContext('2d');
-
-        // background
-        const bg = ctx.createLinearGradient(0, 0, W, H);
-        bg.addColorStop(0, '#05070d'); bg.addColorStop(1, '#0b1626');
-        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-        const glow = ctx.createRadialGradient(W / 2, 360, 40, W / 2, 360, 620);
-        glow.addColorStop(0, 'rgba(14,165,233,.28)'); glow.addColorStop(1, 'rgba(14,165,233,0)');
-        ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
-
-        // image (cover into a rounded frame)
-        const fx = 60, fy = 60, fw = W - 120, fh = 700;
-        const img = await loadImg(cldUrl(post.image_url, 'f_jpg,q_auto,w_1400'));
-        ctx.save(); rr(ctx, fx, fy, fw, fh, 36); ctx.clip();
-        const s = Math.max(fw / img.width, fh / img.height);
-        const dw = img.width * s, dh = img.height * s;
-        ctx.drawImage(img, fx + (fw - dw) / 2, fy + (fh - dh) / 2, dw, dh);
-        ctx.restore();
-        ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(125,211,252,.35)'; rr(ctx, fx, fy, fw, fh, 36); ctx.stroke();
-
-        // title
-        let y = fy + fh + 30;
-        ctx.textBaseline = 'top'; ctx.fillStyle = '#ffffff';
-        ctx.font = '800 50px ' + FONT;
-        const title = (post.title || 'AI Creation');
-        const tl = wrap(ctx, title, W - 120, 1);
-        ctx.fillText(tl[0] || '', 60, y);
-        y += 70;
-
-        // prompt box
-        ctx.font = '500 28px ' + FONT;
-        const pl = wrap(ctx, post.prompt || '', W - 120 - 60, 6);
-        const boxH = 36 + 20 + pl.length * 40 + 24;
-        ctx.fillStyle = 'rgba(255,255,255,.06)'; rr(ctx, 60, y, W - 120, boxH, 24); ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 2; rr(ctx, 60, y, W - 120, boxH, 24); ctx.stroke();
-        ctx.fillStyle = '#7dd3fc'; ctx.font = '800 20px ' + FONT; ctx.fillText('AI PROMPT', 90, y + 20);
-        ctx.fillStyle = '#e5e7eb'; ctx.font = '500 28px ' + FONT;
-        pl.forEach((ln, i) => ctx.fillText(ln, 90, y + 56 + i * 40));
-
-        // footer
-        const fyb = H - 90;
-        ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.fillRect(60, fyb - 22, W - 120, 2);
-        try {
-            const lg = await loadImg('/logo.png');
-            const lh = 56, lw = lg.width * (lh / lg.height);
-            ctx.drawImage(lg, 60, fyb, lw, lh);
-        } catch (e) { /* logo optional */ }
-        ctx.textAlign = 'right'; ctx.fillStyle = '#ffffff'; ctx.font = '800 30px ' + FONT;
-        ctx.fillText('frazxpro.com', W - 60, fyb + 2);
-        ctx.fillStyle = '#8a91a0'; ctx.font = '500 22px ' + FONT;
-        ctx.fillText('by @' + (post.creator_name || 'creator'), W - 60, fyb + 38);
-        ctx.textAlign = 'left';
-        return c;
-    }
-
-    function postUrl(id) { return location.origin + location.pathname + '#post/' + id; }
-
-    window.openShareCard = async function (postId) {
-        const post = (window._feedPosts || []).find(p => p.id === (postId || window._currentDetailPostId));
-        if (!post) { showToast('Post not ready, try again'); return; }
-        if (document.querySelector('.fx-overlay')) return;
-        const prev = document.activeElement;
-
-        const ov = document.createElement('div'); ov.className = 'fx-overlay';
-        const box = document.createElement('div'); box.className = 'fx-dialog';
-        box.style.maxWidth = '420px';
-        box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'Share card');
-        const h = document.createElement('h3'); h.textContent = 'Share card'; box.appendChild(h);
-        const holder = document.createElement('div');
-        holder.style.cssText = 'min-height:200px;display:flex;align-items:center;justify-content:center;color:#8a91a0;font-size:13px;margin:6px 0 14px';
-        holder.textContent = 'Creating your card...';
-        box.appendChild(holder);
-        const row = document.createElement('div');
-        row.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap';
-        const mkb = (t, pri) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.disabled = true;
-            b.style.cssText = 'font:inherit;cursor:pointer;border-radius:12px;padding:11px 18px;font-size:13px;font-weight:700;border:1px solid ' + (pri ? '#38bdf8' : 'rgba(255,255,255,.14)') + ';background:' + (pri ? '#0272ad' : 'transparent') + ';color:' + (pri ? '#fff' : '#cbd5e1');
-            return b; };
-        const closeB = mkb('Close'); closeB.disabled = false;
-        const dlB = mkb('Download');
-        const shB = mkb('Share', true);
-        row.append(closeB, dlB, shB); box.appendChild(row);
-        ov.appendChild(box); document.body.appendChild(ov);
-        closeB.focus();
-
-        function close() {
-            document.removeEventListener('keydown', onKey, true); ov.remove();
-            if (prev && prev.focus && document.contains(prev)) { try { prev.focus(); } catch (e) { /* ignore */ } }
-        }
-        function onKey(e) {
-            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
-            else if (e.key === 'Tab') {
-                const f = Array.from(box.querySelectorAll('button')).filter(x => !x.disabled);
-                if (!f.length) return;
-                const first = f[0], last = f[f.length - 1];
-                if (!box.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
-                else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-            }
-        }
-        document.addEventListener('keydown', onKey, true);
-        closeB.onclick = close;
-        ov.addEventListener('mousedown', (e) => { if (e.target === ov) close(); });
-
-        let blob = null;
-        try {
-            const canvas = await buildCard(post);
-            blob = await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('blob')), 'image/png'));
-            canvas.style.cssText = 'width:100%;height:auto;border-radius:14px;display:block';
-            canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', 'Preview of the share card');
-            holder.style.minHeight = ''; holder.textContent = ''; holder.appendChild(canvas);
-        } catch (err) {
-            holder.textContent = "Couldn't create the card for this image. Please try another post.";
-            return;
-        }
-        const fname = 'frazxpro-' + String(post.title || 'creation').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) + '.png';
-        const file = new File([blob], fname, { type: 'image/png' });
-        dlB.disabled = false; shB.disabled = false;
-        dlB.onclick = () => {
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname;
-            document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-            showToast('Card saved 📥');
-        };
-        shB.onclick = async () => {
-            const data = { files: [file], title: post.title || 'FRAZX PRO', text: (post.title || 'AI creation') + ' on FRAZX PRO\n' + postUrl(post.id) };
-            try {
-                if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share(data); }
-                else if (navigator.share) { await navigator.share({ title: data.title, text: data.text, url: postUrl(post.id) }); }
-                else { dlB.click(); }
-            } catch (e) { if (e && e.name !== 'AbortError') showToast('Sharing failed, try Download'); }
-        };
     };
 
-    // inject the Share button on the post detail page (no HTML changes needed)
-    function injectBtn() {
-        const save = document.getElementById('detail-save-btn');
-        if (!save || document.getElementById('detail-share-btn')) return;
-        const wrap = document.createElement('div');
-        wrap.className = 'flex items-center gap-2';
-        save.parentNode.insertBefore(wrap, save);
-        const b = document.createElement('button');
-        b.id = 'detail-share-btn'; b.type = 'button';
-        b.setAttribute('aria-label', 'Create share card');
-        b.className = save.className;
-        b.innerHTML = '<i class="fa-solid fa-share-nodes" aria-hidden="true"></i><span>Share</span>';
-        b.onclick = () => openShareCard();
-        wrap.append(b, save);
+    // ---- followers / following list ----
+    async function openFollowList(kind, uid) {
+        if (document.querySelector('.fx-overlay')) return;
+        const prev = document.activeElement;
+        const ov = document.createElement('div'); ov.className = 'fx-overlay';
+        const box = document.createElement('div'); box.className = 'fx-dialog';
+        box.style.cssText = 'max-width:420px;max-height:80vh;display:flex;flex-direction:column';
+        box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true');
+        box.setAttribute('aria-label', kind === 'followers' ? 'Followers' : 'Following');
+        const h = document.createElement('h3'); h.textContent = kind === 'followers' ? 'Followers' : 'Following'; box.appendChild(h);
+        const list = document.createElement('div');
+        list.style.cssText = 'overflow-y:auto;margin:6px 0 14px;flex:1;color:#8a91a0;font-size:13px';
+        list.textContent = 'Loading...'; box.appendChild(list);
+        const cl = document.createElement('button'); cl.type = 'button'; cl.textContent = 'Close';
+        cl.style.cssText = 'align-self:flex-end;font:inherit;cursor:pointer;border-radius:12px;padding:10px 18px;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.14);background:transparent;color:#cbd5e1';
+        box.appendChild(cl); ov.appendChild(box); document.body.appendChild(ov); cl.focus();
+        function close() { document.removeEventListener('keydown', onKey, true); ov.remove(); if (prev && prev.focus && document.contains(prev)) { try { prev.focus(); } catch (e) { /* ignore */ } } }
+        function onKey(e) { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); } }
+        document.addEventListener('keydown', onKey, true);
+        cl.onclick = close; ov.addEventListener('mousedown', (e) => { if (e.target === ov) close(); });
+
+        const mine = kind === 'followers' ? 'following_id' : 'follower_id';
+        const other = kind === 'followers' ? 'follower_id' : 'following_id';
+        const { data: rows, error } = await _supabase.from('follows').select(other + ',created_at').eq(mine, uid).order('created_at', { ascending: false }).limit(100);
+        if (error) { list.textContent = "Couldn't load. Try again."; return; }
+        if (!rows || !rows.length) { list.textContent = kind === 'followers' ? 'No followers yet.' : "You're not following anyone yet."; return; }
+        const ids = rows.map(r => r[other]);
+        const { data: ps } = await _supabase.from('posts').select('creator_id,creator_name,creator_avatar,created_at').in('creator_id', ids).order('created_at', { ascending: false }).limit(500);
+        const info = {};
+        (ps || []).forEach(p => { if (!info[p.creator_id]) info[p.creator_id] = p; });
+        list.textContent = '';
+        rows.forEach(r => {
+            const id = r[other], pi = info[id];
+            const row = document.createElement('button'); row.type = 'button';
+            row.style.cssText = 'display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;color:#fff;font:inherit;padding:8px 6px;border-radius:12px;cursor:pointer;text-align:left';
+            row.onmouseenter = () => row.style.background = 'rgba(255,255,255,.06)'; row.onmouseleave = () => row.style.background = 'none';
+            const av = document.createElement('div');
+            av.style.cssText = 'width:40px;height:40px;border-radius:50%;background:#1f2937;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;color:#7dd3fc;font-weight:800';
+            if (pi && pi.creator_avatar) { const im = document.createElement('img'); im.src = cldAvatar(pi.creator_avatar); im.alt = ''; im.style.cssText = 'width:100%;height:100%;object-fit:cover'; av.appendChild(im); }
+            else av.textContent = ((pi && pi.creator_name) || 'F').charAt(0).toUpperCase();
+            const nm = document.createElement('span'); nm.style.cssText = 'font-weight:700;font-size:14px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+            nm.textContent = (pi && pi.creator_name) || 'FRAZX member';
+            const dt = document.createElement('span'); dt.style.cssText = 'color:#8a91a0;font-size:11px;flex:none';
+            dt.textContent = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+            row.append(av, nm, dt);
+            row.onclick = () => { close(); if (typeof openUserProfileById === 'function') openUserProfileById(id); };
+            list.appendChild(row);
+        });
     }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectBtn); else injectBtn();
+
+    // ---- "Following" option in the gallery sort panel ----
+    const origFilterFeed = window.filterFeed;
+    let emptyOrig = null;
+    function setBadge(text) {
+        const b = document.getElementById('active-filter-badge');
+        if (!b) return;
+        if (text) { b.textContent = text; b.classList.remove('hidden'); } else b.classList.add('hidden');
+    }
+    window.filterFeed = async function (filter) {
+        const emptyEl = document.getElementById('feed-empty');
+        const emptyP = emptyEl && emptyEl.querySelector('p');
+        if (emptyP && emptyOrig === null) emptyOrig = emptyP.innerText;
+        if (filter !== 'following') {
+            if (emptyP && emptyOrig !== null) emptyP.innerText = emptyOrig;
+            const emptyBtn = emptyEl && emptyEl.querySelector('button'); if (emptyBtn) emptyBtn.style.display = '';
+            setBadge('');
+            return origFilterFeed(filter);
+        }
+        const { data: { session } } = await _supabase.auth.getSession();
+        if (!session) { showToast('Sign in to see creators you follow'); toggleLoginModal(true); return; }
+        _currentFilter = 'following';
+        const feedEl = document.getElementById('community-feed');
+        const pag = document.getElementById('feed-pagination');
+        const { data: fl, error } = await _supabase.from('follows').select('following_id').eq('follower_id', session.user.id).limit(1000);
+        if (error) { showToast("Couldn't load. Try again."); return; }
+        const ids = (fl || []).map(r => r.following_id);
+        let posts = [];
+        if (ids.length) {
+            const r = await _supabase.from('posts').select(POST_LIST_COLS).in('creator_id', ids).order('created_at', { ascending: false }).limit(200);
+            if (r.error) { showToast("Couldn't load. Try again."); return; }
+            posts = r.data || [];
+        }
+        setBadge('Following');
+        window._feedPosts = window._feedPosts || [];
+        posts.forEach(p => { if (!window._feedPosts.find(x => x.id === p.id)) window._feedPosts.push(p); });
+        if (!posts.length) {
+            if (feedEl) feedEl.innerHTML = '';
+            if (pag) pag.innerHTML = '';
+            if (emptyEl) {
+                emptyEl.classList.remove('hidden');
+                if (emptyP) emptyP.innerText = ids.length ? 'Creators you follow have no posts yet' : 'Follow creators to see their posts here';
+                const eb = emptyEl.querySelector('button'); if (eb) eb.style.display = 'none';
+            }
+            return;
+        }
+        if (emptyEl) emptyEl.classList.add('hidden');
+        renderGalleryPage(posts, 'feed', 1);
+    };
+
+    function injectOption() {
+        const panel = document.getElementById('sort-panel');
+        if (!panel || document.getElementById('sort-following-opt')) return;
+        const b = document.createElement('button');
+        b.id = 'sort-following-opt'; b.type = 'button';
+        b.className = 'sort-opt w-full text-left px-4 py-2.5 text-gray-300 hover:bg-sky-600/20 text-sm font-bold transition flex items-center gap-2';
+        b.innerHTML = '<i class="fa-solid fa-user-group text-emerald-400 text-xs w-3" aria-hidden="true"></i> Following';
+        b.onclick = () => { filterFeed('following'); toggleSortPanel(); };
+        panel.appendChild(b);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectOption); else injectOption();
 })();
