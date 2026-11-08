@@ -949,7 +949,7 @@ let _feedLoading = false;
 let _feedLoaded = false;
 
 // ===== SHARED GALLERY PAGINATION SYSTEM =====
-const GALLERY_PAGE_SIZE = 20;
+const GALLERY_PAGE_SIZE = 24;
 const GALLERY_CONFIG = {
     feed:  { feedEl: 'community-feed', emptyEl: 'feed-empty',  paginationEl: 'feed-pagination',  storeKey: '_feedView',  accent: 'sky' },
     ads:   { feedEl: 'ads-feed',       emptyEl: 'ads-empty',   paginationEl: 'ads-pagination',   storeKey: '_adsView',   accent: 'sky' },
@@ -1003,15 +1003,77 @@ function renderGalleryPage(posts, gallery, page) {
     }
     if (emptyEl) emptyEl.classList.add('hidden');
 
-    const totalPages = Math.max(1, Math.ceil(posts.length / GALLERY_PAGE_SIZE));
-    page = Math.min(Math.max(1, page || 1), totalPages);
-    const start = (page - 1) * GALLERY_PAGE_SIZE;
-    const pagePosts = posts.slice(start, start + GALLERY_PAGE_SIZE);
+    // Infinite scroll: show the first batch now, add more as the user nears the end.
+    // Each extra batch goes in its own masonry block so earlier cards never jump columns.
+    const hadMore = _galleryState[gallery] && _galleryState[gallery].extras && _galleryState[gallery].extras.length;
+    clearGalleryExtras(gallery);
+    const first = posts.slice(0, GALLERY_PAGE_SIZE);
+    feedEl.innerHTML = first.map(post => buildGalleryCardHTML(post, config.accent)).join('');
+    _galleryState[gallery] = { posts, shown: first.length, extras: [], io: null };
+    // the list just got shorter: bring the top of it back into view so we don't load everything again
+    if (hadMore) { try { feedEl.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) { /* ignore */ } }
+    setupGalleryLoadMore(gallery);
+}
 
-    feedEl.innerHTML = pagePosts.map(post => buildGalleryCardHTML(post, config.accent)).join('');
-    window[config.storeKey + '_page'] = page;
+const _galleryState = {};
 
-    renderPaginationControls(paginationEl, page, totalPages, gallery, config.accent);
+function clearGalleryExtras(gallery) {
+    const st = _galleryState[gallery];
+    if (!st) return;
+    if (st.io) { st.io.disconnect(); st.io = null; }
+    (st.extras || []).forEach(el => el.remove());
+    st.extras = [];
+}
+
+function setupGalleryLoadMore(gallery) {
+    const config = GALLERY_CONFIG[gallery];
+    const st = _galleryState[gallery];
+    const el = document.getElementById(config.paginationEl);
+    if (!el || !st) return;
+    if (st.io) { st.io.disconnect(); st.io = null; }
+    const total = st.posts.length;
+
+    if (st.shown >= total) {
+        el.innerHTML = total > GALLERY_PAGE_SIZE
+            ? `<p class="text-center text-gray-600 text-[11px] font-bold uppercase tracking-widest py-8 col-span-full">You've seen all ${total} creations</p>`
+            : '';
+        return;
+    }
+    el.innerHTML = `
+        <div class="flex flex-col items-center gap-3 py-8 col-span-full" data-gallery-more>
+            <button type="button" class="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-[11px] font-black text-gray-300 uppercase tracking-widest transition">
+                Load more
+            </button>
+            <span class="text-gray-600 text-[10px] font-bold tracking-widest uppercase">${st.shown} of ${total}</span>
+        </div>`;
+    const btn = el.querySelector('button');
+    btn.onclick = () => loadMoreGallery(gallery);
+
+    if ('IntersectionObserver' in window) {
+        st.io = new IntersectionObserver((entries) => {
+            if (entries.some(e => e.isIntersecting)) loadMoreGallery(gallery);
+        }, { rootMargin: '700px 0px' });
+        st.io.observe(el.firstElementChild);
+    }
+}
+
+function loadMoreGallery(gallery) {
+    const config = GALLERY_CONFIG[gallery];
+    const st = _galleryState[gallery];
+    if (!st || st.busy || st.shown >= st.posts.length) return;
+    st.busy = true;
+    const feedEl = document.getElementById(config.feedEl);
+    const paginationEl = document.getElementById(config.paginationEl);
+    if (!feedEl || !paginationEl) { st.busy = false; return; }
+    const batch = st.posts.slice(st.shown, st.shown + GALLERY_PAGE_SIZE);
+    const block = document.createElement('div');
+    block.className = feedEl.className;
+    block.innerHTML = batch.map(post => buildGalleryCardHTML(post, config.accent)).join('');
+    paginationEl.parentNode.insertBefore(block, paginationEl);
+    st.extras.push(block);
+    st.shown += batch.length;
+    st.busy = false;
+    setupGalleryLoadMore(gallery);
 }
 
 function renderPaginationControls(el, page, totalPages, gallery, accent) {
