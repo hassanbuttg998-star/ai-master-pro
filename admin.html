@@ -111,6 +111,16 @@
       <div class="btns"><button id="banSave">Save Banner</button></div>
     </div>
 
+    <div class="card">
+      <h2>Ads (Google AdSense)</h2>
+      <p class="hint">AdSense approve hone ke baad yahan details bharein. Jab tak ID khali ya switch OFF hai, site par koi ad ya khali jagah nahi dikhegi. Publisher ID aise hota hai: ca-pub-1234567890123456. Slot ID sirf number hota hai (AdSense &rarr; Ads &rarr; By ad unit).</p>
+      <input id="adClient" type="text" placeholder="Publisher ID (ca-pub-...)">
+      <input id="adFeed" type="text" placeholder="Feed ad Slot ID (gallery ke beech)">
+      <input id="adDetail" type="text" placeholder="Post detail ad Slot ID">
+      <label style="display:flex;gap:8px;align-items:center;font-size:13px;color:#a1a1aa;margin:4px 0 8px"><input id="adOn" type="checkbox"> Ads ON rakhein</label>
+      <div class="btns"><button id="adSave">Save Ads</button></div>
+    </div>
+
     <button class="ghost" id="logout">Logout</button>
   </div>
 </div>
@@ -131,6 +141,7 @@ async function loadCurrent(){
   $('logoPrev').src=s.logo_url||DEFAULTS.logo_url;
   $('favPrev').src=s.favicon_url||DEFAULTS.favicon_url;
   $('banText').value=s.banner_text||'';$('banLink').value=s.banner_link||'';$('banOn').checked=s.banner_on==='1';
+  $('adClient').value=s.adsense_client||'';$('adFeed').value=s.ads_slot_feed||'';$('adDetail').value=s.ads_slot_detail||'';$('adOn').checked=s.ads_on==='1';
   featIds=(s.featured_posts||'').split(',').map(x=>x.trim()).filter(Boolean);
 }
 function show(on){$('login').classList.toggle('hide',on);$('panel').classList.toggle('hide',!on)}
@@ -224,6 +235,21 @@ $('banSave').onclick=async()=>{
     say(on?'Banner live ho gaya (visitors ko refresh par nazar ayega).':'Banner band kar diya.',true);
   }catch(e){say('Error: '+(e.message||e),false)}
   $('banSave').disabled=false;
+};
+
+$('adSave').onclick=async()=>{
+  const c=$('adClient').value.trim(),f=$('adFeed').value.trim(),d=$('adDetail').value.trim(),on=$('adOn').checked;
+  if(c&&!/^ca-pub-\d{10,20}$/.test(c))return say('Publisher ID aise hona chahiye: ca-pub-1234567890123456',false);
+  for(const v of [f,d]){if(v&&!/^\d{5,20}$/.test(v))return say('Slot ID sirf numbers hota hai.',false)}
+  if(on&&!c)return say('Ads ON karne ke liye Publisher ID chahiye.',false);
+  $('adSave').disabled=true;say('Save ho raha hai...');
+  try{
+    await setKey('adsense_client',c);await setKey('ads_slot_feed',f);await setKey('ads_slot_detail',d);
+    await setKey('ads_on',on?'1':'');
+    try{localStorage.removeItem('frazx_site_settings')}catch(e){}
+    say(on?'Ads ON ho gaye (visitors ko refresh par nazar aayenge).':'Ads band hain.',true);
+  }catch(e){say('Error: '+(e.message||e),false)}
+  $('adSave').disabled=false;
 };
 
 /* ===== Collections ===== */
