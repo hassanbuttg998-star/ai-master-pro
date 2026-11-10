@@ -5,3 +5,4 @@ Disallow: /account
 Disallow: /reset-password
 
 Sitemap: https://frazxpro.com/sitemap.xml
+Sitemap: https://frazxpro.com/sitemap-posts.xml
