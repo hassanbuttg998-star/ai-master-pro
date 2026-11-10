@@ -1010,12 +1010,24 @@ function renderGalleryPage(posts, gallery, page) {
     const first = posts.slice(0, GALLERY_PAGE_SIZE);
     feedEl.innerHTML = first.map(post => buildGalleryCardHTML(post, config.accent)).join('');
     _galleryState[gallery] = { posts, shown: first.length, extras: [], io: null };
+    placeGalleryAd(gallery);
     // the list just got shorter: bring the top of it back into view so we don't load everything again
     if (hadMore) { try { feedEl.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) { /* ignore */ } }
     setupGalleryLoadMore(gallery);
 }
 
 const _galleryState = {};
+
+// one ad after each batch of posts (only if ads are switched on in the admin panel)
+function placeGalleryAd(gallery) {
+    const st = _galleryState[gallery];
+    const config = GALLERY_CONFIG[gallery];
+    if (!st || st.shown >= st.posts.length || !window.fxAd) return;
+    const pag = document.getElementById(config.paginationEl);
+    if (!pag) return;
+    const el = window.fxAd('feed', (node) => pag.parentNode.insertBefore(node, pag));
+    if (el) st.extras.push(el);
+}
 
 function clearGalleryExtras(gallery) {
     const st = _galleryState[gallery];
@@ -1073,6 +1085,7 @@ function loadMoreGallery(gallery) {
     st.extras.push(block);
     st.shown += batch.length;
     st.busy = false;
+    placeGalleryAd(gallery);
     setupGalleryLoadMore(gallery);
 }
 
@@ -1519,6 +1532,7 @@ async function editPost(postId) { openEditPost(postId); }
 function goBackToGallery() {
     const _backTo = window._fxBackTo || 'samples';
     window._fxBackTo = null;
+    if (location.pathname.indexOf('/post/') === 0) { try { history.replaceState(null, '', '/ai-images'); } catch (e) { /* ignore */ } }
     window.location.hash = _backTo;
     document.getElementById('main-navbar').style.display = '';
     document.querySelectorAll('section').forEach(el => el.style.display = '');
@@ -4124,4 +4138,194 @@ function fxCopied() {
         panel.appendChild(b);
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectOption); else injectOption();
+})();
+
+
+// =========================================================
+// ADS (Google AdSense) - controlled from the admin panel, invisible when OFF
+// =========================================================
+(function initAds() {
+    function cfg() {
+        let c = window.FX_SETTINGS;
+        if (!c) { try { c = JSON.parse(localStorage.getItem('frazx_site_settings') || 'null'); } catch (e) { c = null; } }
+        return c || {};
+    }
+    function enabled(place) {
+        const c = cfg();
+        const client = (c.adsense_client || '').trim();
+        const slot = (c['ads_slot_' + place] || '').trim();
+        if (c.ads_on !== '1' || !/^ca-pub-\d{10,20}$/.test(client) || !/^\d{5,20}$/.test(slot)) return null;
+        return { client, slot };
+    }
+    let scriptAdded = false;
+    function loadScript(client) {
+        if (scriptAdded) return; scriptAdded = true;
+        const sc = document.createElement('script');
+        sc.async = true; sc.crossOrigin = 'anonymous';
+        sc.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(client);
+        document.head.appendChild(sc);
+    }
+    // place: 'feed' | 'detail'. insertFn puts the returned node into the page.
+    window.fxAd = function (place, insertFn) {
+        const e = enabled(place);
+        if (!e) return null;
+        loadScript(e.client);
+        const box = document.createElement('div');
+        box.className = 'fx-ad';
+        box.style.cssText = 'width:100%;max-width:728px;margin:24px auto;text-align:center;clear:both;overflow:hidden';
+        const lab = document.createElement('div');
+        lab.textContent = 'Advertisement';
+        lab.style.cssText = 'font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6b7280;margin-bottom:6px;font-weight:700';
+        const ins = document.createElement('ins');
+        ins.className = 'adsbygoogle';
+        ins.style.cssText = 'display:block';
+        ins.setAttribute('data-ad-client', e.client);
+        ins.setAttribute('data-ad-slot', e.slot);
+        ins.setAttribute('data-ad-format', 'auto');
+        ins.setAttribute('data-full-width-responsive', 'true');
+        box.append(lab, ins);
+        insertFn(box);
+        try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (err) { box.remove(); return null; }
+        // no ad to show -> don't leave an empty labelled gap
+        try {
+            new MutationObserver(() => { if (ins.getAttribute('data-ad-status') === 'unfilled') box.remove(); })
+                .observe(ins, { attributes: true, attributeFilter: ['data-ad-status'] });
+        } catch (err) { /* ignore */ }
+        return box;
+    };
+})();
+
+// =========================================================
+// RELATED POSTS on the post detail page
+// =========================================================
+(function initRelated() {
+    let token = 0;
+    function box() {
+        let b = document.getElementById('related-posts');
+        if (b) return b;
+        const host = document.querySelector('#post-detail > div');
+        if (!host) return null;
+        b = document.createElement('div');
+        b.id = 'related-posts';
+        b.className = 'mt-14';
+        host.appendChild(b);
+        return b;
+    }
+    const catOf = (p) => p.category || 'ai_images';
+
+    async function render(postId) {
+        const my = ++token;
+        const b = box();
+        if (!b) return;
+        b.innerHTML = '';
+        const cur = (window._feedPosts || []).find(p => p.id === postId);
+        if (!cur) return;
+
+        // ad under the prompt (if switched on)
+        if (window.fxAd) window.fxAd('detail', (n) => b.appendChild(n));
+
+        let pool = (window._feedPosts || []).filter(p => p.id !== postId && catOf(p) === catOf(cur));
+        if (pool.length < 24) {
+            try {
+                let q = _supabase.from('posts').select(POST_LIST_COLS).neq('id', postId).order('created_at', { ascending: false }).limit(80);
+                q = catOf(cur) === 'ai_images' ? q.or('category.eq.ai_images,category.is.null') : q.eq('category', catOf(cur));
+                const { data } = await q;
+                if (my !== token) return;
+                (data || []).forEach(p => {
+                    if (!window._feedPosts.find(x => x.id === p.id)) window._feedPosts.push(p);
+                    if (!pool.find(x => x.id === p.id)) pool.push(p);
+                });
+            } catch (e) { /* use what we have */ }
+        }
+        if (my !== token) return;
+        const tags = new Set((cur.tags || []).map(t => String(t).toLowerCase()));
+        const scored = pool.map((p, i) => {
+            let sc = 0;
+            (p.tags || []).forEach(t => { if (tags.has(String(t).toLowerCase())) sc += 3; });
+            if (p.creator_id && p.creator_id === cur.creator_id) sc += 1;
+            return { p, sc, i };
+        }).sort((x, y) => y.sc - x.sc || x.i - y.i);
+        const picks = scored.slice(0, 12).map(x => x.p);
+        if (!picks.length) return;
+
+        const h = document.createElement('h2');
+        h.className = 'text-sm font-black uppercase tracking-widest text-gray-300 mb-5';
+        h.textContent = 'More like this';
+        const grid = document.createElement('div');
+        grid.className = 'masonry-feed';
+        grid.innerHTML = picks.map(p => buildGalleryCardHTML(p, 'sky')).join('');
+        b.append(h, grid);
+    }
+
+    const orig = window.renderPostDetail;
+    let lastId = null;
+    window.renderPostDetail = async function (postId) {
+        const changed = lastId && lastId !== postId;
+        await orig(postId);
+        if (changed) { try { window.scrollTo({ top: 0, behavior: 'instant' }); } catch (e) { window.scrollTo(0, 0); } }
+        lastId = postId;
+        render(postId);
+    };
+})();
+
+
+// =========================================================
+// REAL POST LINKS: /post/<id> opens the post, and "Copy link" gives that URL
+// =========================================================
+(function initPostLinks() {
+    const m = location.pathname.match(/^\/post\/([0-9a-f-]{36})\/?$/i);
+    if (m && !location.hash) {
+        try { history.replaceState(null, '', '/post/' + m[1] + '#post/' + m[1]); } catch (e) { /* ignore */ }
+    }
+    window.copyPostLink = function () {
+        const id = window._currentDetailPostId;
+        if (!id) return;
+        const url = location.origin + '/post/' + id;
+        const done = () => { showToast('Link copied! 🔗'); if (window.fxCopied) fxCopied(); };
+        if (navigator.share && /Android|iPhone|iPad/i.test(navigator.userAgent)) {
+            navigator.share({ title: document.getElementById('detail-title') ? document.getElementById('detail-title').innerText : 'FRAZX PRO', url }).catch(() => {});
+            return;
+        }
+        if (navigator.clipboard) navigator.clipboard.writeText(url).then(done).catch(() => showToast(url));
+        else showToast(url);
+    };
+    function injectBtn() {
+        const save = document.getElementById('detail-save-btn');
+        if (!save || document.getElementById('detail-link-btn')) return;
+        const wrap = document.createElement('div');
+        wrap.className = 'flex items-center gap-2';
+        save.parentNode.insertBefore(wrap, save);
+        const b = document.createElement('button');
+        b.id = 'detail-link-btn'; b.type = 'button';
+        b.setAttribute('aria-label', 'Share or copy link to this post');
+        b.className = save.className;
+        b.innerHTML = '<i class="fa-solid fa-link" aria-hidden="true"></i><span>Share</span>';
+        b.onclick = window.copyPostLink;
+        wrap.append(b, save);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectBtn); else injectBtn();
+})();
+
+
+// =========================================================
+// LIVE SITE STATS (the "AI Images" and "Ready Prompts" numbers update by themselves)
+// =========================================================
+(function initSiteStats() {
+    const els = () => Array.from(document.querySelectorAll('[data-fx-stat="posts"]'));
+    const KEY = 'fx_post_count';
+    function show(n) { const t = Number(n).toLocaleString('en-US'); els().forEach(e => { e.textContent = t; }); }
+    async function run() {
+        if (!els().length) return;
+        let cached = null;
+        try { cached = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { /* ignore */ }
+        if (cached && cached.n >= 0) show(cached.n);
+        if (cached && Date.now() - cached.t < 10 * 60 * 1000) return;
+        try {
+            const { count, error } = await _supabase.from('posts').select('*', { count: 'exact', head: true });
+            if (error || count == null) return;
+            show(count);
+            try { localStorage.setItem(KEY, JSON.stringify({ n: count, t: Date.now() })); } catch (e) { /* ignore */ }
+        } catch (e) { /* keep what is shown */ }
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
 })();
