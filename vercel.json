@@ -4,7 +4,15 @@
   "rewrites": [
     {
       "source": "/collections/:slug",
-      "destination": "/collections.html"
+      "destination": "/collections"
+    },
+    {
+      "source": "/post/:id",
+      "destination": "/api/post?id=:id"
+    },
+    {
+      "source": "/sitemap-posts.xml",
+      "destination": "/api/sitemap-posts"
     }
   ]
 }
