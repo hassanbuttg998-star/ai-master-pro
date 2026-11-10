@@ -5,6 +5,8 @@
   var CK = 'frazx_site_settings';
   function apply(s) {
     if (!s) return;
+    window.FX_SETTINGS = s;
+    try { document.dispatchEvent(new CustomEvent('fx-settings', { detail: s })); } catch (e) {}
     banner(s);
     try {
       if (s.logo_url) document.querySelectorAll('img[alt="FRAZX Logo"]').forEach(function (i) { i.src = s.logo_url; });
