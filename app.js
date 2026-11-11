@@ -4160,6 +4160,7 @@ function fxCopied() {
     let scriptAdded = false;
     function loadScript(client) {
         if (scriptAdded) return; scriptAdded = true;
+        if (document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')) return;
         const sc = document.createElement('script');
         sc.async = true; sc.crossOrigin = 'anonymous';
         sc.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(client);
