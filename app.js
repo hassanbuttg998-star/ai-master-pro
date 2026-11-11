@@ -4329,3 +4329,13 @@ function fxCopied() {
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
 })();
+
+
+// =========================================================
+// SITE NUMBERS YOU CHANGE BY HAND (edit here only: one file updates every page)
+// =========================================================
+window.FX_TOOLS_LIVE = 2;   // number of AI tools that are working right now
+(function () {
+    function put() { document.querySelectorAll('[data-fx-stat="tools"]').forEach(e => { e.textContent = window.FX_TOOLS_LIVE; }); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', put); else put();
+})();
