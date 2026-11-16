@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Using AI Images for Ad Posters and Social Media Creatives | FRAZX PRO</title>
+    <meta name="description" content="A practical workflow for making ad posters and social media creatives with AI images: planning the layout, writing the prompt, adding text, testing versions and avoiding legal pitfalls.">
+    <link rel="canonical" href="https://frazxpro.com/guides/ai-images-for-ad-posters-and-social-media">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Using AI Images for Ad Posters and Social Media Creatives">
+    <meta property="og:description" content="A practical workflow for making ad posters and social media creatives with AI images: planning the layout, writing the prompt, adding text, testing versions and avoiding legal pitfalls.">
+    <meta property="og:url" content="https://frazxpro.com/guides/ai-images-for-ad-posters-and-social-media">
+    <meta property="og:image" content="https://frazxpro.com/og-image.jpg">
+    <meta property="og:site_name" content="FRAZX PRO">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Using AI Images for Ad Posters and Social Media Creatives">
+    <meta name="twitter:description" content="A practical workflow for making ad posters and social media creatives with AI images: planning the layout, writing the prompt, adding text, testing versions and avoiding legal pitfalls.">
+    <meta name="twitter:image" content="https://frazxpro.com/og-image.jpg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#05070b">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #050508;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        /* Navbar */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(4,3,12,0.85);
+            border-bottom: 1px solid rgba(2,132,199,0.15);
+            backdrop-filter: blur(24px);
+        }
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+        .nav-logo img { width: 32px; height: 32px; border-radius: 50%; }
+        .nav-logo span {
+            font-size: 18px; font-weight: 900; color: white; letter-spacing: -0.03em;
+        }
+        .nav-logo .pro {
+            font-size: 9px; font-weight: 900; letter-spacing: 0.15em;
+            background: linear-gradient(135deg,#0284c7,#22d3ee);
+            color: white; padding: 2px 7px; border-radius: 4px;
+        }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #38bdf8; font-size: 13px; font-weight: 700;
+            text-decoration: none; letter-spacing: 0.05em;
+            transition: color 0.2s;
+        }
+        .back-btn:hover { color: #bae6fd; }
+
+        /* Hero */
+        .hero {
+            padding: 120px 24px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 400px; pointer-events: none;
+            background: radial-gradient(ellipse at 50% 0%, rgba(2,132,199,0.15) 0%, transparent 70%);
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 999px;
+            background: linear-gradient(135deg,rgba(2,132,199,0.15),rgba(34,211,238,0.1));
+            border: 1px solid rgba(167,139,250,0.3);
+            color: #bae6fd; font-size: 10px; font-weight: 800;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-size: clamp(32px, 6vw, 56px);
+            font-weight: 900; color: white;
+            letter-spacing: -0.03em; margin-bottom: 16px;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg,#38bdf8,#22d3ee,#ec4899);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            color: #64748b; font-size: 14px; max-width: 500px; margin: 0 auto;
+        }
+        .last-updated {
+            display: inline-block; margin-top: 12px;
+            color: #475569; font-size: 12px; font-weight: 600;
+        }
+
+        /* Content */
+        .container {
+            max-width: 760px; margin: 0 auto; padding: 0 24px 80px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 28px 32px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: border-color 0.3s;
+        }
+        .section:hover { border-color: rgba(2,132,199,0.2); }
+        .section-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+        }
+        .section-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; flex-shrink: 0;
+        }
+        .section h2 {
+            font-size: 16px; font-weight: 800; color: white;
+            letter-spacing: -0.01em; text-transform: uppercase;
+        }
+        .section p, .section li {
+            color: #94a3b8; font-size: 14px; line-height: 1.8;
+        }
+        .section ul { padding-left: 20px; margin-top: 10px; }
+        .section ul li { margin-bottom: 6px; }
+        .section a {
+            color: #38bdf8; text-decoration: none; font-weight: 600;
+        }
+        .section a:hover { color: #bae6fd; text-decoration: underline; }
+        .highlight {
+            display: inline-block;
+            background: rgba(2,132,199,0.1);
+            border: 1px solid rgba(2,132,199,0.2);
+            color: #bae6fd; padding: 2px 8px; border-radius: 6px;
+            font-size: 12px; font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center; padding: 32px 24px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: #334155; font-size: 11px; letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        footer a { color: #0284c7; text-decoration: none; }
+        footer a:hover { color: #38bdf8; }
+    
+.article{max-width:760px;margin:0 auto;padding:0 24px 40px}
+.article .meta{color:#64748b;font-size:12px;font-weight:600;margin:0 0 28px;display:flex;gap:14px;flex-wrap:wrap}
+.article h2{font-size:22px;font-weight:800;color:#fff;margin:36px 0 12px;letter-spacing:-0.01em}
+.article p,.article li{color:#a8b3c5;font-size:16px;line-height:1.85}
+.article p{margin:0 0 16px}
+.article ul,.article ol{padding-left:22px;margin:0 0 18px}
+.article li{margin-bottom:8px}
+.article a{color:#38bdf8;font-weight:600;text-decoration:none}
+.article a:hover{text-decoration:underline}
+.article strong{color:#fff}
+.article blockquote{margin:18px 0 22px;padding:18px 20px;border-left:3px solid #0284c7;background:rgba(2,132,199,.08);border-radius:0 14px 14px 0;color:#d7e3f4;font-size:15px;line-height:1.75}
+.crumbs{max-width:760px;margin:0 auto;padding:96px 24px 0;font-size:12px;color:#64748b}
+.crumbs a{color:#38bdf8;text-decoration:none;font-weight:600}
+.art-hero{max-width:760px;margin:0 auto;padding:18px 24px 6px}
+.art-hero h1{font-size:clamp(28px,5.5vw,44px);font-weight:900;color:#fff;letter-spacing:-0.03em;line-height:1.15;margin:0 0 14px}
+.art-hero p{color:#94a3b8;font-size:16px;line-height:1.7}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;max-width:900px;margin:0 auto;padding:0 24px 60px}
+.card{display:block;padding:24px;border-radius:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);text-decoration:none;transition:.2s}
+.card:hover{border-color:rgba(2,132,199,.5);transform:translateY(-2px)}
+.card .ic{width:42px;height:42px;border-radius:12px;background:rgba(2,132,199,.15);color:#38bdf8;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.card h3{color:#fff;font-size:17px;font-weight:800;line-height:1.35;margin:0 0 8px}
+.card p{color:#94a3b8;font-size:13.5px;line-height:1.65;margin:0 0 12px}
+.card span{color:#38bdf8;font-size:12px;font-weight:700}
+.more{max-width:760px;margin:10px auto 60px;padding:0 24px}
+.more h2{font-size:15px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.more a{display:block;padding:14px 16px;border:1px solid rgba(255,255,255,.07);border-radius:14px;color:#cbd5e1;text-decoration:none;font-weight:600;font-size:14px;margin-bottom:10px;background:rgba(255,255,255,.02)}
+.more a:hover{border-color:rgba(2,132,199,.5);color:#fff}
+footer .links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+</style>
+    <script src="/site-settings.js?v3"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6865734382752959"
+     crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Using AI Images for Ad Posters and Social Media Creatives", "description": "A practical workflow for making ad posters and social media creatives with AI images: planning the layout, writing the prompt, adding text, testing versions and avoiding legal pitfalls.", "datePublished": "2026-11-16", "dateModified": "2026-11-16", "author": {"@type": "Person", "name": "Hassan Fraz"}, "publisher": {"@type": "Organization", "name": "FRAZX PRO", "logo": {"@type": "ImageObject", "url": "https://frazxpro.com/logo.png"}}, "mainEntityOfPage": "https://frazxpro.com/guides/ai-images-for-ad-posters-and-social-media", "image": "https://frazxpro.com/og-image.jpg"}</script>
+</head>
+<body>
+<nav>
+    <a href="/" class="nav-logo"><img src="/logo.png" alt="FRAZX PRO"><span>FRAZX</span><span class="pro">PRO</span></a>
+    <a href="/guides" class="back-btn"><i class="fa-solid fa-book-open"></i> All Guides</a>
+</nav>
+
+<div class="crumbs"><a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Using AI Images for Ad Posters and Social Media Creatives</div>
+<div class="art-hero">
+    <h1>Using AI Images for Ad Posters and Social Media Creatives</h1>
+    <p>A practical workflow for making ad posters and social media creatives with AI images: planning the layout, writing the prompt, adding text, testing versions and avoiding legal pitfalls.</p>
+</div>
+<article class="article">
+    <div class="meta"><span><i class="fa-regular fa-user"></i> By Hassan Fraz</span><span><i class="fa-regular fa-calendar"></i> November 2026</span><span><i class="fa-regular fa-clock"></i> 7 min read</span></div>
+
+<p>Small businesses and solo creators often need many visuals: product posters, Instagram posts, Facebook ads, banners and story graphics. Hiring a photographer for each one is expensive. AI image generators can produce strong starting visuals quickly, but a good ad is more than a nice picture. This guide walks through a simple workflow that works for beginners.</p>
+
+<h2>Step 1: Decide what the ad must do</h2>
+<p>Before you generate anything, write one sentence: what should the viewer do after seeing this? Visit the shop, order a product, follow a page, remember a brand? A clear goal helps you choose the right image. A product launch needs the product to be the hero. A brand awareness post may focus on mood and lifestyle instead.</p>
+
+<h2>Step 2: Plan the layout before you prompt</h2>
+<p>Most ads have an image plus text: a headline, maybe a price or an offer, and a logo. If you ignore this when generating the image, the text ends up covering the important part. Decide where the text will go and ask for empty space there. Useful phrases are "negative space on the left", "plain background at the top for text" and "subject placed in the lower right".</p>
+<p>Also think about the format. Instagram feed posts are usually square or 4:5, stories and reels covers are 9:16, and Facebook or website banners are wide. Many generators let you set the aspect ratio. Choose it first so you do not crop away your subject later.</p>
+
+<h2>Step 3: Write a product-focused prompt</h2>
+<p>Describe the product, the setting and the feeling. For a watch, you might want a dark, premium look. For a summer drink, bright and fresh. Here is an example for a perfume poster:</p>
+<blockquote>Luxury perfume bottle on a polished black stone surface, soft rim light, subtle golden reflections, floating light mist, dark elegant background with empty space on the right for text, professional product photography, 100mm macro lens, sharp focus, high-end advertising style.</blockquote>
+<p>Notice what is missing: any text in the image. AI generators often draw letters badly, with spelling mistakes and strange shapes. It is almost always better to generate the picture without words and add the text yourself afterwards.</p>
+
+<h2>Step 4: Add text and branding properly</h2>
+<p>Use a design tool such as Canva, Figma, Photoshop or a free editor to add your headline, price, logo and call to action. A few rules make ads look professional:</p>
+<ul>
+<li><strong>Keep the headline short.</strong> Five to seven words is a good limit.</li>
+<li><strong>Make sure the text is readable.</strong> Use strong contrast between text and background. If needed, add a soft dark overlay behind the text.</li>
+<li><strong>Use one or two fonts only.</strong> More than that looks messy.</li>
+<li><strong>Use your brand colors</strong> for buttons and highlights so your ads look consistent.</li>
+<li><strong>Leave a safe margin.</strong> Platforms crop edges and cover parts of the image with interface elements.</li>
+</ul>
+
+<h2>Step 5: Create several versions and test</h2>
+<p>Never rely on a single image. Generate three to five variations with different backgrounds, colors or angles, and run them as small tests. Look at which version gets more clicks or saves, and use that style for your next set. Over time you learn what your audience responds to.</p>
+
+<h2>Step 6: Check quality before you publish</h2>
+<p>AI images can contain small errors. Zoom in and check hands, text on products, logos, reflections and edges. If the product in the image is not the real product, do not mislead customers: an AI mockup is fine for atmosphere, but if you are selling a specific item, show the real item accurately. Some platforms also ask you to label AI-generated content, so check their current rules.</p>
+
+<h2>Legal and ethical points to remember</h2>
+<ul>
+<li><strong>Do not copy famous brands or people.</strong> Avoid prompts that imitate a real logo, a celebrity face or a trademarked character.</li>
+<li><strong>Check the terms of your generator.</strong> The rules for commercial use depend on the tool and on your plan.</li>
+<li><strong>Be honest in your claims.</strong> The image should not promise something the product cannot deliver.</li>
+</ul>
+<p>This is general information, not legal advice. If you use AI images for a large campaign, read the terms of the tool you used and, where needed, ask a professional.</p>
+
+<h2>Get ideas from real examples</h2>
+<p>The <a href="/ads-poster">Ads Poster gallery</a> on FRAZX PRO collects AI-generated marketing visuals for clothing, shoes, watches, perfume, billboards and social media creatives, each shown with the prompt that created it. Browse it to see how different products are framed and lit, copy a prompt that fits your product, and change the details to match your brand. It is a quick way to get from a blank page to a first draft.</p>
+
+</article>
+<div class="more"><h2>Keep reading</h2><a href="/guides/how-to-write-better-ai-image-prompts">How to Write Better AI Image Prompts: A Practical Guide</a><a href="/guides/cinematic-ai-portraits-lighting-lens-color">Cinematic AI Portraits: Lighting, Lens and Color Grading Explained</a><a href="/guides/ai-stock-images-where-they-work-and-limits">AI Stock Images: Where They Work Well and Where They Do Not</a></div>
+
+<footer>
+    <div class="links">
+        <a href="/">Home</a><a href="/guides">Guides</a><a href="/about">About</a><a href="/privacy-policy">Privacy Policy</a><a href="/terms">Terms of Service</a><a href="mailto:hassanbuttg998@gmail.com">Contact</a>
+    </div>
+    <p>&copy; 2026 FRAZX PRO &mdash; <a href="https://frazxpro.com">frazxpro.com</a> &mdash; All Rights Reserved</p>
+</footer>
+</body>
+</html>
