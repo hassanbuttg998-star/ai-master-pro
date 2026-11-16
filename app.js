@@ -3685,7 +3685,7 @@ function fxCopied() {
         sec.className = 'page-content pt-28 pb-20 w-full';
         sec.style.display = 'none';
         sec.innerHTML = '<div class="fx-wrap">'
-            + '<div id="col-list-view"><div class="fx-col-head"><h1>Prompt <span>Collections</span></h1><p>Browse AI prompts by theme and copy your favourites.</p></div>'
+            + '<div id="col-list-view"><div class="fx-col-head"><h1>Prompt <span>Collections</span></h1><p>Collections are themed groups of AI posts picked by the FRAZX PRO team, such as black and white portraits. Open a collection to browse its images, copy the prompt behind any of them and adapt it for your own work.</p></div>'
             + '<div id="col-grid" class="fx-col-grid"></div></div>'
             + '<div id="col-detail-view" style="display:none"><button type="button" class="fx-back" id="col-back">← All collections</button>'
             + '<div class="fx-col-head"><h1 id="col-title"></h1><p id="col-sub"></p></div>'
